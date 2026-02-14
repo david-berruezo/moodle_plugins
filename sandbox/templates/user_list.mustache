@@ -1,0 +1,36 @@
+{{!
+    local/sandbox/templates/user_list.mustache
+
+    Template para mostrar una lista de usuarios.
+
+    Context variables required:
+    * title (string) - Título de la lista
+    * users (array) - Array de objetos con {name, email, role}
+    * hasusers (bool) - Si hay usuarios en la lista
+    * count (int) - Número total de usuarios
+}}
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">
+        <i class="fa fa-users"></i> {{title}}
+        <span class="badge badge-light float-right">{{count}} users</span>
+    </div>
+    {{#hasusers}}
+    <ul class="list-group list-group-flush">
+        {{#users}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{name}}</strong>
+                <br>
+                <small class="text-muted">{{email}}</small>
+            </div>
+            <span class="badge badge-primary badge-pill">{{role}}</span>
+        </li>
+        {{/users}}
+    </ul>
+    {{/hasusers}}
+    {{^hasusers}}
+    <div class="card-body text-center text-muted">
+        <i class="fa fa-info-circle"></i> No users found.
+    </div>
+    {{/hasusers}}
+</div>

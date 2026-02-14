@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/sandbox_ddl/db" VERSION="2026020600" COMMENT="Tablas del plugin sandbox_ddl">
+    <TABLES>
+        <TABLE NAME="sandbox_ddl_notes" COMMENT="Notas de prueba para aprender DDL">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="ID del usuario" />
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Título de la nota" />
+                <FIELD NAME="content" TYPE="text" NOTNULL="false" COMMENT="Contenido de la nota" />
+                <FIELD NAME="priority" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" COMMENT="0=baja, 1=media, 2=alta" />
+                <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="0=pendiente, 1=completada" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="idx_userid_status" UNIQUE="false" FIELDS="userid, status" />
+                <INDEX NAME="idx_priority" UNIQUE="false" FIELDS="priority" />
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

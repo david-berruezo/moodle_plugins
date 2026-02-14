@@ -1,0 +1,29 @@
+{{!
+    local/sandbox/templates/greeting_card.mustache
+
+    Template para mostrar un saludo en formato tarjeta.
+
+    Context variables required:
+    * name (string) - Nombre de la persona
+    * greeting (string) - Texto del saludo
+    * timestamp (int) - Timestamp Unix
+    * cssclass (string) - Clase CSS para el borde (ej: border-success)
+}}
+<div class="card mb-3 {{cssclass}}" style="max-width: 400px;">
+    <div class="card-header">
+        <i class="fa fa-user"></i> Greeting Card
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{greeting}}</h5>
+        <p class="card-text">
+            Personalised message for <strong>{{name}}</strong>.
+        </p>
+        {{#timestamp}}
+        <p class="card-text">
+            <small class="text-muted">
+                Generated at timestamp: {{timestamp}}
+            </small>
+        </p>
+        {{/timestamp}}
+    </div>
+</div>
