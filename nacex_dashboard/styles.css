@@ -1,0 +1,21 @@
+/* Block Nacex Dashboard Styles */
+.block_nacex_dashboard .nacex-dashboard-welcome {
+    padding: 10px;
+    background: linear-gradient(135deg, #e40613 0%, #c20510 100%);
+    color: #fff;
+    border-radius: 5px;
+}
+.block_nacex_dashboard .nacex-dashboard-welcome p {
+    margin-bottom: 2px;
+    color: #fff;
+}
+.block_nacex_dashboard .nacex-dashboard-welcome .text-muted {
+    color: rgba(255,255,255,0.8) !important;
+}
+.block_nacex_dashboard .nacex-dashboard-urgent h6 {
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 5px;
+}
+.block_nacex_dashboard .nacex-dashboard-links .btn {
+    font-size: 0.85rem;
+}
