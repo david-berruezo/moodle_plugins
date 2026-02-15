@@ -1,0 +1,21 @@
+<?php
+$string['pluginname'] = 'Nacex - Sincronización RRHH';
+$string['sync_log'] = 'Registro de sincronización RRHH';
+$string['run_sync'] = 'Ejecutar sincronización manual';
+$string['confirm_sync'] = '¿Ejecutar sincronización ahora? Se procesará el fichero CSV de empleados.';
+$string['sync_result'] = 'Sincronización completada. Creados: {$a->created}, Actualizados: {$a->updated}, Suspendidos: {$a->suspended}, Sin cambios: {$a->skipped}, Errores: {$a->errors}';
+$string['sync_error'] = 'Error en la sincronización';
+$string['employeeid'] = 'ID Empleado';
+$string['nologs'] = 'No hay registros de sincronización.';
+$string['task_sync_users'] = 'Sincronizar usuarios desde RRHH';
+$string['settings_csv_path'] = 'Ruta del fichero CSV';
+$string['settings_csv_path_desc'] = 'Ruta completa al fichero CSV exportado por el sistema de RRHH.';
+$string['settings_csv_delimiter'] = 'Delimitador CSV';
+$string['settings_csv_delimiter_desc'] = 'Carácter separador de columnas en el fichero CSV.';
+$string['settings_default_password'] = 'Contraseña por defecto';
+$string['settings_default_password_desc'] = 'Contraseña inicial para nuevos usuarios. Se les pedirá cambiarla en el primer acceso.';
+$string['settings_auto_suspend'] = 'Suspender automáticamente';
+$string['settings_auto_suspend_desc'] = 'Suspender automáticamente a los usuarios que ya no aparecen en el fichero CSV.';
+$string['settings_default_role'] = 'Rol por defecto';
+$string['settings_default_role_desc'] = 'Rol que se asignará a los nuevos usuarios a nivel de sistema.';
+$string['csv_not_found'] = 'No se ha encontrado el fichero CSV en la ruta: {$a}';

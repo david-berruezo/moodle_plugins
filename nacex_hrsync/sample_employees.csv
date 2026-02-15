@@ -1,0 +1,11 @@
+employee_id;first_name;last_name;email;department;position;active
+NAC001;Carlos;García López;cgarcia@nacex.es;Almacén;Responsable de almacén;1
+NAC002;María;Fernández Ruiz;mfernandez@nacex.es;Reparto;Repartidora;1
+NAC003;Pedro;Martínez Sanz;pmartinez@nacex.es;Atención al cliente;Agente de atención;1
+NAC004;Laura;Sánchez Díaz;lsanchez@nacex.es;Administración;Administrativa;1
+NAC005;Antonio;López Moreno;alopez@nacex.es;IT;Técnico de sistemas;1
+NAC006;Ana;Rodríguez Vega;arodriguez@nacex.es;Almacén;Operaria de almacén;1
+NAC007;Javier;Ruiz Torres;jruiz@nacex.es;Reparto;Repartidor;1
+NAC008;Elena;Díaz Romero;ediaz@nacex.es;Atención al cliente;Supervisora;1
+NAC009;Miguel;Torres Blanco;mtorres@nacex.es;Almacén;Operario de almacén;0
+NAC010;Carmen;Moreno Gil;cmoreno@nacex.es;Administración;Responsable RRHH;1

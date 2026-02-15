@@ -1,0 +1,21 @@
+<?php
+$string['pluginname'] = 'Nacex - HR Synchronization';
+$string['sync_log'] = 'HR Sync Log';
+$string['run_sync'] = 'Run manual synchronization';
+$string['confirm_sync'] = 'Run synchronization now? The employee CSV file will be processed.';
+$string['sync_result'] = 'Sync completed. Created: {$a->created}, Updated: {$a->updated}, Suspended: {$a->suspended}, Skipped: {$a->skipped}, Errors: {$a->errors}';
+$string['sync_error'] = 'Synchronization error';
+$string['employeeid'] = 'Employee ID';
+$string['nologs'] = 'No sync records found.';
+$string['task_sync_users'] = 'Synchronize users from HR';
+$string['settings_csv_path'] = 'CSV file path';
+$string['settings_csv_path_desc'] = 'Full path to the CSV file exported by the HR system.';
+$string['settings_csv_delimiter'] = 'CSV delimiter';
+$string['settings_csv_delimiter_desc'] = 'Column separator character in the CSV file.';
+$string['settings_default_password'] = 'Default password';
+$string['settings_default_password_desc'] = 'Initial password for new users. They will be asked to change it on first login.';
+$string['settings_auto_suspend'] = 'Auto-suspend';
+$string['settings_auto_suspend_desc'] = 'Automatically suspend users no longer present in the CSV file.';
+$string['settings_default_role'] = 'Default role';
+$string['settings_default_role_desc'] = 'Role to assign to new users at system level.';
+$string['csv_not_found'] = 'CSV file not found at path: {$a}';
