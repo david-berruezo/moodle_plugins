@@ -1,0 +1,236 @@
+{{!
+    Catálogo de cursos — Template principal
+    local/catalog/templates/catalog.mustache
+
+    Contexto:
+    - courses: array de cursos enriquecidos
+    - categories, levels, priceoptions, tags: filtros laterales
+    - pagination: datos de paginación
+    - activesearch, activecategory, activeprice, activelevel, activetag: filtros activos
+    - baseurl: URL base para los enlaces
+}}
+
+<div class="catalog-wrapper">
+
+    {{! ============ BUSCADOR SUPERIOR ============ }}
+    <div class="catalog-searchbar">
+        <form action="{{baseurl}}" method="get" class="catalog-searchbar__form">
+            <input
+                type="text"
+                name="q"
+                value="{{activesearch}}"
+                placeholder="{{#str}}searchplaceholder, local_catalog{{/str}}"
+                class="catalog-searchbar__input"
+                autocomplete="off"
+            >
+            <button type="submit" class="catalog-searchbar__btn">
+                {{#str}}search, local_catalog{{/str}}
+            </button>
+        </form>
+        {{#totalcourses}}
+            <p class="catalog-searchbar__count">
+                {{totalcourses}} {{#str}}coursesresults, local_catalog{{/str}}
+                {{#activesearch}}"{{activesearch}}"{{/activesearch}}
+            </p>
+        {{/totalcourses}}
+    </div>
+
+    <div class="catalog-layout">
+
+        {{! ============ FILTROS LATERALES ============ }}
+        <aside class="catalog-filters">
+            <div class="catalog-filters__header">
+                <h2 class="catalog-filters__title">{{#str}}filters, local_catalog{{/str}}</h2>
+                <a href="{{baseurl}}" class="catalog-filters__clear">
+                    {{#str}}clearfilters, local_catalog{{/str}}
+                </a>
+            </div>
+
+            {{! --- Filtro por Categoría --- }}
+            {{#categories.0}}
+            <div class="catalog-filters__group">
+                <h3 class="catalog-filters__group-title">{{#str}}category, local_catalog{{/str}}</h3>
+                <ul class="catalog-filters__list">
+                    {{#categories}}
+                    <li>
+                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
+                            {{name}}
+                            <span class="catalog-filters__count">({{count}})</span>
+                        </a>
+                    </li>
+                    {{/categories}}
+                </ul>
+            </div>
+            {{/categories.0}}
+
+            {{! --- Filtro por Precio --- }}
+            <div class="catalog-filters__group">
+                <h3 class="catalog-filters__group-title">{{#str}}price, local_catalog{{/str}}</h3>
+                <ul class="catalog-filters__list">
+                    {{#priceoptions}}
+                    <li>
+                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
+                            {{name}}
+                        </a>
+                    </li>
+                    {{/priceoptions}}
+                </ul>
+            </div>
+
+            {{! --- Filtro por Nivel --- }}
+            <div class="catalog-filters__group">
+                <h3 class="catalog-filters__group-title">{{#str}}level, local_catalog{{/str}}</h3>
+                <ul class="catalog-filters__list">
+                    {{#levels}}
+                    <li>
+                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
+                            {{name}}
+                        </a>
+                    </li>
+                    {{/levels}}
+                </ul>
+            </div>
+
+            {{! --- Filtro por Tags --- }}
+            {{#tags.0}}
+            <div class="catalog-filters__group">
+                <h3 class="catalog-filters__group-title">{{#str}}topic, local_catalog{{/str}}</h3>
+                <ul class="catalog-filters__list">
+                    {{#tags}}
+                    <li>
+                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
+                            {{name}}
+                            {{#count}}<span class="catalog-filters__count">({{count}})</span>{{/count}}
+                        </a>
+                    </li>
+                    {{/tags}}
+                </ul>
+            </div>
+            {{/tags.0}}
+        </aside>
+
+        {{! ============ GRID DE CURSOS ============ }}
+        <main class="catalog-courses">
+            {{#hascourses}}
+            <div class="catalog-grid">
+                {{#courses}}
+                <article class="catalog-card">
+                    {{! --- Imagen --- }}
+                    <a href="{{courseurl}}" class="catalog-card__image-link">
+                        {{#hasimage}}
+                            <img src="{{imageurl}}" alt="{{fullname}}"
+                                 class="catalog-card__img" loading="lazy">
+                        {{/hasimage}}
+                        {{^hasimage}}
+                            <div class="catalog-card__img-placeholder">
+                                <span>{{initials}}</span>
+                            </div>
+                        {{/hasimage}}
+                    </a>
+
+                    {{! --- Contenido --- }}
+                    <div class="catalog-card__body">
+                        <h3 class="catalog-card__title">
+                            <a href="{{courseurl}}">{{fullname}}</a>
+                        </h3>
+
+                        {{#summary}}
+                            <p class="catalog-card__summary">{{summary}}</p>
+                        {{/summary}}
+
+                        {{#hasinstructors}}
+                            <p class="catalog-card__instructor">{{instructornames}}</p>
+                        {{/hasinstructors}}
+
+                        {{! --- Meta: estrellas, duración, clases, nivel --- }}
+                        <div class="catalog-card__meta">
+                            <span class="catalog-card__stars">★★★★☆</span>
+                            <span class="catalog-card__rating-num">4.0</span>
+
+                            {{#hasduration}}
+                                <span class="catalog-card__tag">⏱ {{duration}}</span>
+                            {{/hasduration}}
+
+                            {{#hasactivities}}
+                                <span class="catalog-card__tag">📚 {{activitycount}} {{#str}}lessons, local_catalog{{/str}}</span>
+                            {{/hasactivities}}
+
+                            {{#haslevel}}
+                                <span class="catalog-card__tag">📊 {{level}}</span>
+                            {{/haslevel}}
+                        </div>
+
+                        {{! --- Tags --- }}
+                        {{#hastags}}
+                        <div class="catalog-card__tags">
+                            {{#tags}}
+                                <a href="{{url}}" class="catalog-card__tag-link">{{name}}</a>
+                            {{/tags}}
+                        </div>
+                        {{/hastags}}
+                    </div>
+
+                    {{! --- Footer: precio + botón --- }}
+                    <div class="catalog-card__footer">
+                        {{#is_free}}
+                            <span class="catalog-card__price catalog-card__price--free">
+                                {{#str}}free, local_catalog{{/str}}
+                            </span>
+                        {{/is_free}}
+                        {{^is_free}}
+                            <span class="catalog-card__price">{{price}}</span>
+                        {{/is_free}}
+
+                        <a href="{{enrolurl}}" class="catalog-card__btn">
+                            {{#is_free}}
+                                {{#str}}enrollnow, local_catalog{{/str}}
+                            {{/is_free}}
+                            {{^is_free}}
+                                {{#str}}buynow, local_catalog{{/str}}
+                            {{/is_free}}
+                        </a>
+                    </div>
+                </article>
+                {{/courses}}
+            </div>
+
+            {{! ============ PAGINACIÓN ============ }}
+            {{#haspagination}}
+            <nav class="catalog-pagination" aria-label="{{#str}}pagination, local_catalog{{/str}}">
+                {{#pagination.hasprev}}
+                    <a href="{{pagination.prevurl}}" class="catalog-pagination__btn" aria-label="{{#str}}previous, local_catalog{{/str}}">
+                        ← {{#str}}previous, local_catalog{{/str}}
+                    </a>
+                {{/pagination.hasprev}}
+
+                {{#pagination.pages}}
+                    <a href="{{url}}"
+                       class="catalog-pagination__page {{#active}}catalog-pagination__page--active{{/active}}"
+                       aria-label="{{#str}}page, local_catalog{{/str}} {{display}}"
+                       {{#active}}aria-current="page"{{/active}}>
+                        {{display}}
+                    </a>
+                {{/pagination.pages}}
+
+                {{#pagination.hasnext}}
+                    <a href="{{pagination.nexturl}}" class="catalog-pagination__btn" aria-label="{{#str}}next, local_catalog{{/str}}">
+                        {{#str}}next, local_catalog{{/str}} →
+                    </a>
+                {{/pagination.hasnext}}
+            </nav>
+            {{/haspagination}}
+
+            {{/hascourses}}
+
+            {{! Sin resultados }}
+            {{^hascourses}}
+            <div class="catalog-empty">
+                <p>{{#str}}nocourses, local_catalog{{/str}}</p>
+                <a href="{{baseurl}}" class="catalog-empty__btn">
+                    {{#str}}clearfilters, local_catalog{{/str}}
+                </a>
+            </div>
+            {{/hascourses}}
+        </main>
+    </div>
+</div>

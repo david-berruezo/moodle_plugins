@@ -1,0 +1,157 @@
+{{!
+    Player del curso - Aula virtual tipo Udemy
+    local/catalog/templates/course_player.mustache
+}}
+
+<div class="lp-wrapper">
+
+    {{! TOPBAR }}
+    <header class="lp-topbar">
+        <div class="lp-topbar__left">
+            <a href="{{catalogurl}}" class="lp-topbar__back" title="{{#str}}backtocatalog, local_catalog{{/str}}">
+                &#8592;
+            </a>
+            <a href="{{courseurl}}" class="lp-topbar__coursename">
+                {{coursename}}
+            </a>
+        </div>
+
+        <div class="lp-topbar__right">
+            <div class="lp-topbar__progress">
+                <div class="lp-topbar__progress-bar">
+                    <div class="lp-topbar__progress-fill" style="width: {{progress}}%;"></div>
+                </div>
+                <span class="lp-topbar__progress-text">
+                    {{completed_count}}/{{total_count}} {{#str}}completed, local_catalog{{/str}}
+                </span>
+            </div>
+            <a href="{{dashboardurl}}" class="lp-topbar__dashboard" title="{{#str}}dashboard, local_catalog{{/str}}">
+                &#127968;
+            </a>
+        </div>
+    </header>
+
+    <div class="lp-layout">
+
+        {{! AREA PRINCIPAL }}
+        <main class="lp-main">
+
+            {{! Video player }}
+            {{#is_video}}
+            <div class="lp-video">
+                <iframe
+                    src="{{video_url}}"
+                    class="lp-video__iframe"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+            {{#html_content}}
+                <div class="lp-content__below-video">
+                    {{{html_content}}}
+                </div>
+            {{/html_content}}
+            {{/is_video}}
+
+            {{! Contenido pagina }}
+            {{#is_page}}
+            <div class="lp-content">
+                <div class="lp-content__html">
+                    {{{html_content}}}
+                </div>
+            </div>
+            {{/is_page}}
+
+            {{! Otro tipo de actividad }}
+            {{#is_other}}
+            <div class="lp-content lp-content--other">
+                <div class="lp-content__message">
+                    <p>{{#str}}openactivity, local_catalog{{/str}}</p>
+                    <a href="{{activity_url}}" class="lp-content__open-btn" target="_blank">
+                        {{#str}}openinnewwindow, local_catalog{{/str}} &#8599;
+                    </a>
+                </div>
+            </div>
+            {{/is_other}}
+
+            {{! Barra inferior: titulo + nav + completar }}
+            <div class="lp-infobar">
+                <div class="lp-infobar__title">
+                    <span class="lp-infobar__number">{{current_number}}/{{total_activities}}</span>
+                    <h2 class="lp-infobar__name">{{current_name}}</h2>
+                </div>
+
+                <div class="lp-infobar__actions">
+                    {{! Boton completar }}
+                    {{#cancomplete}}
+                    <a href="{{completeurl}}" class="lp-infobar__complete {{#iscompleted}}lp-infobar__complete--done{{/iscompleted}}">
+                        {{#iscompleted}}
+                            &#10003; {{#str}}completed, local_catalog{{/str}}
+                        {{/iscompleted}}
+                        {{^iscompleted}}
+                            &#9744; {{#str}}markcomplete, local_catalog{{/str}}
+                        {{/iscompleted}}
+                    </a>
+                    {{/cancomplete}}
+
+                    {{! Navegacion }}
+                    <div class="lp-infobar__nav">
+                        {{#hasprev}}
+                            <a href="{{prevurl}}" class="lp-infobar__nav-btn">
+                                &#8592; {{#str}}previous, local_catalog{{/str}}
+                            </a>
+                        {{/hasprev}}
+                        {{#hasnext}}
+                            <a href="{{nexturl}}" class="lp-infobar__nav-btn lp-infobar__nav-btn--next">
+                                {{#str}}next, local_catalog{{/str}} &#8594;
+                            </a>
+                        {{/hasnext}}
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        {{! SIDEBAR (temario) }}
+        <aside class="lp-sidebar" id="lp-sidebar">
+            <div class="lp-sidebar__header">
+                <h3 class="lp-sidebar__title">{{#str}}coursecontent, local_catalog{{/str}}</h3>
+                <button class="lp-sidebar__toggle" onclick="document.querySelector('.lp-layout').classList.toggle('lp-layout--sidebar-hidden')">
+                    &#10005;
+                </button>
+            </div>
+
+            <div class="lp-sidebar__sections">
+                {{#sections}}
+                <details class="lp-sidebar__section" {{#isopen}}open{{/isopen}}>
+                    <summary class="lp-sidebar__section-header">
+                        <div class="lp-sidebar__section-info">
+                            <span class="lp-sidebar__section-name">{{name}}</span>
+                            <span class="lp-sidebar__section-meta">{{progress_text}}</span>
+                        </div>
+                    </summary>
+
+                    <ul class="lp-sidebar__activities">
+                        {{#activities}}
+                        <li class="lp-sidebar__activity {{#iscurrent}}lp-sidebar__activity--current{{/iscurrent}} {{#completed}}lp-sidebar__activity--completed{{/completed}}">
+                            <a href="{{url}}" class="lp-sidebar__activity-link">
+                                <span class="lp-sidebar__activity-status">
+                                    {{#completed}}&#10003;{{/completed}}
+                                    {{^completed}}{{icon}}{{/completed}}
+                                </span>
+                                <span class="lp-sidebar__activity-name">{{name}}</span>
+                            </a>
+                        </li>
+                        {{/activities}}
+                    </ul>
+                </details>
+                {{/sections}}
+            </div>
+        </aside>
+    </div>
+</div>
+
+<button class="lp-sidebar-show" onclick="document.querySelector('.lp-layout').classList.remove('lp-layout--sidebar-hidden')">
+    &#9776; {{#str}}coursecontent, local_catalog{{/str}}
+</button>

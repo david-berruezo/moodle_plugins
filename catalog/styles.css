@@ -1,0 +1,1563 @@
+/* ==========================================================================
+   local_catalog — Estilos del catálogo tipo Udemy
+   /local/catalog/styles.css
+   ========================================================================== */
+
+/* --- Layout general: full width --- */
+.pagelayout-standard .catalog-wrapper {
+    max-width: 134rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Override del max-width de Boost para esta página */
+body.path-local-catalog #page.drawers .main-inner {
+    max-width: 100% !important;
+}
+body.path-local-catalog #region-main {
+    max-width: 134rem;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   BUSCADOR SUPERIOR
+   ========================================================================== */
+.catalog-searchbar {
+    margin-bottom: 1.5rem;
+}
+
+.catalog-searchbar__form {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 600px;
+}
+
+.catalog-searchbar__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 0.375rem;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.catalog-searchbar__input:focus {
+    border-color: #5624d0;
+}
+
+.catalog-searchbar__btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    background: #5624d0;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.catalog-searchbar__btn:hover {
+    background: #401b9c;
+}
+
+.catalog-searchbar__count {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6a6f73;
+}
+
+/* ==========================================================================
+   LAYOUT: FILTROS + GRID
+   ========================================================================== */
+.catalog-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .catalog-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   FILTROS LATERALES
+   ========================================================================== */
+.catalog-filters {
+    position: sticky;
+    top: 80px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: #fff;
+}
+
+.catalog-filters__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.catalog-filters__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.catalog-filters__clear {
+    font-size: 0.8rem;
+    color: #5624d0;
+    text-decoration: none;
+}
+.catalog-filters__clear:hover {
+    text-decoration: underline;
+}
+
+.catalog-filters__group {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+.catalog-filters__group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.catalog-filters__group-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: #1a1a1a;
+}
+
+.catalog-filters__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.catalog-filters__list li {
+    margin-bottom: 0.25rem;
+}
+
+.catalog-filters__option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8rem;
+    color: #3e4143;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: background 0.1s;
+}
+.catalog-filters__option:hover {
+    background: #f7f9fa;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+.catalog-filters__option--active {
+    background: #e8e0f7;
+    color: #5624d0;
+    font-weight: 600;
+}
+
+.catalog-filters__count {
+    font-size: 0.75rem;
+    color: #6a6f73;
+}
+
+/* ==========================================================================
+   GRID DE CURSOS
+   ========================================================================== */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+@media (min-width: 1200px) {
+    .catalog-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (min-width: 1500px) {
+    .catalog-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ==========================================================================
+   TARJETA DE CURSO
+   ========================================================================== */
+.catalog-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.15s;
+}
+.catalog-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* --- Imagen --- */
+.catalog-card__image-link {
+    display: block;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.catalog-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.catalog-card__img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #5624d0, #3b1a8e);
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* --- Body --- */
+.catalog-card__body {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.catalog-card__title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.catalog-card__title a {
+    color: #1a1a1a;
+    text-decoration: none;
+}
+.catalog-card__title a:hover {
+    color: #5624d0;
+}
+
+.catalog-card__summary {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6a6f73;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.catalog-card__instructor {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6a6f73;
+}
+
+/* --- Meta --- */
+.catalog-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: auto;
+}
+
+.catalog-card__stars {
+    color: #f69c08;
+    font-size: 0.8rem;
+    letter-spacing: -1px;
+}
+
+.catalog-card__rating-num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #b4690e;
+}
+
+.catalog-card__tag {
+    font-size: 0.7rem;
+    color: #6a6f73;
+    background: #f7f9fa;
+    padding: 0.125rem 0.4rem;
+    border-radius: 1rem;
+    white-space: nowrap;
+}
+
+/* --- Tags del curso --- */
+.catalog-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.catalog-card__tag-link {
+    font-size: 0.7rem;
+    color: #5624d0;
+    background: #f3edff;
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    text-decoration: none;
+}
+.catalog-card__tag-link:hover {
+    background: #e8e0f7;
+    text-decoration: none;
+}
+
+/* --- Footer --- */
+.catalog-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.catalog-card__price {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+.catalog-card__price--free {
+    color: #2d6a4f;
+}
+
+.catalog-card__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    background: #5624d0;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.catalog-card__btn:hover {
+    background: #401b9c;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   PAGINACIÓN
+   ========================================================================== */
+.catalog-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.catalog-pagination__btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #5624d0;
+    text-decoration: none;
+    border: 1px solid #5624d0;
+    border-radius: 0.25rem;
+}
+.catalog-pagination__btn:hover {
+    background: #5624d0;
+    color: #fff;
+    text-decoration: none;
+}
+
+.catalog-pagination__page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-radius: 50%;
+}
+.catalog-pagination__page:hover {
+    background: #f7f9fa;
+    text-decoration: none;
+}
+.catalog-pagination__page--active {
+    background: #5624d0;
+    color: #fff;
+}
+.catalog-pagination__page--active:hover {
+    background: #401b9c;
+    color: #fff;
+}
+
+/* ==========================================================================
+   SIN RESULTADOS
+   ========================================================================== */
+.catalog-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6a6f73;
+}
+
+.catalog-empty__btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background: #5624d0;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
+.catalog-empty__btn:hover {
+    background: #401b9c;
+    color: #fff;
+    text-decoration: none;
+}
+/* ==========================================================================
+   COURSE DETAIL PAGE — Estilos tipo Udemy
+   Se añade al final del styles.css existente
+   ========================================================================== */
+
+/* --- Full width override para detalle --- */
+body.path-local-catalog #page.drawers .main-inner {
+    max-width: 100% !important;
+}
+body.path-local-catalog #region-main {
+    max-width: 134rem;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   HERO (cabecera oscura)
+   ========================================================================== */
+.cd-hero {
+    background: #1c1d1f;
+    color: #fff;
+    padding: 2rem 0;
+    margin: -1rem -1rem 0;
+}
+
+.cd-hero__inner {
+    max-width: 134rem;
+    margin: 0 auto;
+    padding: 0 2.4rem;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .cd-hero__inner {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cd-hero__content {
+    max-width: 700px;
+}
+
+.cd-hero__title {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0.75rem 0;
+    color: #fff;
+}
+
+.cd-hero__summary {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #d1d7dc;
+    margin-bottom: 0.75rem;
+}
+.cd-hero__summary p {
+    margin: 0;
+    color: #d1d7dc;
+}
+
+.cd-hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.cd-hero__stars {
+    color: #f69c08;
+    font-size: 0.9rem;
+}
+
+.cd-hero__rating {
+    font-weight: 700;
+    color: #f69c08;
+    font-size: 0.9rem;
+}
+
+.cd-hero__stat {
+    font-size: 0.875rem;
+    color: #cec0fc;
+}
+
+.cd-hero__instructor {
+    font-size: 0.875rem;
+    color: #d1d7dc;
+    margin: 0.375rem 0;
+}
+
+.cd-hero__instructor-link {
+    color: #cec0fc;
+    text-decoration: underline;
+}
+.cd-hero__instructor-link:hover {
+    color: #fff;
+}
+
+.cd-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #d1d7dc;
+    margin-top: 0.5rem;
+}
+
+/* --- Breadcrumbs --- */
+.cd-breadcrumbs {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.cd-breadcrumbs__link {
+    color: #cec0fc;
+    text-decoration: none;
+}
+.cd-breadcrumbs__link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.cd-breadcrumbs__sep {
+    color: #6a6f73;
+    margin: 0 0.25rem;
+}
+
+.cd-breadcrumbs__current {
+    color: #d1d7dc;
+}
+
+/* ==========================================================================
+   SIDEBAR (card sticky)
+   ========================================================================== */
+.cd-sidebar {
+    position: relative;
+}
+
+.cd-sidebar__card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 80px;
+}
+
+@media (max-width: 900px) {
+    .cd-sidebar__card {
+        position: static;
+    }
+}
+
+.cd-sidebar__video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+}
+
+.cd-sidebar__iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.cd-sidebar__img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+}
+
+.cd-sidebar__img-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #5624d0, #3b1a8e);
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.cd-sidebar__price {
+    padding: 1rem 1.25rem 0;
+}
+
+.cd-sidebar__price-amount {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+.cd-sidebar__price-free {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2d6a4f;
+}
+
+.cd-sidebar__btn {
+    display: block;
+    margin: 0.75rem 1.25rem;
+    padding: 0.875rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: #5624d0;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.cd-sidebar__btn:hover {
+    background: #401b9c;
+    color: #fff;
+    text-decoration: none;
+}
+
+.cd-sidebar__info {
+    list-style: none;
+    padding: 0 1.25rem 1.25rem;
+    margin: 0;
+}
+
+.cd-sidebar__info li {
+    padding: 0.375rem 0;
+    font-size: 0.8rem;
+    color: #3e4143;
+    border-bottom: 1px solid #f0f0f0;
+}
+.cd-sidebar__info li:last-child {
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   CONTENIDO PRINCIPAL
+   ========================================================================== */
+.cd-main {
+    max-width: 700px;
+    padding: 2rem 2.4rem;
+}
+
+@media (max-width: 900px) {
+    .cd-main {
+        max-width: 100%;
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* --- Sección genérica --- */
+.cd-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+.cd-section:last-child {
+    border-bottom: none;
+}
+
+.cd-section__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: #1a1a1a;
+}
+
+/* ==========================================================================
+   OBJETIVOS DE APRENDIZAJE
+   ========================================================================== */
+.cd-objectives {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.cd-objectives .cd-section__title {
+    margin-bottom: 0.75rem;
+}
+
+.cd-objectives__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .cd-objectives__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cd-objectives__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #3e4143;
+    line-height: 1.4;
+}
+
+.cd-objectives__check {
+    color: #5624d0;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+/* ==========================================================================
+   TEMAS RELACIONADOS (tags)
+   ========================================================================== */
+.cd-topics__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cd-topics__tag {
+    display: inline-block;
+    padding: 0.375rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #5624d0;
+    background: #f3edff;
+    border-radius: 2rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.cd-topics__tag:hover {
+    background: #e8e0f7;
+    color: #401b9c;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   TEMARIO (curriculum)
+   ========================================================================== */
+.cd-curriculum__summary {
+    font-size: 0.875rem;
+    color: #6a6f73;
+    margin-bottom: 1rem;
+}
+
+.cd-curriculum__list {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.cd-curriculum__section {
+    border-bottom: 1px solid #e0e0e0;
+}
+.cd-curriculum__section:last-child {
+    border-bottom: none;
+}
+
+.cd-curriculum__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    background: #f7f9fa;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    list-style: none;
+}
+.cd-curriculum__section-header::-webkit-details-marker {
+    display: none;
+}
+
+.cd-curriculum__section-header::before {
+    content: '▶';
+    font-size: 0.6rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+}
+
+details[open] > .cd-curriculum__section-header::before {
+    transform: rotate(90deg);
+}
+
+.cd-curriculum__section-meta {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #6a6f73;
+}
+
+.cd-curriculum__activities {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cd-curriculum__activity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem 0.625rem 2rem;
+    font-size: 0.8rem;
+    color: #3e4143;
+    border-top: 1px solid #f0f0f0;
+}
+
+.cd-curriculum__activity-icon {
+    flex-shrink: 0;
+}
+
+.cd-curriculum__activity-name {
+    flex: 1;
+}
+
+.cd-curriculum__activity-type {
+    font-size: 0.7rem;
+    color: #6a6f73;
+    background: #f7f9fa;
+    padding: 0.125rem 0.4rem;
+    border-radius: 0.25rem;
+}
+
+/* ==========================================================================
+   REQUISITOS
+   ========================================================================== */
+.cd-requirements__list {
+    padding-left: 1.25rem;
+    margin: 0;
+}
+
+.cd-requirements__list li {
+    font-size: 0.875rem;
+    color: #3e4143;
+    margin-bottom: 0.375rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   DESCRIPCIÓN EXTENDIDA
+   ========================================================================== */
+.cd-description__content {
+    font-size: 0.9rem;
+    color: #3e4143;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   INSTRUCTOR
+   ========================================================================== */
+.cd-instructor__card {
+    margin-bottom: 1.5rem;
+}
+
+.cd-instructor__header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.cd-instructor__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.cd-instructor__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.375rem;
+}
+
+.cd-instructor__name a {
+    color: #5624d0;
+    text-decoration: underline;
+}
+
+.cd-instructor__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #6a6f73;
+}
+
+.cd-instructor__bio {
+    font-size: 0.875rem;
+    color: #3e4143;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   CURSOS RELACIONADOS / MÁS DEL INSTRUCTOR
+   ========================================================================== */
+.cd-related__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.cd-related__card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    text-decoration: none;
+    transition: box-shadow 0.15s, transform 0.1s;
+}
+.cd-related__card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.cd-related__img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+}
+
+.cd-related__img-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #5624d0, #3b1a8e);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.cd-related__info {
+    padding: 0.625rem;
+}
+
+.cd-related__name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    color: #1a1a1a;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cd-related__price {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #3e4143;
+}
+
+/* ==========================================================================
+   COURSE PLAYER — Aula virtual tipo Udemy
+   Se añade al final del styles.css existente
+   ========================================================================== */
+
+/* --- Reset del layout Moodle para embedded --- */
+body.pagelayout-embedded .lp-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #1c1d1f;
+    z-index: 9999;
+}
+
+body.pagelayout-embedded #page-wrapper,
+body.pagelayout-embedded #page,
+body.pagelayout-embedded #page-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+body.pagelayout-embedded #page-header,
+body.pagelayout-embedded #page-footer,
+body.pagelayout-embedded .navbar {
+    display: none !important;
+}
+
+/* ==========================================================================
+   TOPBAR
+   ========================================================================== */
+.lp-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    padding: 0 1rem;
+    background: #1c1d1f;
+    border-bottom: 1px solid #3e4143;
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.lp-topbar__left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.lp-topbar__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border: 1px solid #6a6f73;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.lp-topbar__back:hover {
+    background: #3e4143;
+    color: #fff;
+    text-decoration: none;
+}
+
+.lp-topbar__coursename {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.lp-topbar__coursename:hover {
+    color: #cec0fc;
+    text-decoration: none;
+}
+
+.lp-topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lp-topbar__progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lp-topbar__progress-bar {
+    width: 120px;
+    height: 6px;
+    background: #3e4143;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.lp-topbar__progress-fill {
+    height: 100%;
+    background: #5624d0;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.lp-topbar__progress-text {
+    font-size: 0.7rem;
+    color: #d1d7dc;
+    white-space: nowrap;
+}
+
+.lp-topbar__dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 50%;
+}
+.lp-topbar__dashboard:hover {
+    background: #3e4143;
+    color: #fff;
+    text-decoration: none;
+}
+
+@media (max-width: 700px) {
+    .lp-topbar__progress-bar { width: 60px; }
+    .lp-topbar__progress-text { display: none; }
+    .lp-topbar__coursename { max-width: 120px; }
+}
+
+/* ==========================================================================
+   LAYOUT: MAIN + SIDEBAR
+   ========================================================================== */
+.lp-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.lp-layout--sidebar-hidden {
+    grid-template-columns: 1fr 0;
+}
+
+.lp-layout--sidebar-hidden .lp-sidebar {
+    display: none;
+}
+
+.lp-layout--sidebar-hidden ~ .lp-sidebar-show {
+    display: flex;
+}
+
+@media (max-width: 900px) {
+    .lp-layout {
+        grid-template-columns: 1fr;
+    }
+    .lp-sidebar {
+        display: none;
+    }
+    .lp-sidebar-show {
+        display: flex !important;
+    }
+}
+
+/* ==========================================================================
+   AREA PRINCIPAL
+   ========================================================================== */
+.lp-main {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: #1c1d1f;
+}
+
+/* --- Video --- */
+.lp-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    flex-shrink: 0;
+    max-height: 70vh;
+}
+
+.lp-video__iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Contenido debajo del video --- */
+.lp-content__below-video {
+    padding: 1.5rem 2rem;
+    color: #d1d7dc;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* --- Contenido página (sin video) --- */
+.lp-content {
+    flex: 1;
+    padding: 2rem;
+    color: #d1d7dc;
+    overflow-y: auto;
+}
+
+.lp-content__html {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+.lp-content__html h1,
+.lp-content__html h2,
+.lp-content__html h3 {
+    color: #fff;
+}
+.lp-content__html a {
+    color: #cec0fc;
+}
+.lp-content__html img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.25rem;
+}
+
+/* --- Otro tipo de actividad --- */
+.lp-content--other {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.lp-content__message {
+    text-align: center;
+    color: #d1d7dc;
+}
+
+.lp-content__open-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background: #5624d0;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
+.lp-content__open-btn:hover {
+    background: #401b9c;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   INFOBAR (debajo del contenido)
+   ========================================================================== */
+.lp-infobar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: #2d2f31;
+    border-top: 1px solid #3e4143;
+    flex-shrink: 0;
+}
+
+.lp-infobar__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.lp-infobar__number {
+    font-size: 0.75rem;
+    color: #6a6f73;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.lp-infobar__name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lp-infobar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lp-infobar__complete {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    background: #3e4143;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.lp-infobar__complete:hover {
+    background: #5624d0;
+    color: #fff;
+    text-decoration: none;
+}
+.lp-infobar__complete--done {
+    background: #2d6a4f;
+    color: #fff;
+}
+.lp-infobar__complete--done:hover {
+    background: #1e4d38;
+}
+
+.lp-infobar__nav {
+    display: flex;
+    gap: 0.375rem;
+}
+
+.lp-infobar__nav-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    background: #3e4143;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.lp-infobar__nav-btn:hover {
+    background: #5624d0;
+    color: #fff;
+    text-decoration: none;
+}
+.lp-infobar__nav-btn--next {
+    background: #5624d0;
+}
+.lp-infobar__nav-btn--next:hover {
+    background: #401b9c;
+}
+
+@media (max-width: 600px) {
+    .lp-infobar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ==========================================================================
+   SIDEBAR
+   ========================================================================== */
+.lp-sidebar {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.lp-sidebar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.lp-sidebar__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.lp-sidebar__toggle {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #6a6f73;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+}
+.lp-sidebar__toggle:hover {
+    color: #1a1a1a;
+}
+
+.lp-sidebar__sections {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* --- Sección --- */
+.lp-sidebar__section {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.lp-sidebar__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    background: #f7f9fa;
+    list-style: none;
+    user-select: none;
+}
+.lp-sidebar__section-header::-webkit-details-marker {
+    display: none;
+}
+
+.lp-sidebar__section-header::before {
+    content: '\25B6';
+    font-size: 0.5rem;
+    margin-right: 0.5rem;
+    color: #6a6f73;
+    transition: transform 0.2s;
+}
+details[open] > .lp-sidebar__section-header::before {
+    transform: rotate(90deg);
+}
+
+.lp-sidebar__section-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.lp-sidebar__section-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.lp-sidebar__section-meta {
+    font-size: 0.7rem;
+    color: #6a6f73;
+}
+
+/* --- Actividades --- */
+.lp-sidebar__activities {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lp-sidebar__activity {
+    border-top: 1px solid #f0f0f0;
+}
+
+.lp-sidebar__activity-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem 0.625rem 1.5rem;
+    text-decoration: none;
+    color: #3e4143;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    transition: background 0.1s;
+}
+.lp-sidebar__activity-link:hover {
+    background: #f7f9fa;
+    text-decoration: none;
+    color: #1a1a1a;
+}
+
+.lp-sidebar__activity-status {
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.lp-sidebar__activity-name {
+    flex: 1;
+}
+
+/* Estado: actual */
+.lp-sidebar__activity--current {
+    background: #e8e0f7;
+}
+.lp-sidebar__activity--current .lp-sidebar__activity-link {
+    color: #5624d0;
+    font-weight: 700;
+}
+
+/* Estado: completada */
+.lp-sidebar__activity--completed .lp-sidebar__activity-status {
+    color: #2d6a4f;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   BOTON MOSTRAR SIDEBAR (mobile / hidden)
+   ========================================================================== */
+.lp-sidebar-show {
+    display: none;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background: #5624d0;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 200;
+    align-items: center;
+    gap: 0.375rem;
+}
+.lp-sidebar-show:hover {
+    background: #401b9c;
+}
+
+/* --- Learn button (already enrolled) --- */
+.cd-sidebar__btn--learn {
+    background: #2d6a4f;
+}
+.cd-sidebar__btn--learn:hover {
+    background: #1e4d38;
+    color: #fff;
+    text-decoration: none;
+}
