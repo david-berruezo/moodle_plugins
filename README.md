@@ -106,7 +106,7 @@ Generador de informes con métricas de formación por departamento, curso y empl
 
 ---
 
-### 4. `local_catalog` - Frontend para listar cursos y verlos
+### 5. `local_catalog` - Frontend para listar cursos y verlos
 
 Frontend para listar , filtrar y ver cursos con reescritura de urls amigables mediante apache
 
