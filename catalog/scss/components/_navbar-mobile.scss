@@ -1,0 +1,387 @@
+// =============================================================================
+// NAVBAR MOBILE — barra + búsqueda + drawer
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Wrapper (oculto en desktop) ───────────────────────────────────────────────
+.cv-mobile {
+    display: block;
+
+    @include m.above(m.$bp-lg) {
+        display: none;
+    }
+}
+
+// =============================================================================
+// BARRA SUPERIOR
+// =============================================================================
+.cv-mobile-bar {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: t.$z-sticky;
+    height: t.$nav-height-mobile;
+    background: t.$nav-bg;
+    border-block-end: t.$nav-border;
+    display: flex;
+    align-items: center;
+    padding-inline: t.$space-2;
+    gap: t.$space-1;
+
+    // Botón icónico (hamburger, buscar, cerrar)
+    &__btn {
+        @include m.btn-reset;
+        @include m.flex-center;
+        width: 4rem;
+        height: 4rem;
+        color: t.$nav-text;
+        border-radius: t.$radius-full;
+        flex-shrink: 0;
+        transition: background .1s;
+
+        svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        &:hover {
+            background: rgba(t.$color-white, .08);
+            color: t.$nav-text-active;
+        }
+    }
+
+    // Logo centrado
+    &__logo {
+        @include m.flex-center;
+        flex: 1;
+        gap: t.$space-2;
+        text-decoration: none;
+
+        &-mark {
+            @include m.flex-center;
+            width: 2.8rem;
+            height: 2.8rem;
+            background: t.$color-brand;
+            border-radius: t.$radius;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: t.$color-white;
+        }
+
+        &-text {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: t.$color-white;
+            letter-spacing: -0.02em;
+        }
+
+        &:hover { text-decoration: none; }
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+    }
+}
+
+// =============================================================================
+// BÚSQUEDA MÓVIL (panel deslizante desde arriba)
+// =============================================================================
+.cv-mobile-search {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: t.$z-drawer; // por encima del drawer
+    height: t.$nav-height-mobile;
+    background: t.$nav-bg;
+    border-block-end: t.$nav-border;
+    display: flex;
+    align-items: center;
+    padding-inline: t.$space-2;
+    transform: translateY(-100%);
+    transition: transform .22s cubic-bezier(.4, 0, .2, 1);
+
+    &.is-open {
+        transform: translateY(0);
+    }
+
+    &__form {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 3.8rem;
+        background: t.$color-white;
+        border-radius: t.$radius-full;
+        overflow: hidden;
+        margin-inline: t.$space-2;
+    }
+
+    &__input {
+        flex: 1;
+        padding-inline: t.$space-4;
+        font-size: t.$text-sm;
+        font-family: t.$font-sans;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: t.$color-text;
+
+        &::placeholder { color: t.$color-text-muted; }
+    }
+
+    &__btn {
+        @include m.flex-center;
+        width: 4rem;
+        height: 100%;
+        background: t.$color-brand;
+        border: none;
+        color: t.$color-white;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background .15s;
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+        &:hover { background: t.$color-brand-dark; }
+    }
+}
+
+// =============================================================================
+// OVERLAY
+// =============================================================================
+.cv-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: t.$z-overlay;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+
+    &.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+// =============================================================================
+// DRAWER
+// =============================================================================
+.cv-drawer {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: min(34rem, 88vw);
+    background: t.$color-white;
+    z-index: t.$z-drawer;
+    transform: translateX(-100%);
+    transition: transform .25s cubic-bezier(.4, 0, .2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    &.is-open {
+        transform: translateX(0);
+    }
+
+    // Botón cerrar flotante (fuera del drawer)
+    &__close {
+        @include m.btn-reset;
+        @include m.flex-center;
+        position: absolute;
+        inset-block-start: 1.4rem;
+        inset-inline-end: -4.8rem;
+        width: 3.6rem;
+        height: 3.6rem;
+        background: t.$color-white;
+        border-radius: t.$radius-full;
+        color: t.$color-text;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+        transition: background .1s;
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+        &:hover { background: t.$color-bg-subtle; }
+    }
+
+    // Paneles apilados (navegación anidada)
+    &__panel {
+        position: absolute;
+        inset: 0;
+        overflow-y: auto;
+        background: t.$color-white;
+        transform: translateX(100%);
+        transition: transform .2s ease;
+        display: flex;
+        flex-direction: column;
+
+        &.is-active {
+            transform: translateX(0);
+        }
+    }
+
+    // Cabecera oscura
+    &__header {
+        background: t.$nav-bg;
+        padding: t.$space-5 t.$space-4;
+        flex-shrink: 0;
+    }
+
+    // Fila de usuario
+    &__user-row {
+        @include m.btn-reset;
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+        width: 100%;
+        text-align: start;
+        padding: 0;
+    }
+
+    &__avatar {
+        @include m.flex-center;
+        width: 6.4rem;
+        height: 6.4rem;
+        border-radius: t.$radius-full;
+        background: t.$color-brand;
+        color: t.$color-white;
+        font-size: 1.8rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        text-transform: uppercase;
+    }
+
+    &__user-info {
+        flex: 1;
+
+        strong {
+            display: block;
+            font-size: t.$text-lg;
+            font-weight: 700;
+            color: t.$color-white;
+        }
+
+        small {
+            display: block;
+            font-size: t.$text-xs;
+            color: rgba(t.$color-white, .55);
+            margin-block-start: t.$space-1;
+        }
+    }
+
+    // Botones auth (invitado)
+    &__auth {
+        display: flex;
+        gap: t.$space-2;
+
+        &-btn {
+            @include m.btn-reset;
+            flex: 1;
+            padding: t.$space-3 0;
+            font-size: t.$text-sm;
+            font-weight: 700;
+            border-radius: t.$radius;
+            transition: .15s;
+
+            &--outline {
+                border: 1px solid rgba(t.$color-white, .5);
+                color: t.$color-white;
+
+                &:hover { border-color: t.$color-white; text-decoration: none; }
+            }
+
+            &--primary {
+                background: t.$color-brand;
+                color: t.$color-white;
+                border: 1px solid t.$color-brand;
+
+                &:hover { background: t.$color-brand-dark; text-decoration: none; }
+            }
+        }
+    }
+
+    &__body {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    // Heading de sección
+    &__section {
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: t.$color-text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: t.$space-4 t.$space-4 t.$space-1;
+        border-block-start: 1px solid t.$color-border-subtle;
+
+        &:first-child { border-block-start: none; }
+    }
+
+    &__list {
+        padding-block-end: t.$space-1;
+    }
+
+    // Ítem de lista
+    &__item {
+        @include m.btn-reset;
+        @include m.flex-between;
+        width: 100%;
+        padding: 1.2rem t.$space-4;
+        font-size: t.$text-md;
+        color: t.$color-text;
+        text-align: start;
+        border-radius: 0;
+        transition: background .1s;
+
+        svg {
+            fill: none;
+            stroke: t.$color-text-muted;
+            stroke-width: 2;
+            stroke-linecap: round;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+            text-decoration: none;
+        }
+
+        &--hl  { color: t.$color-brand; font-weight: 700; }
+        &--sm  { font-size: t.$text-sm; color: t.$color-text-muted; }
+        &--see { color: t.$color-brand; font-weight: 700; font-size: t.$text-sm; }
+    }
+
+    // Botón volver
+    &__back {
+        @include m.btn-reset;
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+        width: 100%;
+        padding: t.$space-3 t.$space-4;
+        font-size: t.$text-md;
+        font-weight: 700;
+        color: t.$color-text;
+        background: t.$color-bg-subtle;
+        border-block-end: 1px solid t.$color-border;
+        border-radius: 0;
+        text-align: start;
+
+        svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        &:hover {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+        }
+    }
+}

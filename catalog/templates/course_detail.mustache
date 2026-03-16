@@ -1,290 +1,270 @@
-{{!
-    Detalle del curso — Template tipo Udemy
-    local/catalog/templates/course_detail.mustache
-}}
+{{! ── NAVBAR ── }}
+{{> local_catalog/navbar }}
 
-<div class="cd-wrapper">
+<main class="cv-page">
+    <section class="cv-detail-hero">
+        <div class="container">
+            <div class="cv-detail-hero__inner">
+                <div>
+                    <nav class="cv-detail-hero__breadcrumb">
+                        <!--
+                        <a href="index.html">Inicio</a><span>/</span>
+                        <a href="courses.html">Desarrollo</a><span>/</span>
+                        <a href="courses.html">React JS</a>
+                        -->
+                        {{#breadcrumbs}}
+                            {{#url}}
+                                <a href="{{url}}" class="cd-breadcrumbs__link">{{text}}</a>
+                                <span class="cd-breadcrumbs__sep">›</span>
+                            {{/url}}
+                            {{^url}}
+                                <span class="cd-breadcrumbs__current">{{text}}</span>
+                            {{/url}}
+                        {{/breadcrumbs}}
 
-    {{! ============ HERO (fondo oscuro) ============ }}
-    <div class="cd-hero">
-        <div class="cd-hero__inner">
-            <div class="cd-hero__content">
+                    </nav>
 
-                {{! Breadcrumbs }}
-                <nav class="cd-breadcrumbs" aria-label="Breadcrumb">
-                    {{#breadcrumbs}}
-                        {{#url}}
-                            <a href="{{url}}" class="cd-breadcrumbs__link">{{text}}</a>
-                            <span class="cd-breadcrumbs__sep">›</span>
-                        {{/url}}
-                        {{^url}}
-                            <span class="cd-breadcrumbs__current">{{text}}</span>
-                        {{/url}}
-                    {{/breadcrumbs}}
-                </nav>
-
-                {{! Título }}
-                <h1 class="cd-hero__title">{{fullname}}</h1>
-
-                {{! Descripción corta }}
-                {{#summary}}
-                    <div class="cd-hero__summary">{{{summary}}}</div>
-                {{/summary}}
-
-                {{! Estrellas + Estudiantes }}
-                <div class="cd-hero__stats">
-                    <span class="cd-hero__stars">{{stars}}</span>
-                    <span class="cd-hero__rating">{{rating}}</span>
-                    <span class="cd-hero__stat">({{ratingcount}} {{#str}}ratings, local_catalog{{/str}})</span>
-                    <span class="cd-hero__stat">{{enrolledcount}} {{#str}}students, local_catalog{{/str}}</span>
-                </div>
-
-                {{! Instructor }}
-                {{#hasinstructors}}
-                    <p class="cd-hero__instructor">
-                        {{#str}}createdby, local_catalog{{/str}}
-                        {{#instructors}}
-                            <a href="{{profileurl}}" class="cd-hero__instructor-link">{{fullname}}</a>
-                        {{/instructors}}
-                    </p>
-                {{/hasinstructors}}
-
-                {{! Meta: actualización, idioma }}
-                <div class="cd-hero__meta">
-                    <span>🕐 {{#str}}lastupdated, local_catalog{{/str}} {{lastupdate}}</span>
-                    {{#hascourselang}}
-                        <span>🌐 {{courselang}}</span>
-                    {{/hascourselang}}
-                    {{#haslevel}}
-                        <span>📊 {{level}}</span>
-                    {{/haslevel}}
-                </div>
-            </div>
-
-            {{! ============ SIDEBAR (card fija) ============ }}
-            <div class="cd-sidebar">
-                <div class="cd-sidebar__card">
-                    {{! Video preview o imagen }}
-                    {{#haspreviewvideo}}
-                        <div class="cd-sidebar__video">
-                            <iframe src="{{previewvideo}}" frameborder="0"
-                                    allowfullscreen class="cd-sidebar__iframe"></iframe>
+                    <h1 class="cv-detail-hero__title">{{fullname}}</h1>
+                    <p class="cv-detail-hero__subtitle">{{{summary}}}</p>
+                    <div class="cv-detail-hero__meta">
+                        <span class="cv-detail-hero__badge">Más vendido</span>
+                        <div class="cv-detail-hero__rating-row">
+                            <span class="cv-detail-hero__score">4.8</span>
+                            <span class="cv-detail-hero__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></span>
+                            <span class="cv-detail-hero__reviews">(3.241 valoraciones)</span>
                         </div>
-                    {{/haspreviewvideo}}
-                    {{^haspreviewvideo}}
-                        {{#hasimage}}
-                            <img src="{{imageurl}}" alt="{{fullname}}" class="cd-sidebar__img">
-                        {{/hasimage}}
-                        {{^hasimage}}
-                            <div class="cd-sidebar__img-placeholder">
-                                <span>{{initials}}</span>
-                            </div>
-                        {{/hasimage}}
-                    {{/haspreviewvideo}}
-
-                    {{! Precio }}
-                    <div class="cd-sidebar__price">
-                        {{#is_free}}
-                            <span class="cd-sidebar__price-free">{{#str}}free, local_catalog{{/str}}</span>
-                        {{/is_free}}
-                        {{^is_free}}
-                            <span class="cd-sidebar__price-amount">{{price}}</span>
-                        {{/is_free}}
+                        <span class="cv-detail-hero__students">12.847 estudiantes</span>
                     </div>
 
-                    {{! Botón según estado de matrícula }}
-                    {{#isenrolled}}
-                        <a href="{{learnurl}}" class="cd-sidebar__btn cd-sidebar__btn--learn">
-                            {{#str}}gotocourse, local_catalog{{/str}}
-                        </a>
-                    {{/isenrolled}}
-                    {{^isenrolled}}
-                        <a href="{{enrolurl}}" class="cd-sidebar__btn">
-                            {{#is_free}}
-                                {{#str}}enrollnow, local_catalog{{/str}}
-                            {{/is_free}}
-                            {{^is_free}}
-                                {{#str}}buynow, local_catalog{{/str}}
-                            {{/is_free}}
-                        </a>
-                    {{/isenrolled}}
+                    {{#hasinstructors}}
+                        <p class="cv-detail-hero__instructors">{{#str}}createdby, local_catalog{{/str}}
+                            {{#instructors}}
+                                <a href="#">{{fullname}}</a>
+                            {{/instructors}}
+                        </p>
+                    {{/hasinstructors}}
 
-                    {{! Info rápida }}
-                    <ul class="cd-sidebar__info">
-                        {{#hasduration}}
-                            <li>⏱ {{duration}} {{#str}}totalcontent, local_catalog{{/str}}</li>
-                        {{/hasduration}}
-                        {{#hasactivities}}
-                            <li>📚 {{activitycount}} {{#str}}lessons, local_catalog{{/str}}</li>
-                        {{/hasactivities}}
-                        {{#haslevel}}
-                            <li>📊 {{#str}}level, local_catalog{{/str}}: {{level}}</li>
-                        {{/haslevel}}
-                        <li>📱 {{#str}}mobileaccess, local_catalog{{/str}}</li>
-                    </ul>
+                    <div style="display:flex;gap:2.4rem;flex-wrap:wrap;margin-top:1.6rem">
+                        <span class="cv-detail-hero__updated"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v10l4 4"/><circle cx="12" cy="12" r="10"/></svg> Última actualización: 02/2025</span>
+                        <span class="cv-detail-hero__langs"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Español</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="cv-buy-widget">
+
+                        <div class="cv-buy-widget__preview">
+                            <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#61DAFB22,#1c1d1f);display:flex;align-items:center;justify-content:center">
+                                <span style="font-size:8rem;font-weight:900;color:#61DAFB;opacity:.6">R</span>
+                            </div>
+
+                            <div class="cv-buy-widget__preview-play" style="background: url({{imageurl}});
+    background-size: cover;">
+                                {{#haspreviewvideo}}
+                                <div class="cv-buy-widget__preview-play-btn">
+                                    <svg viewBox="0 0 24 24" width="24" height="24"><polygon points="5,3 19,12 5,21 5,3" fill="#F05A28"/></svg>
+                                </div>
+                                <span>Vista previa del curso</span>
+                                {{/haspreviewvideo}}
+                            </div>
+
+                        </div>
+
+                        <div class="cv-buy-widget__body">
+                            <div class="cv-buy-widget__price">
+                                <strong>Incluido</strong>
+                                <small style="font-size:1.3rem;color:#6a6f73">con tu plan</small>
+                            </div>
+
+                            {{! Botón según estado de matrícula }}
+                            {{#isenrolled}}
+                                <a href="{{learnurl}}" class="cv-buy-widget__cta">
+                                    {{#str}}gotocourse, local_catalog{{/str}}
+                                </a>
+                            {{/isenrolled}}
+                            {{^isenrolled}}
+                                <a href="{{enrolurl}}" class="cv-buy-widget__cta">
+                                    {{#is_free}}
+                                        {{#str}}enrollnow, local_catalog{{/str}}
+                                    {{/is_free}}
+                                    {{^is_free}}
+                                        {{#str}}buynow, local_catalog{{/str}}
+                                    {{/is_free}}
+                                </a>
+                            {{/isenrolled}}
+
+                            <a href="#" class="cv-buy-widget__cta cv-buy-widget__cta--secondary" style="margin-top:.8rem;text-align:center;display:flex;justify-content:center">Guardar para más tarde</a>
+                            <div class="cv-buy-widget__includes">
+                                <h4>Este curso incluye:</h4>
+                                <ul>
+                                    <li><svg viewBox="0 0 24 24" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> 56 horas de vídeo bajo demanda</li>
+                                    <li><svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Recursos descargables</li>
+                                    <li><svg viewBox="0 0 24 24" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Certificado al completar</li>
+                                    <li><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Acceso de por vida</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    {{! ============ CONTENIDO PRINCIPAL ============ }}
-    <div class="cd-main">
+    <section class="cv-detail-body">
+        <div class="container">
+            <div class="cv-detail-body__layout">
+                <div data-tabs>
+                    <nav class="cv-tabs" role="tablist">
+                        <button class="cv-tabs__btn is-active" data-tab="overview" role="tab" aria-selected="true">Descripción</button>
+                        <button class="cv-tabs__btn" data-tab="curriculum" role="tab">Contenido</button>
+                        <button class="cv-tabs__btn" data-tab="instructor" role="tab">Instructor</button>
+                        <button class="cv-tabs__btn" data-tab="reviews" role="tab">Valoraciones</button>
+                    </nav>
 
-        {{! --- Lo que aprenderás --- }}
-        {{#hasobjectives}}
-        <section class="cd-section cd-objectives">
-            <h2 class="cd-section__title">{{#str}}whatyoulearn, local_catalog{{/str}}</h2>
-            <div class="cd-objectives__grid">
-                {{#objectives}}
-                    <div class="cd-objectives__item">
-                        <span class="cd-objectives__check">✓</span>
-                        <span>{{text}}</span>
+                    <div class="cv-tab-panel is-active" data-tab="overview">
+                        {{! --- Lo que aprenderás --- }}
+                        {{#hasobjectives}}
+                        <div class="cv-what-learn">
+                            <h2 class="cv-what-learn__title">{{#str}}whatyoulearn, local_catalog{{/str}}</h2>
+                            <div class="cv-what-learn__grid">
+                                {{#objectives}}
+                                    <div class="cv-what-learn__item">
+                                        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                                        <span>{{text}}</span>
+                                    </div>
+                                {{/objectives}}
+                            </div>
+                        </div>
+                        {{/hasobjectives}}
+
+                        {{! --- Requisitos previos --- }}
+                        {{#hasrequirements}}
+                        <div style="margin-bottom:2.4rem">
+                            <h3 style="font-size:2rem;font-weight:700;margin-bottom:1.2rem">Requisitos</h3>
+                            <ul style="display:flex;flex-direction:column;gap:.8rem">
+                                {{#requirements}}
+                                    <li style="display:flex;align-items:flex-start;gap:.8rem;font-size:1.4rem">• {{text}}</li>
+                                {{/requirements}}
+                            </ul>
+                        </div>
+                        {{/hasrequirements}}
+
                     </div>
-                {{/objectives}}
-            </div>
-        </section>
-        {{/hasobjectives}}
 
-        {{! --- Tags / Temas relacionados --- }}
-        {{#hastags}}
-        <section class="cd-section cd-topics">
-            <h2 class="cd-section__title">{{#str}}relatedtopics, local_catalog{{/str}}</h2>
-            <div class="cd-topics__list">
-                {{#tags}}
-                    <a href="{{url}}" class="cd-topics__tag">{{name}}</a>
-                {{/tags}}
-            </div>
-        </section>
-        {{/hastags}}
+                    {{#hassections}}
+                    <div class="cv-tab-panel" data-tab="curriculum">
+                        <div class="cv-curriculum">
+                            <div class="cv-curriculum__header">
+                                <h2 class="cv-curriculum__title">Contenido del curso</h2>
+                                <span class="cv-curriculum__meta">{{sectioncount}} secciones • {{totallessons}} clases • {{duration}} en total</span>
+                            </div>
 
-        {{! --- Contenido del curso (temario) --- }}
-        {{#hassections}}
-        <section class="cd-section cd-curriculum">
-            <h2 class="cd-section__title">{{#str}}coursecontent, local_catalog{{/str}}</h2>
-            <p class="cd-curriculum__summary">
-                {{sectioncount}} {{#str}}sections, local_catalog{{/str}} •
-                {{totallessons}} {{#str}}lessons, local_catalog{{/str}}
-                {{#hasduration}} • {{duration}} {{#str}}totallength, local_catalog{{/str}}{{/hasduration}}
-            </p>
+                            {{#sections}}
+                            <div class="cv-curriculum__section">
+                                <button class="cv-curriculum__section-header" aria-expanded="false">
+                                    <span class="cv-curriculum__section-title">{{name}}</span>
+                                    <span class="cv-curriculum__section-meta">{{activitycount}}  {{#str}}lessons, local_catalog{{/str}} • 45 min</span>
+                                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                                </button>
+                                {{#hasactivities}}
+                                <div class="cv-curriculum__section-body">
+                                    {{#activities}}
+                                    <div class="cv-curriculum__lesson">
+                                        <div class="cv-curriculum__lesson-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16">
+                                                <circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <span class="cv-curriculum__lesson-title">{{name}}</span>
+                                        <span class=cv-curriculum__lesson-preview>Vista previa</span>
+                                        <span class="cv-curriculum__lesson-duration">5:32</span>
+                                    </div>
+                                    {{/activities}}
+                                </div>
+                                {{/hasactivities}}
+                            </div>
+                            {{/sections}}
 
-            <div class="cd-curriculum__list">
-                {{#sections}}
-                <details class="cd-curriculum__section" {{#isopen}}open{{/isopen}}>
-                    <summary class="cd-curriculum__section-header">
-                        <span class="cd-curriculum__section-name">{{name}}</span>
-                        <span class="cd-curriculum__section-meta">
-                            {{activitycount}} {{#str}}lessons, local_catalog{{/str}}
-                        </span>
-                    </summary>
-                    {{#hasactivities}}
-                    <ul class="cd-curriculum__activities">
-                        {{#activities}}
-                        <li class="cd-curriculum__activity">
-                            <span class="cd-curriculum__activity-icon">{{icon}}</span>
-                            <span class="cd-curriculum__activity-name">{{name}}</span>
-                            <span class="cd-curriculum__activity-type">{{type}}</span>
-                        </li>
-                        {{/activities}}
-                    </ul>
-                    {{/hasactivities}}
-                </details>
-                {{/sections}}
-            </div>
-        </section>
-        {{/hassections}}
+                        </div>
+                    </div>
+                    {{/hassections}}
 
-        {{! --- Requisitos previos --- }}
-        {{#hasrequirements}}
-        <section class="cd-section cd-requirements">
-            <h2 class="cd-section__title">{{#str}}requirements, local_catalog{{/str}}</h2>
-            <ul class="cd-requirements__list">
-                {{#requirements}}
-                    <li>{{text}}</li>
-                {{/requirements}}
-            </ul>
-        </section>
-        {{/hasrequirements}}
+                    {{! --- Instructor --- }}
+                    {{#hasinstructors}}
+                    <div class="cv-tab-panel" data-tab="instructor">
+                        {{#instructors}}
+                        <div class="cv-instructor-card">
+                            <div class="cv-instructor-card__header">
+                                <div class="cv-instructor-card__avatar" style="background:url({{avatarurl}})"></div>
+                                <div>
+                                    <h3 class="cv-instructor-card__name">{{fullname}}</h3>
+                                    <p class="cv-instructor-card__role">Senior Frontend Developer & Instructor</p>
+                                </div>
+                            </div>
+                            <div class="cv-instructor-card__stats">
+                                <div class="cv-instructor-card__stat">
+                                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f0a500" stroke="none"/></svg>
+                                    <span><strong>{{rating}}</strong> {{#str}}instructorrating, local_catalog{{/str}}</span>
+                                </div>
+                                <div class="cv-instructor-card__stat">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                    <span><strong>{{studentcount}}</strong> {{#str}}students, local_catalog{{/str}}</span>
+                                </div>
+                                <div class="cv-instructor-card__stat"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span><strong>{{coursecount}}</strong> {{#str}}courses, local_catalog{{/str}}</span>
+                                </div>
+                            </div>
+                            {{#hasbio}}
+                            <p class="cv-instructor-card__bio">{{{bio}}}</p>
+                            {{/hasbio}}
+                        </div>
+                        {{/instructors}}
+                    </div>
+                    {{/hasinstructors}}
 
-        {{! --- Descripción extendida --- }}
-        {{#haslongdescription}}
-        <section class="cd-section cd-description">
-            <h2 class="cd-section__title">{{#str}}description, local_catalog{{/str}}</h2>
-            <div class="cd-description__content">{{{longdescription}}}</div>
-        </section>
-        {{/haslongdescription}}
 
-        {{! --- Instructor --- }}
-        {{#hasinstructors}}
-        <section class="cd-section cd-instructor">
-            <h2 class="cd-section__title">{{#str}}instructor, local_catalog{{/str}}</h2>
-            {{#instructors}}
-            <div class="cd-instructor__card">
-                <div class="cd-instructor__header">
-                    <img src="{{avatarurl}}" alt="{{fullname}}" class="cd-instructor__avatar">
-                    <div class="cd-instructor__info">
-                        <h3 class="cd-instructor__name">
-                            <a href="{{profileurl}}">{{fullname}}</a>
-                        </h3>
-                        <div class="cd-instructor__stats">
-                            <span>⭐ {{rating}} {{#str}}instructorrating, local_catalog{{/str}}</span>
-                            <span>👥 {{studentcount}} {{#str}}students, local_catalog{{/str}}</span>
-                            <span>📚 {{coursecount}} {{#str}}courses, local_catalog{{/str}}</span>
+                    <div class="cv-tab-panel" data-tab="reviews">
+                        <div class="cv-reviews">
+                            <div class="cv-reviews__summary">
+                                <div class="cv-reviews__score-big"><strong>4.8</strong><span>Valoración del curso</span></div>
+                                <div class="cv-reviews__bars"><div class="cv-reviews__bar-row"><span class="cv-reviews__bar-label">★★★★★</span><div class="cv-reviews__bar-track"><div class="cv-reviews__bar-fill" style="width:68%"></div></div><span class="cv-reviews__bar-pct">68%</span></div><div class="cv-reviews__bar-row"><span class="cv-reviews__bar-label">★★★★</span><div class="cv-reviews__bar-track"><div class="cv-reviews__bar-fill" style="width:22%"></div></div><span class="cv-reviews__bar-pct">22%</span></div><div class="cv-reviews__bar-row"><span class="cv-reviews__bar-label">★★★</span><div class="cv-reviews__bar-track"><div class="cv-reviews__bar-fill" style="width:7%"></div></div><span class="cv-reviews__bar-pct">7%</span></div><div class="cv-reviews__bar-row"><span class="cv-reviews__bar-label">★★</span><div class="cv-reviews__bar-track"><div class="cv-reviews__bar-fill" style="width:2%"></div></div><span class="cv-reviews__bar-pct">2%</span></div><div class="cv-reviews__bar-row"><span class="cv-reviews__bar-label">★</span><div class="cv-reviews__bar-track"><div class="cv-reviews__bar-fill" style="width:1%"></div></div><span class="cv-reviews__bar-pct">1%</span></div></div>
+                            </div>
+                            <div class="cv-reviews__list">
+                                <div class="cv-reviews__item">
+                                    <div class="cv-reviews__avatar" style="background:#F05A28">AM</div>
+                                    <div class="cv-reviews__body">
+                                        <div class="cv-reviews__author">Ana Martínez</div>
+                                        <div class="cv-reviews__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></div>
+                                        <p class="cv-reviews__text">Excelente curso. La explicación de hooks fue muy clara y los proyectos prácticos afianzaron los conceptos. Lo recomiendo totalmente.</p>
+                                        <div class="cv-reviews__date">Hace 2 semanas</div>
+                                    </div>
+                                </div>
+                                <div class="cv-reviews__item">
+                                    <div class="cv-reviews__avatar" style="background:#2563eb">CL</div>
+                                    <div class="cv-reviews__body">
+                                        <div class="cv-reviews__author">Carlos López</div>
+                                        <div class="cv-reviews__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></div>
+                                        <p class="cv-reviews__text">El mejor curso de React que he encontrado. Fernando explica de forma muy didáctica y va al grano. Ya lo aplico en mi trabajo.</p>
+                                        <div class="cv-reviews__date">Hace 1 mes</div>
+                                    </div>
+                                </div>
+                                <div class="cv-reviews__item">
+                                    <div class="cv-reviews__avatar" style="background:#059669">SR</div>
+                                    <div class="cv-reviews__body">
+                                        <div class="cv-reviews__author">Sara Rodríguez</div>
+                                        <div class="cv-reviews__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></div>
+                                        <p class="cv-reviews__text">Muy completo y actualizado. Me gustó especialmente la parte de TypeScript + React. Se nota que el instructor tiene experiencia real.</p>
+                                        <div class="cv-reviews__date">Hace 3 semanas</div>
+                                    </div>
+                                </div></div>
                         </div>
                     </div>
                 </div>
-                {{#hasbio}}
-                    <div class="cd-instructor__bio">{{{bio}}}</div>
-                {{/hasbio}}
-            </div>
-            {{/instructors}}
-        </section>
-        {{/hasinstructors}}
 
-        {{! --- Cursos relacionados --- }}
-        {{#hasrelatedcourses}}
-        <section class="cd-section cd-related">
-            <h2 class="cd-section__title">{{#str}}relatedcourses, local_catalog{{/str}}</h2>
-            <div class="cd-related__grid">
-                {{#relatedcourses}}
-                <a href="{{url}}" class="cd-related__card">
-                    {{#hasimage}}
-                        <img src="{{imageurl}}" alt="{{fullname}}" class="cd-related__img">
-                    {{/hasimage}}
-                    {{^hasimage}}
-                        <div class="cd-related__img-placeholder"><span>{{initials}}</span></div>
-                    {{/hasimage}}
-                    <div class="cd-related__info">
-                        <h4 class="cd-related__name">{{fullname}}</h4>
-                        <span class="cd-related__price">{{pricelabel}}</span>
-                    </div>
-                </a>
-                {{/relatedcourses}}
+                <div><!-- espacio para el widget sticky en desktop --></div>
             </div>
-        </section>
-        {{/hasrelatedcourses}}
+        </div>
+    </section>
+</main>
 
-        {{! --- Más cursos del instructor --- }}
-        {{#hasinstructorcourses}}
-        <section class="cd-section cd-related">
-            <h2 class="cd-section__title">{{#str}}moreinstructor, local_catalog{{/str}}</h2>
-            <div class="cd-related__grid">
-                {{#instructorcourses}}
-                <a href="{{url}}" class="cd-related__card">
-                    {{#hasimage}}
-                        <img src="{{imageurl}}" alt="{{fullname}}" class="cd-related__img">
-                    {{/hasimage}}
-                    {{^hasimage}}
-                        <div class="cd-related__img-placeholder"><span>{{initials}}</span></div>
-                    {{/hasimage}}
-                    <div class="cd-related__info">
-                        <h4 class="cd-related__name">{{fullname}}</h4>
-                        <span class="cd-related__price">{{pricelabel}}</span>
-                    </div>
-                </a>
-                {{/instructorcourses}}
-            </div>
-        </section>
-        {{/hasinstructorcourses}}
-
-    </div>
-</div>
+{{! ── FOOTER ── }}
+{{> local_catalog/footer_home }}

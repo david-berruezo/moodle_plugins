@@ -106,6 +106,23 @@ Generador de informes con métricas de formación por departamento, curso y empl
 
 ---
 
+### 4. `local_catalog` - Frontend para listar cursos y verlos
+
+Frontend para listar , filtrar y ver cursos con reescritura de urls amigables mediante apache
+
+| Funcionalidad | Imágen |
+|---|---|
+| Buscador principal | ![UML](catalog/fondos/fondo2.png) |
+| Destacados | ![UML](catalog/fondos/fondo3.png) |
+| Categorías | ![UML](catalog/fondos/fondo4.png) |
+| Opiniones | ![UML](catalog/fondos/fondo5.png) |
+| Listado de cursos | ![UML](catalog/fondos/fondo6.png) |
+| Detalle del curso | ![UML](catalog/fondos/fondo7.png) |
+| Contenido del curso | ![UML](catalog/fondos/fondo8.png) |
+| Videos del curso | ![UML](catalog/fondos/fondo9.png) |
+| Instructor del curso | ![UML](catalog/fondos/fondo10.png) |
+
+
 ## APIs de Moodle utilizadas
 
 ### Access API (access)

@@ -1,157 +1,149 @@
-{{!
-    Player del curso - Aula virtual tipo Udemy
-    local/catalog/templates/course_player.mustache
-}}
-
-<div class="lp-wrapper">
-
-    {{! TOPBAR }}
-    <header class="lp-topbar">
-        <div class="lp-topbar__left">
-            <a href="{{catalogurl}}" class="lp-topbar__back" title="{{#str}}backtocatalog, local_catalog{{/str}}">
-                &#8592;
-            </a>
-            <a href="{{courseurl}}" class="lp-topbar__coursename">
-                {{coursename}}
-            </a>
+<nav class="cv-player-nav">
+    <a href="index.html" class="cv-player-nav__logo">
+        <div class="cv-player-nav__logo-mark">A</div>
+    </a>
+    <div class="cv-player-nav__divider"></div>
+    <span class="cv-player-nav__title">React JS de cero a experto</span>
+    <div class="cv-player-nav__progress">
+        <span class="cv-player-nav__progress-label">8% completado</span>
+        <div class="cv-player-nav__progress-bar">
+            <div class="cv-player-nav__progress-fill" style="width:8%"></div>
         </div>
+    </div>
+    <button class="cv-player-nav__btn cv-player-nav__btn--primary">
+        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Dejar valoración
+    </button>
+    <a href="course-detail.html" class="cv-player-nav__btn">Volver al curso</a>
+</nav>
 
-        <div class="lp-topbar__right">
-            <div class="lp-topbar__progress">
-                <div class="lp-topbar__progress-bar">
-                    <div class="lp-topbar__progress-fill" style="width: {{progress}}%;"></div>
-                </div>
-                <span class="lp-topbar__progress-text">
-                    {{completed_count}}/{{total_count}} {{#str}}completed, local_catalog{{/str}}
-                </span>
+<div class="cv-player-layout">
+    <div class="cv-player-layout__main">
+
+        {{! Video player }}
+        {{#is_video}}
+            <iframe src="{{video_url}}" class="lp-video__iframe" frameborder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+style="min-height:600px;"></iframe>
+        {{/is_video}}
+
+        {{#html_content}}
+            <div class="lp-content__below-video">
+                {{{html_content}}}
             </div>
-            <a href="{{dashboardurl}}" class="lp-topbar__dashboard" title="{{#str}}dashboard, local_catalog{{/str}}">
-                &#127968;
-            </a>
-        </div>
-    </header>
+        {{/html_content}}
 
-    <div class="lp-layout">
 
-        {{! AREA PRINCIPAL }}
-        <main class="lp-main">
-
-            {{! Video player }}
-            {{#is_video}}
-            <div class="lp-video">
-                <iframe
-                    src="{{video_url}}"
-                    class="lp-video__iframe"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
-            </div>
-            {{#html_content}}
-                <div class="lp-content__below-video">
-                    {{{html_content}}}
-                </div>
-            {{/html_content}}
-            {{/is_video}}
-
-            {{! Contenido pagina }}
-            {{#is_page}}
-            <div class="lp-content">
-                <div class="lp-content__html">
-                    {{{html_content}}}
-                </div>
-            </div>
-            {{/is_page}}
-
-            {{! Otro tipo de actividad }}
-            {{#is_other}}
-            <div class="lp-content lp-content--other">
-                <div class="lp-content__message">
-                    <p>{{#str}}openactivity, local_catalog{{/str}}</p>
-                    <a href="{{activity_url}}" class="lp-content__open-btn" target="_blank">
-                        {{#str}}openinnewwindow, local_catalog{{/str}} &#8599;
+        <div class="cv-player-content" data-tabs>
+            <h1 class="cv-player-content__title">JSX en profundidad</h1>
+            <nav class="cv-tabs">
+                <button class="cv-tabs__btn is-active" data-tab="p-overview">Descripción</button>
+                <button class="cv-tabs__btn" data-tab="p-qa">Instructores</button>
+                <button class="cv-tabs__btn" data-tab="p-notes">Notas</button>
+                <button class="cv-tabs__btn" data-tab="p-resources">Recursos</button>
+            </nav>
+            <div class="cv-tab-panel is-active" data-tab="p-overview">
+                <p style="font-size:1.4rem;color:#2d2f31;line-height:1.7;margin-bottom:1.6rem">{{personalizados.course_long_description}}</p>
+                <div style="background:#f7f9fa;border:1px solid #e8ecef;border-radius:.4rem;padding:1.6rem;font-size:1.3rem">
+                    <strong style="display:block;margin-bottom:.8rem">Objetivos</strong>
+                    <a href="#" style="display:flex;align-items:center;gap:.8rem;color:#F05A28;font-weight:700;text-decoration:none">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        {{personalizados.course_objectives}}
                     </a>
                 </div>
-            </div>
-            {{/is_other}}
-
-            {{! Barra inferior: titulo + nav + completar }}
-            <div class="lp-infobar">
-                <div class="lp-infobar__title">
-                    <span class="lp-infobar__number">{{current_number}}/{{total_activities}}</span>
-                    <h2 class="lp-infobar__name">{{current_name}}</h2>
-                </div>
-
-                <div class="lp-infobar__actions">
-                    {{! Boton completar }}
-                    {{#cancomplete}}
-                    <a href="{{completeurl}}" class="lp-infobar__complete {{#iscompleted}}lp-infobar__complete--done{{/iscompleted}}">
-                        {{#iscompleted}}
-                            &#10003; {{#str}}completed, local_catalog{{/str}}
-                        {{/iscompleted}}
-                        {{^iscompleted}}
-                            &#9744; {{#str}}markcomplete, local_catalog{{/str}}
-                        {{/iscompleted}}
-                    </a>
-                    {{/cancomplete}}
-
-                    {{! Navegacion }}
-                    <div class="lp-infobar__nav">
-                        {{#hasprev}}
-                            <a href="{{prevurl}}" class="lp-infobar__nav-btn">
-                                &#8592; {{#str}}previous, local_catalog{{/str}}
-                            </a>
-                        {{/hasprev}}
-                        {{#hasnext}}
-                            <a href="{{nexturl}}" class="lp-infobar__nav-btn lp-infobar__nav-btn--next">
-                                {{#str}}next, local_catalog{{/str}} &#8594;
-                            </a>
-                        {{/hasnext}}
+                <br><br>
+                <div class="cv-what-learn">
+                    <h2 class="cv-what-learn__title">Requerimientos</h2>
+                    <div class="cv-what-learn__grid">
+                      <div class="cv-what-learn__item">
+                          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                          <span>{{personalizados.course_requirements}}</span>
+                      </div>
                     </div>
                 </div>
             </div>
 
-        </main>
+            <div class="cv-tab-panel" data-tab="p-qa">
+                {{! --- Instructor --- }}
 
-        {{! SIDEBAR (temario) }}
-        <aside class="lp-sidebar" id="lp-sidebar">
-            <div class="lp-sidebar__header">
-                <h3 class="lp-sidebar__title">{{#str}}coursecontent, local_catalog{{/str}}</h3>
-                <button class="lp-sidebar__toggle" onclick="document.querySelector('.lp-layout').classList.toggle('lp-layout--sidebar-hidden')">
-                    &#10005;
-                </button>
+                        {{#instructores}}
+                            <div class="cv-instructor-card">
+                                <div class="cv-instructor-card__header">
+                                    <div class="cv-instructor-card__avatar" style="background:url({{avatarurl}})"></div>
+                                    <div>
+                                        <h3 class="cv-instructor-card__name">{{fullname}}</h3>
+                                        <p class="cv-instructor-card__role">Senior Frontend Developer & Instructor</p>
+                                    </div>
+                                </div>
+                                <div class="cv-instructor-card__stats">
+                                    <div class="cv-instructor-card__stat">
+                                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f0a500" stroke="none"/></svg>
+                                        <span><strong>{{rating}}</strong> {{#str}}instructorrating, local_catalog{{/str}}</span>
+                                    </div>
+                                    <div class="cv-instructor-card__stat">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                        <span><strong>{{studentcount}}</strong> {{#str}}students, local_catalog{{/str}}</span>
+                                    </div>
+                                    <div class="cv-instructor-card__stat"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        <span><strong>{{coursecount}}</strong> {{#str}}courses, local_catalog{{/str}}</span>
+                                    </div>
+                                </div>
+                                {{#hasbio}}
+                                    <p class="cv-instructor-card__bio">{{{bio}}}</p>
+                                {{/hasbio}}
+                            </div>
+                        {{/instructores}}
+
+
             </div>
 
-            <div class="lp-sidebar__sections">
-                {{#sections}}
-                <details class="lp-sidebar__section" {{#isopen}}open{{/isopen}}>
-                    <summary class="lp-sidebar__section-header">
-                        <div class="lp-sidebar__section-info">
-                            <span class="lp-sidebar__section-name">{{name}}</span>
-                            <span class="lp-sidebar__section-meta">{{progress_text}}</span>
-                        </div>
-                    </summary>
+            <div class="cv-tab-panel" data-tab="p-notes">
+                <p style="font-size:1.4rem;color:#6a6f73;padding:2.4rem 0">Tus notas personales de esta lección aparecerán aquí.</p>
+            </div>
+            <div class="cv-tab-panel" data-tab="p-resources">
+                <p style="font-size:1.4rem;color:#6a6f73;padding:2.4rem 0">Recursos adicionales de esta lección.</p>
+            </div>
+        </div>
 
-                    <ul class="lp-sidebar__activities">
-                        {{#activities}}
-                        <li class="lp-sidebar__activity {{#iscurrent}}lp-sidebar__activity--current{{/iscurrent}} {{#completed}}lp-sidebar__activity--completed{{/completed}}">
-                            <a href="{{url}}" class="lp-sidebar__activity-link">
-                                <span class="lp-sidebar__activity-status">
-                                    {{#completed}}&#10003;{{/completed}}
-                                    {{^completed}}{{icon}}{{/completed}}
-                                </span>
-                                <span class="lp-sidebar__activity-name">{{name}}</span>
-                            </a>
-                        </li>
-                        {{/activities}}
-                    </ul>
-                </details>
+        {{! ── FOOTER ── }}
+        {{> local_catalog/footer }}
+
+    </div>
+
+    <aside class="cv-player-layout__sidebar">
+        <div class="cv-player-sidebar">
+            <div class="cv-player-sidebar__header">Contenido del curso</div>
+
+            <div class="cv-player-sidebar__section">
+                {{#sections}}
+                <button class="cv-player-sidebar__section-header">
+                    <div>
+                        <div class="cv-player-sidebar__section-title">{{name}}</div>
+                        <div class="cv-player-sidebar__section-meta">{{progress_text}} completadas</div>
+                    </div>
+                    <svg class="cv-player-sidebar__section-arrow" viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke-linecap="round"/></svg>
+                </button>
+
+                <div class="cv-player-sidebar__lessons">
+                    {{#activities}}
+                    <div class="cv-player-sidebar__lesson ">
+                        <div class="cv-player-sidebar__check is-done">
+                            <svg viewBox="0 0 24 24" width="10" height="10"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="cv-player-sidebar__lesson-info">
+                            <div class="cv-player-sidebar__lesson-title">{{name}}</div>
+                            <div class="cv-player-sidebar__lesson-meta">
+                                <svg viewBox="0 0 24 24" width="12" height="12"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8" fill="currentColor"/></svg>
+                                5:32
+                            </div>
+                        </div>
+                    </div>
+                    {{/activities}}
+                </div>
+
                 {{/sections}}
             </div>
-        </aside>
-    </div>
-</div>
 
-<button class="lp-sidebar-show" onclick="document.querySelector('.lp-layout').classList.remove('lp-layout--sidebar-hidden')">
-    &#9776; {{#str}}coursecontent, local_catalog{{/str}}
-</button>
+        </div>
+    </aside>
+</div>

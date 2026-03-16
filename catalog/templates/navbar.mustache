@@ -1,0 +1,436 @@
+<!-- ═══════════════════════════════════════════════════
+     MOBILE HEADER
+════════════════════════════════════════════════════ -->
+<div class="cv-mobile">
+    <div class="cv-overlay" id="cv-overlay"></div>
+
+    <!-- Drawer -->
+    <nav class="cv-drawer" id="cv-drawer" role="dialog" aria-modal="true" aria-label="Menú">
+
+        <button class="cv-drawer__close" id="cv-drawer-close" aria-label="Cerrar menú">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+
+        <!-- Panel principal -->
+        <div class="cv-drawer__panel is-active" id="dp-main">
+            <div class="cv-drawer__header">
+                {{#isloggedin}}
+                <!-- Usuario logueado -->
+                <button class="cv-drawer__user-row" data-panel="profile" style="display:none" id="drawer-user-row">
+                    <div class="cv-drawer__avatar" id="drawer-avatar">{{initals}}</div>
+                    <div class="cv-drawer__user-info">
+                        <strong id="drawer-name">Hola, {{username}}</strong>
+                        <small>{{#str}}welcomeback, local_catalog{{/str}}</small>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="stroke:#9aa0a6;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                {{/isloggedin}}
+                {{^isloggedin}}
+                <!-- Invitado -->
+                <div class="cv-drawer__auth" id="drawer-auth">
+                    <a href="#login" class="cv-drawer__auth-btn cv-drawer__auth-btn--outline">{{#str}}login, local_catalog{{/str}}</a>
+                    <a href="#register" class="cv-drawer__auth-btn cv-drawer__auth-btn--primary">{{#str}}register, local_catalog{{/str}}</a>
+                </div>
+                {{/isloggedin}}
+            </div>
+
+            <div class="cv-drawer__body">
+                <div id="drawer-mylearning" style="display:none">
+                    <div class="cv-drawer__section">{{#str}}learn, local_catalog{{/str}}</div>
+                    <ul class="cv-drawer__list">
+                        <li><a href="{{mycoursesurl}}" class="cv-drawer__item">{{#str}}mylearning, local_catalog{{/str}}</a></li>
+                    </ul>
+                </div>
+
+                <div class="cv-drawer__section" style="border-top:none">Más popular</div>
+                <ul class="cv-drawer__list">
+                    <li><button class="cv-drawer__item" data-panel="cat-dev">Desarrollo web <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                    <li><button class="cv-drawer__item" data-panel="cat-data">Data & IA <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                    <li><button class="cv-drawer__item" data-panel="cat-biz">Negocios <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                    <li><button class="cv-drawer__item" data-panel="cat-design">Diseño <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                    <li><button class="cv-drawer__item" data-panel="allcats">Todas las categorías <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                </ul>
+
+                <div class="cv-drawer__section">Más del campus</div>
+                <ul class="cv-drawer__list">
+                    <li><a href="#plan-personal" class="cv-drawer__item cv-drawer__item--hl">Plan Personal</a></li>
+                    <li><button class="cv-drawer__item" data-panel="business">Campus Empresarial <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg></button></li>
+                    <li><a href="#enseña" class="cv-drawer__item">Enseña aquí</a></li>
+                    <li><a href="#ayuda" class="cv-drawer__item">Ayuda y asistencia</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel: perfil -->
+        <div class="cv-drawer__panel" id="dp-profile">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Alertas</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#notificaciones" class="cv-drawer__item">Notificaciones</a></li>
+                <li><a href="#mensajes" class="cv-drawer__item">Mensajes</a></li>
+            </ul>
+            <div class="cv-drawer__section">Cuenta</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#cuenta" class="cv-drawer__item">Configuración de la cuenta</a></li>
+                <li><a href="#perfil" class="cv-drawer__item">Perfil público</a></li>
+                <li><a href="#editar" class="cv-drawer__item">Editar perfil</a></li>
+            </ul>
+            <ul class="cv-drawer__list" style="margin-top:.4rem">
+                <li><a href="#logout" class="cv-drawer__item cv-drawer__item--sm">Cerrar sesión</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: Desarrollo web -->
+        <div class="cv-drawer__panel" id="dp-cat-dev">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Desarrollo web</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">JavaScript</a></li>
+                <li><a href="#" class="cv-drawer__item">React JS</a></li>
+                <li><a href="#" class="cv-drawer__item">Angular</a></li>
+                <li><a href="#" class="cv-drawer__item">TypeScript</a></li>
+                <li><a href="#" class="cv-drawer__item">Node.js</a></li>
+                <li><a href="#" class="cv-drawer__item">CSS & HTML</a></li>
+                <li><a href="#" class="cv-drawer__item cv-drawer__item--see">Ver todo en Desarrollo web →</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: Data & IA -->
+        <div class="cv-drawer__panel" id="dp-cat-data">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Data & Inteligencia Artificial</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">Python</a></li>
+                <li><a href="#" class="cv-drawer__item">Machine Learning</a></li>
+                <li><a href="#" class="cv-drawer__item">ChatGPT & LLMs</a></li>
+                <li><a href="#" class="cv-drawer__item">Power BI</a></li>
+                <li><a href="#" class="cv-drawer__item">SQL</a></li>
+                <li><a href="#" class="cv-drawer__item cv-drawer__item--see">Ver todo en Data & IA →</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: Negocios -->
+        <div class="cv-drawer__panel" id="dp-cat-biz">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Negocios</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">Gestión de proyectos</a></li>
+                <li><a href="#" class="cv-drawer__item">Liderazgo</a></li>
+                <li><a href="#" class="cv-drawer__item">Emprendimiento</a></li>
+                <li><a href="#" class="cv-drawer__item">Marketing digital</a></li>
+                <li><a href="#" class="cv-drawer__item cv-drawer__item--see">Ver todo en Negocios →</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: Diseño -->
+        <div class="cv-drawer__panel" id="dp-cat-design">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Diseño</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">Figma</a></li>
+                <li><a href="#" class="cv-drawer__item">Adobe Photoshop</a></li>
+                <li><a href="#" class="cv-drawer__item">UX / UI Design</a></li>
+                <li><a href="#" class="cv-drawer__item">Illustrator</a></li>
+                <li><a href="#" class="cv-drawer__item cv-drawer__item--see">Ver todo en Diseño →</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: todas las cats -->
+        <div class="cv-drawer__panel" id="dp-allcats">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Todas las categorías</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">Desarrollo</a></li>
+                <li><a href="#" class="cv-drawer__item">Negocios</a></li>
+                <li><a href="#" class="cv-drawer__item">Finanzas y contabilidad</a></li>
+                <li><a href="#" class="cv-drawer__item">Informática y software</a></li>
+                <li><a href="#" class="cv-drawer__item">Productividad en la oficina</a></li>
+                <li><a href="#" class="cv-drawer__item">Desarrollo personal</a></li>
+                <li><a href="#" class="cv-drawer__item">Diseño</a></li>
+                <li><a href="#" class="cv-drawer__item">Marketing</a></li>
+                <li><a href="#" class="cv-drawer__item">Fotografía y vídeo</a></li>
+                <li><a href="#" class="cv-drawer__item">Salud y bienestar</a></li>
+            </ul>
+        </div>
+
+        <!-- Panel: Campus Empresarial -->
+        <div class="cv-drawer__panel" id="dp-business">
+            <button class="cv-drawer__back" data-panel-back="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg> Menú</button>
+            <div class="cv-drawer__section">Campus Empresarial</div>
+            <ul class="cv-drawer__list">
+                <li><a href="#" class="cv-drawer__item">Sobre el Campus Empresarial</a></li>
+                <li><a href="#" class="cv-drawer__item">Comparar planes</a></li>
+                <li><a href="#" class="cv-drawer__item">Solicitar demo</a></li>
+            </ul>
+        </div>
+
+    </nav>
+
+    <!-- Barra móvil -->
+    <header class="cv-mobile-bar">
+        <button class="cv-mobile-bar__btn" id="cv-hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+
+        <a href="index.html" class="cv-mobile-bar__logo">
+            <div class="cv-mobile-bar__logo-mark">A</div>
+            <span class="cv-mobile-bar__logo-text">Campus Virtual</span>
+        </a>
+
+        <div class="cv-mobile-bar__right">
+            <button class="cv-mobile-bar__btn" id="cv-mob-search-open" aria-label="Buscar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Búsqueda móvil overlay -->
+    <div class="cv-mobile-search" id="cv-mob-search">
+        <button class="cv-mobile-bar__btn" id="cv-mob-search-close" aria-label="Cerrar">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <form class="cv-mobile-search__form" action="/cursos">
+            <input type="text" name="q" class="cv-mobile-search__input" placeholder="Buscar cualquier cosa" autofocus>
+            <button type="submit" class="cv-mobile-search__btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- ═══ DESKTOP ══════════════════════════════════════════════════════════════ -->
+<header class="cv-header" role="banner">
+    <div class="cv-header__inner">
+        <a href="{{homeurl}}" class="cv-header__logo">
+            <div class="cv-header__logo-mark">A</div>
+            <span class="cv-header__logo-text">Campus Virtual</span>
+        </a>
+
+        {{! ── Desktop: mega-menú Explorar ── }}
+        <div class="cv-popper" id="cv-p-explore" data-trigger="hover">
+            <button class="cv-header__nav-btn"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="cv-explore-menu">
+                {{#str}}explore, local_catalog{{/str}}
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+
+            <div class="cv-popper__content cv-popper__content--explore" id="cv-explore-menu" role="menu">
+                {{#has_menu}}
+                    <div class="cv-explore">
+
+                        {{! ── Columna izquierda: triggers de nivel 1 ── }}
+                        <div class="cv-explore__col cv-explore__col--main">
+
+                            {{! Enlace directo: todos los cursos }}
+                            <div class="cv-explore__heading">{{#str}}categories, local_catalog{{/str}}</div>
+                            <ul class="cv-explore__list">
+                                {{#menu_triggers}}
+                                    <li>
+                                        {{#has_subcats}}
+                                        {{! Categoría con hijos → botón trigger que abre el panel }}
+                                            <button class="cv-explore__item cv-explore__item--trigger"
+                                                    data-cat="{{data_key}}"
+                                                    aria-expanded="false"
+                                                    aria-controls="cv-sub-{{data_key}}">
+                                                {{name}}
+                                                <svg viewBox="0 0 24 24" width="10" height="10" fill="none"
+                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                                    <path d="M9 18l6-6-6-6"/>
+                                                </svg>
+                                            </button>
+                                        {{/has_subcats}}
+                                        {{^has_subcats}}
+                                        {{! Categoría hoja → enlace directo }}
+                                            <a href="{{url}}" class="cv-explore__item">{{name}}</a>
+                                        {{/has_subcats}}
+                                    </li>
+                                {{/menu_triggers}}
+
+                                <li>
+                                    <a href="{{catalogurl}}" class="cv-explore__item cv-explore__item--see">
+                                        {{#str}}allcourses, local_catalog{{/str}} →
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        {{! ── Columna derecha: paneles de cada categoría nivel 1 ── }}
+                        <div class="cv-explore__col cv-explore__col--sub" id="cv-explore-sub">
+
+                            {{#menu_panels}}
+                                <div class="cv-explore__sub" id="cv-sub-{{data_key}}">
+
+                                    {{! ── El panel tiene subcategorías de nivel 2 ── }}
+                                    {{#has_subcats}}
+                                        {{#subcats}}
+                                            <div class="cv-explore__subgroup">
+
+                                                {{! Cabecera nivel 2: enlace a la categoría }}
+                                                <a href="{{url}}" class="cv-explore__heading cv-explore__heading--link">
+                                                    {{name}}
+                                                </a>
+
+                                                {{! Subcategorías de nivel 3 }}
+                                                {{#has_subcats}}
+                                                    <ul class="cv-explore__list">
+                                                        {{#subcats}}
+                                                            <li>
+                                                                <a href="{{url}}" class="cv-explore__item">
+                                                                    {{name}}
+                                                                    {{#has_courses}}
+                                                                        <span class="cv-explore__count">({{coursecount}})</span>
+                                                                    {{/has_courses}}
+                                                                </a>
+                                                                {{! Cursos dentro del nivel 3 — visible en hover/click }}
+                                                                {{#has_courses}}
+                                                                    <ul class="cv-explore__courses">
+                                                                        {{#courses}}
+                                                                            <li>
+                                                                                <a href="{{courseurl}}" class="cv-explore__course">
+                                                                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none"
+                                                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                                                                        <polyline points="14 2 14 8 20 8"/>
+                                                                                    </svg>
+                                                                                    {{fullname}}
+                                                                                </a>
+                                                                            </li>
+                                                                        {{/courses}}
+                                                                    </ul>
+                                                                {{/has_courses}}
+                                                            </li>
+                                                        {{/subcats}}
+                                                    </ul>
+                                                {{/has_subcats}}
+
+                                                {{! Nivel 2 tiene cursos directos (sin pasar por nivel 3) }}
+                                                {{^has_subcats}}
+                                                    {{#has_courses}}
+                                                        <ul class="cv-explore__list">
+                                                            {{#courses}}
+                                                                <li>
+                                                                    <a href="{{courseurl}}" class="cv-explore__item cv-explore__item--course">
+                                                                        {{fullname}}
+                                                                    </a>
+                                                                </li>
+                                                            {{/courses}}
+                                                        </ul>
+                                                    {{/has_courses}}
+                                                {{/has_subcats}}
+
+                                            </div>
+                                        {{/subcats}}
+                                    {{/has_subcats}}
+
+                                    {{! ── El panel nivel 1 tiene cursos directos (sin nivel 2) ── }}
+                                    {{^has_subcats}}
+                                        {{#has_courses}}
+                                            <ul class="cv-explore__list">
+                                                {{#courses}}
+                                                    <li>
+                                                        <a href="{{courseurl}}" class="cv-explore__item cv-explore__item--course">
+                                                            {{fullname}}
+                                                        </a>
+                                                    </li>
+                                                {{/courses}}
+                                            </ul>
+                                        {{/has_courses}}
+                                    {{/has_subcats}}
+
+                                </div>
+                            {{/menu_panels}}
+
+                        </div>{{! /col--sub }}
+
+                    </div>{{! /cv-explore }}
+                {{/has_menu}}
+
+                {{! Fallback si no hay categorías configuradas }}
+                {{^has_menu}}
+                    <div class="cv-explore cv-explore--empty">
+                        <a href="{{catalogurl}}" class="cv-explore__item">
+                            {{#str}}allcourses, local_catalog{{/str}} →
+                        </a>
+                    </div>
+                {{/has_menu}}
+
+            </div>{{! /cv-popper__content }}
+        </div>{{! /cv-popper }}
+
+        <a href="plan-personal.html" class="cv-header__nav-btn">Plan Personal</a>
+
+        <div class="cv-header__search">
+            <form class="cv-header__search-form" action="{{searchaction}}" method="get" role="search">
+                <input type="text" name="q" class="cv-header__search-input" placeholder="Buscar cualquier cosa" aria-label="Buscar">
+                <button type="submit" class="cv-header__search-btn" aria-label="Buscar">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="cv-header__right">
+            <div class="cv-popper" data-trigger="hover">
+                <a href="comparar-planes.html" class="cv-header__nav-btn">Campus Empresarial</a>
+                <div class="cv-popper__content cv-popper__content--right cv-popper__content--panel">
+                    <div class="cv-panel"><div class="cv-panel__list">
+                        <a href="comparar-planes.html" class="cv-panel__item">Comparar planes</a>
+                        <a href="solicitar-demo.html" class="cv-panel__item">Solicitar demo</a>
+                    </div></div>
+                </div>
+            </div>
+            <div class="cv-popper" data-trigger="hover">
+                <a href="enseña-aqui.html" class="cv-header__nav-btn">Enseña aquí</a>
+                <div class="cv-popper__content cv-popper__content--right cv-popper__content--panel">
+                    <div class="cv-panel"><div class="cv-panel__promo">
+                        <p>Comparte tu conocimiento con el campus.</p>
+                        <a href="enseña-aqui.html" class="cv-panel__cta">Más información</a>
+                    </div></div>
+                </div>
+            </div>
+            <div class="cv-popper" data-trigger="hover" id="nav-mylearning" style="display:none">
+                <a href="#" class="cv-header__nav-btn">Mi aprendizaje</a>
+                <div class="cv-popper__content cv-popper__content--right cv-popper__content--panel">
+                    <div class="cv-panel">
+                        <div class="cv-panel__course">
+                            <div class="cv-panel__thumb" style="background:linear-gradient(135deg,#F05A28,#C94820);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.8rem;">R</div>
+                            <div class="cv-panel__course-info">
+                                <span class="cv-panel__course-title">React JS desde cero</span>
+                                <div class="cv-panel__meter"><div class="cv-panel__meter-fill" style="--p:32%"></div></div>
+                            </div>
+                        </div>
+                        <a href="#" class="cv-panel__cta">Ir a Mi aprendizaje</a>
+                    </div>
+                </div>
+            </div>
+            <div id="nav-guest-btns">
+                <a href="login.html" class="cv-header__btn cv-header__btn--outline">Iniciar sesión</a>
+                <a href="registro.html" class="cv-header__btn cv-header__btn--primary">Registrarse</a>
+            </div>
+            <div class="cv-popper" data-trigger="hover" id="nav-user-menu" style="display:none">
+                <a href="#" class="cv-header__icon-btn" aria-label="Mi perfil">
+                    <div class="cv-header__avatar" id="nav-avatar">DB</div>
+                </a>
+                <div class="cv-popper__content cv-popper__content--right cv-popper__content--user">
+                    <div class="cv-user">
+                        <a href="#" class="cv-user__header">
+                            <div class="cv-user__avatar-lg">DB</div>
+                            <div class="cv-user__meta"><strong>David Berruezo</strong><span>dberruezo@aubay.es</span></div>
+                        </a>
+                        <ul class="cv-user__list"><li><a href="#" class="cv-user__item">Mi aprendizaje</a></li></ul>
+                        <ul class="cv-user__list">
+                            <li><a href="#" class="cv-user__item">Configuración de la cuenta</a></li>
+                            <li><a href="#" class="cv-user__item">Perfil público</a></li>
+                        </ul>
+                        <ul class="cv-user__list"><li><a href="#" class="cv-user__item">Cerrar sesión</a></li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

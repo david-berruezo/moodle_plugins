@@ -1,0 +1,238 @@
+// =============================================================================
+// PLAN PERSONAL / SUSCRIPCIÓN
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+.cv-plan {
+    // ── Hero ──────────────────────────────────────────────────────────────────
+    &-hero {
+        background: linear-gradient(135deg, t.$color-bg-dark 0%, t.$color-bg-dark-2 50%, darken(#1a0d08, 2%) 100%);
+        color: t.$color-white;
+        padding-block: t.$space-16;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 50%, rgba(t.$color-brand, .15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        &__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: t.$space-2;
+            font-size: t.$text-xs;
+            font-weight: 700;
+            color: t.$color-brand;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-block-end: t.$space-4;
+        }
+
+        &__title {
+            font-size: t.$text-5xl;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-block-end: t.$space-4;
+            max-width: 70rem;
+            margin-inline: auto;
+
+            @include m.above(m.$bp-lg) { font-size: t.$text-6xl; }
+        }
+
+        &__sub {
+            font-size: t.$text-lg;
+            color: rgba(t.$color-white, .75);
+            line-height: 1.6;
+            max-width: 56rem;
+            margin-inline: auto;
+            margin-block-end: t.$space-8;
+        }
+
+        &__cta {
+            @include m.btn-reset;
+            display: inline-flex;
+            align-items: center;
+            gap: t.$space-2;
+            padding: t.$space-4 t.$space-8;
+            font-size: t.$text-lg;
+            font-weight: 700;
+            background: t.$color-brand;
+            color: t.$color-white;
+            border-radius: t.$radius-full;
+            transition: .15s;
+            box-shadow: 0 8px 24px rgba(t.$color-brand, .4);
+
+            &:hover { background: t.$color-brand-dark; transform: translateY(-2px); text-decoration: none; color: t.$color-white; }
+        }
+
+        &__note {
+            margin-block-start: t.$space-3;
+            font-size: t.$text-xs;
+            color: rgba(t.$color-white, .45);
+        }
+    }
+
+    // ── Tarjeta de precio ──────────────────────────────────────────────────────
+    &-card {
+        max-width: 44rem;
+        margin-inline: auto;
+        background: t.$color-white;
+        border-radius: t.$radius-lg;
+        box-shadow: t.$shadow-lg, 0 0 0 1px t.$color-border;
+        overflow: hidden;
+
+        &__head {
+            background: t.$color-brand;
+            padding: t.$space-6;
+            text-align: center;
+            color: t.$color-white;
+
+            h3 { font-size: t.$text-xl; font-weight: 700; margin-block-end: t.$space-1; }
+            p  { font-size: t.$text-sm; opacity: .85; }
+        }
+
+        &__price {
+            text-align: center;
+            padding: t.$space-6 t.$space-6 t.$space-4;
+            border-block-end: 1px solid t.$color-border-subtle;
+
+            strong { font-size: 4.8rem; font-weight: 900; letter-spacing: -0.02em; }
+            small  { font-size: t.$text-sm; color: t.$color-text-muted; display: block; margin-block-start: t.$space-1; }
+        }
+
+        &__features {
+            padding: t.$space-6;
+            display: flex;
+            flex-direction: column;
+            gap: t.$space-3;
+        }
+
+        &__feature {
+            display: flex;
+            align-items: flex-start;
+            gap: t.$space-3;
+            font-size: t.$text-sm;
+
+            svg { stroke: t.$color-brand; fill: none; stroke-width: 2.5; stroke-linecap: round; flex-shrink: 0; margin-block-start: 0.2rem; }
+        }
+
+        &__cta {
+            padding: 0 t.$space-6 t.$space-6;
+
+            a, button {
+                @include m.btn-reset;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                padding: t.$space-4;
+                font-size: t.$text-md;
+                font-weight: 700;
+                background: t.$color-brand;
+                color: t.$color-white;
+                border-radius: t.$radius;
+                transition: background .15s;
+
+                &:hover { background: t.$color-brand-dark; text-decoration: none; color: t.$color-white; }
+            }
+        }
+    }
+
+    // ── Features grid ──────────────────────────────────────────────────────────
+    &-features {
+        padding-block: t.$space-12;
+
+        &__grid {
+            display: grid;
+            gap: t.$space-8;
+            @include m.above(m.$bp-sm) { grid-template-columns: repeat(2, 1fr); }
+            @include m.above(m.$bp-lg) { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        &__item {
+            display: flex;
+            flex-direction: column;
+            gap: t.$space-3;
+        }
+
+        &__icon {
+            @include m.flex-center;
+            width: 5.6rem;
+            height: 5.6rem;
+            background: t.$color-brand-faint;
+            border-radius: t.$radius-md;
+
+            svg { stroke: t.$color-brand; fill: none; stroke-width: 1.5; stroke-linecap: round; width: 2.8rem; height: 2.8rem; }
+        }
+
+        &__title { font-size: t.$text-lg; font-weight: 700; }
+        &__text  { font-size: t.$text-sm; color: t.$color-text-muted; line-height: 1.6; }
+    }
+
+    // ── FAQ ────────────────────────────────────────────────────────────────────
+    &-faq {
+        padding-block: t.$space-12;
+        background: t.$color-bg-subtle;
+        border-block: 1px solid t.$color-border-subtle;
+
+        &__title {
+            font-size: t.$text-3xl;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-block-end: t.$space-8;
+            text-align: center;
+        }
+
+        &__list {
+            max-width: 72rem;
+            margin-inline: auto;
+            display: flex;
+            flex-direction: column;
+            gap: t.$space-2;
+        }
+
+        &__item {
+            border: 1px solid t.$color-border;
+            border-radius: t.$radius;
+            overflow: hidden;
+            background: t.$color-white;
+        }
+
+        &__question {
+            @include m.btn-reset;
+            @include m.flex-between;
+            width: 100%;
+            padding: t.$space-4;
+            font-size: t.$text-md;
+            font-weight: 700;
+            color: t.$color-text;
+            text-align: start;
+            border-radius: 0;
+
+            svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; transition: transform .2s; }
+            &.is-open { color: t.$color-brand; svg { transform: rotate(180deg); } }
+            &:hover { background: t.$color-brand-faint; }
+        }
+
+        &__answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .25s ease;
+
+            &.is-open { max-height: 500px; }
+
+            p {
+                padding: 0 t.$space-4 t.$space-4;
+                font-size: t.$text-sm;
+                color: t.$color-text-body;
+                line-height: 1.7;
+            }
+        }
+    }
+}

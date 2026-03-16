@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/catalog/classes" isTestSource="false" packagePrefix="local_catalog" />
+      <sourceFolder url="file://$MODULE_DIR$/checklist/classes" isTestSource="false" packagePrefix="mod_checklist" />
+      <sourceFolder url="file://$MODULE_DIR$/checklist/tests" isTestSource="true" packagePrefix="mod_checklist" />
+      <sourceFolder url="file://$MODULE_DIR$/dedication/classes" isTestSource="false" packagePrefix="block_dedication" />
+      <sourceFolder url="file://$MODULE_DIR$/hvp/classes" isTestSource="false" packagePrefix="mod_hvp" />
+      <sourceFolder url="file://$MODULE_DIR$/nacex_hrsync/classes" isTestSource="false" packagePrefix="local_nacex_hrsync" />
+      <sourceFolder url="file://$MODULE_DIR$/nacex_tracking/classes" isTestSource="false" packagePrefix="local_nacex_tracking" />
+      <sourceFolder url="file://$MODULE_DIR$/nacex_training/classes" isTestSource="false" packagePrefix="report_nacex_training" />
+      <sourceFolder url="file://$MODULE_DIR$/sandbox/classes" isTestSource="false" packagePrefix="local_sandbox" />
+      <sourceFolder url="file://$MODULE_DIR$/sharing_cart/classes" isTestSource="false" packagePrefix="block_sharing_cart" />
+      <sourceFolder url="file://$MODULE_DIR$/sharing_cart/tests" isTestSource="true" packagePrefix="block_sharing_cart" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

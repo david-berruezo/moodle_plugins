@@ -1,0 +1,705 @@
+// =============================================================================
+// NAVBAR DESKTOP
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Header ───────────────────────────────────────────────────────────────────
+.cv-header {
+    display: none;
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: t.$z-sticky;
+    height: t.$nav-height;
+    background: t.$nav-bg;
+    border-bottom: t.$nav-border;
+    align-items: center;
+
+    @include m.above(m.$bp-lg) {
+        display: flex;
+    }
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding-inline: t.$space-4;
+        gap: 0;
+    }
+
+    // ── Logo ─────────────────────────────────────────────────────────────────
+    &__logo {
+        @include m.flex-center;
+        flex-shrink: 0;
+        gap: t.$space-2;
+        margin-inline-end: t.$space-3;
+        text-decoration: none;
+        @include m.focus-ring;
+
+        &:hover { text-decoration: none; }
+
+        &-mark {
+            @include m.flex-center;
+            width: 3.6rem;
+            height: 3.6rem;
+            background: t.$color-brand;
+            border-radius: t.$radius;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: t.$color-white;
+            flex-shrink: 0;
+        }
+
+        &-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: t.$color-white;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            white-space: nowrap;
+        }
+    }
+
+    // ── Nav button (ghost) ───────────────────────────────────────────────────
+    &__nav-btn {
+        @include m.btn-reset;
+        padding-inline: t.$space-3;
+        height: t.$nav-height;
+        font-size: t.$text-sm;
+        font-weight: 400;
+        color: t.$nav-text;
+        white-space: nowrap;
+
+        &:hover,
+        &:focus-visible {
+            color: t.$nav-text-active;
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            outline-offset: -2px;
+        }
+    }
+
+    // ── Buscador ─────────────────────────────────────────────────────────────
+    // FIX: __search-form eliminado. La <form> usa directamente cv-header__search,
+    // por lo que el display:flex, height, bg y border-radius van aquí.
+    &__search {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        height: 4rem;
+        /* padding-inline: t.$space-2; */
+        padding-inline: 0!important;
+        min-width: 0;
+        background: t.$color-white;
+        border:0!important;
+        /*border: 2px solid transparent;*/
+        border-radius: t.$radius-full;
+        overflow: hidden;
+        transition: border-color .15s;
+
+        &:focus-within {
+            border-color: t.$color-brand;
+        }
+    }
+
+    &__search-form {
+        display: flex;
+        align-items: center;
+        height: 4rem;
+        background: #ffffff;
+        border: 2px solid transparent;
+        border-radius: 9999px;
+        overflow: hidden;
+        transition: border-color 0.15s;
+        width:100%;
+    }
+
+    &__search-input {
+        flex: 1;
+        padding-inline: t.$space-4;
+        font-size: t.$text-sm;
+        font-family: t.$font-sans;
+        color: t.$color-text;
+        background: transparent;
+        border: none;
+        outline: none;
+        min-width: 0;
+
+        &::placeholder {
+            color: t.$color-text-muted;
+        }
+    }
+
+    &__search-btn {
+        @include m.flex-center;
+        width: 4.2rem;
+        height: 100%;
+        background: t.$color-brand;
+        border: none;
+        color: t.$color-white;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background .15s;
+
+        &:hover { background: t.$color-brand-dark; }
+    }
+
+    // ── Grupo derecha ────────────────────────────────────────────────────────
+    &__right {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        margin-inline-start: t.$space-1;
+    }
+
+    // ── Botones login/register ───────────────────────────────────────────────
+    &__btn {
+        @include m.btn-reset;
+        padding: 0.9rem t.$space-4;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        border-radius: t.$radius;
+        white-space: nowrap;
+        margin-inline-start: t.$space-1;
+
+        &--outline {
+            border: 1px solid rgba(t.$color-white, .5);
+            color: t.$color-white;
+
+            &:hover {
+                border-color: t.$color-white;
+                color: t.$color-white;
+                text-decoration: none;
+            }
+        }
+
+        &--primary {
+            background: t.$color-brand;
+            color: t.$color-white;
+            border: 1px solid t.$color-brand;
+
+            &:hover {
+                background: t.$color-brand-dark;
+                border-color: t.$color-brand-dark;
+                color: t.$color-white;
+                text-decoration: none;
+            }
+        }
+    }
+
+    // ── Icono (campana, etc.) ────────────────────────────────────────────────
+    &__icon-btn {
+        @include m.btn-reset;
+        @include m.flex-center;
+        position: relative;
+        width: 3.6rem;
+        height: t.$nav-height;
+        color: t.$nav-text;
+
+        &:hover { color: t.$nav-text-active; }
+    }
+
+    &__dot {
+        position: absolute;
+        inset-block-start: 1.4rem;
+        inset-inline-end: t.$space-1;
+        width: 0.8rem;
+        height: 0.8rem;
+        background: t.$color-brand;
+        border: 2px solid t.$nav-bg;
+        border-radius: t.$radius-full;
+    }
+
+    // ── Avatar ───────────────────────────────────────────────────────────────
+    &__avatar {
+        @include m.flex-center;
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: t.$radius-full;
+        background: t.$color-brand;
+        color: t.$color-white;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        text-transform: uppercase;
+        user-select: none;
+        flex-shrink: 0;
+    }
+}
+
+// =============================================================================
+// POPPER (contenedor de dropdowns)
+// =============================================================================
+.cv-popper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &__content {
+        display: none;
+        position: absolute;
+        inset-block-start: 100%;
+        z-index: t.$z-dropdown;
+        padding-block-start: t.$space-1;
+
+        &.is-open { display: block; }
+
+        &--left  { inset-inline-start: 0; }
+        &--right { inset-inline-end: 0; }
+
+        &--explore {
+            inset-inline-start: 0;
+            min-width: 64rem;
+            background:#fff;
+            border:1px solid #ccc;
+        }
+
+        &--panel { min-width: 26rem; }
+        &--user  { min-width: 28rem; }
+    }
+}
+
+// =============================================================================
+// MEGA-MENÚ EXPLORAR — jerarquía 3 niveles
+// =============================================================================
+.cv-explore {
+    display: flex;
+    min-width: 60rem;
+    max-width: 80rem;
+    min-height: 24rem;
+
+    // ── Columna izquierda (triggers nivel 1) ─────────────────────────────────
+    &__col--main {
+        width: 22rem;
+        flex-shrink: 0;
+        padding: t.$space-4 0;
+        border-right: 1px solid t.$color-border;
+    }
+
+    // ── Columna derecha (paneles) ─────────────────────────────────────────────
+    &__col--sub {
+        flex: 1;
+        padding: t.$space-4 t.$space-5;
+        overflow-y: auto;
+        max-height: 50rem;
+    }
+
+    // ── Heading de sección ────────────────────────────────────────────────────
+    &__heading {
+        padding: t.$space-1 t.$space-5;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: t.$color-text-muted;
+
+        &--link {
+            display: block;
+            color: t.$color-text;
+            font-size: t.$text-sm;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0;
+            text-decoration: none;
+            padding: t.$space-1 0;
+            margin-bottom: t.$space-1;
+
+            &:hover {
+                color: t.$color-brand;
+            }
+        }
+    }
+
+    // ── Lista genérica de items ───────────────────────────────────────────────
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    // ── Item base ─────────────────────────────────────────────────────────────
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: t.$space-1;
+        width: 100%;
+        padding: 0.7rem t.$space-5;
+        font-size: t.$text-sm;
+        font-weight: 400;
+        color: t.$color-text;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.1s, color 0.1s;
+
+        &:hover {
+            background: t.$color-bg-subtle;
+            color: t.$color-brand;
+        }
+
+        // Trigger activo (panel abierto)
+        &--trigger.is-active {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+            font-weight: 600;
+        }
+
+        // Enlace "Ver todo"
+        &--see {
+            color: t.$color-brand;
+            font-weight: 600;
+            border-top: 1px solid t.$color-border;
+            margin-top: t.$space-2;
+            padding-top: t.$space-3;
+
+            &:hover {
+                background: t.$color-brand-faint;
+            }
+        }
+
+        // Item de curso (nivel 3 dentro de subcategoría)
+        &--course {
+            padding-left: t.$space-6;
+            font-size: t.$text-xs;
+            color: t.$color-text-muted;
+
+            &:hover {
+                color: t.$color-brand;
+                background: t.$color-brand-faint;
+            }
+        }
+    }
+
+    // ── Contador de cursos junto al nombre de categoría ───────────────────────
+    &__count {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        margin-left: 0.2rem; // micro-offset, sin token equivalente
+    }
+
+    // ── Subgrupo: nivel 2 dentro del panel ───────────────────────────────────
+    &__subgroup {
+        margin-bottom: t.$space-5;
+
+        &:last-child { margin-bottom: 0; }
+    }
+
+    // ── Cursos dentro de nivel 3 ──────────────────────────────────────────────
+    &__courses {
+        list-style: none;
+        margin: t.$space-1 0 t.$space-2;
+        padding: 0;
+        padding-left: t.$space-3;
+        border-left: 2px solid t.$color-brand-light;
+    }
+
+    &__course {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem; // micro-gap, sin token equivalente
+        padding: t.$space-1 0.6rem; // 0.6rem: micro-gap horizontal
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        text-decoration: none;
+        border-radius: t.$radius;
+        transition: background 0.1s, color 0.1s;
+
+        svg {
+            flex-shrink: 0;
+            opacity: 0.5;
+        }
+
+        &:hover {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+
+            svg {
+                opacity: 1;
+            }
+        }
+    }
+
+    // ── Panel: oculto por defecto, visible cuando su trigger está activo ──────
+    &__sub {
+        display: none;
+        animation: fadeInPanel 0.15s ease;
+
+        &.is-active {
+            display: block;
+        }
+    }
+
+    // ── Estado vacío ──────────────────────────────────────────────────────────
+    &--empty {
+        padding: t.$space-4 t.$space-5;
+        min-height: auto;
+    }
+}
+
+@keyframes fadeInPanel {
+    from {
+        opacity: 0;
+        transform: translateX(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.cv-explore__divider {
+    height: 1px;
+    background: t.$color-border;
+    margin: t.$space-2 t.$space-5;
+}
+
+// =============================================================================
+// MOBILE — árbol expandible en el drawer
+// =============================================================================
+.cv-drawer {
+
+    &__subtree {
+        padding-left: t.$space-4;
+        border-left: 2px solid t.$color-brand-light;
+        margin: t.$space-1 0 t.$space-2 t.$space-4;
+
+        .cv-drawer__item--course {
+            font-size: t.$text-xs;
+            color: t.$color-text-muted;
+            padding: 0.5rem 0; // fine-tuned, sin token equivalente
+        }
+    }
+}
+
+// =============================================================================
+// PANEL — dropdowns pequeños
+// =============================================================================
+.cv-panel {
+    @include m.surface-popover;
+    padding-block: t.$space-2;
+
+    &__list {
+        padding-block: t.$space-1;
+        border-block-end: 1px solid t.$color-border-subtle;
+
+        &:last-child { border-block-end: none; }
+    }
+
+    &__item {
+        display: block;
+        padding: 0.7rem t.$space-4;
+        font-size: t.$text-sm;
+        color: t.$color-text-body;
+        text-decoration: none;
+        transition: background .1s;
+
+        &:hover {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+            text-decoration: none;
+        }
+    }
+
+    &__promo {
+        padding: t.$space-4;
+        max-width: 26rem;
+
+        p {
+            font-size: t.$text-sm;
+            font-weight: 700;
+            color: t.$color-text;
+            line-height: 1.5;
+            margin-block-end: t.$space-3;
+        }
+    }
+
+    &__cta {
+        @include m.btn-reset;
+        display: flex;
+        justify-content: center;
+        margin: t.$space-1 t.$space-4 t.$space-2;
+        padding: 0.9rem t.$space-3;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        background: t.$color-brand;
+        color: t.$color-white;
+        border-radius: t.$radius;
+        width: calc(100% - #{t.$space-8});
+
+        &:hover {
+            background: t.$color-brand-dark;
+            color: t.$color-white;
+            text-decoration: none;
+        }
+    }
+
+    &__course {
+        display: flex;
+        gap: t.$space-3;
+        padding: t.$space-2 t.$space-4 t.$space-3;
+        border-block-end: 1px solid t.$color-border-subtle;
+        margin-block-end: t.$space-1;
+    }
+
+    &__thumb {
+        flex-shrink: 0;
+        width: 6.4rem;
+        height: 6.4rem;
+        border-radius: t.$radius;
+        overflow: hidden;
+
+        img { width: 100%; height: 100%; object-fit: cover; }
+    }
+
+    &__course-info { flex: 1; min-width: 0; }
+
+    &__course-title {
+        display: block;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        color: t.$color-text;
+        line-height: 1.4;
+        margin-block-end: t.$space-2;
+        @include m.clamp-lines(2);
+
+        &:hover { color: t.$color-brand; }
+    }
+
+    &__meter {
+        height: 0.4rem;
+        background: t.$color-border;
+        border-radius: t.$radius-sm;
+        overflow: hidden;
+    }
+
+    &__meter-fill {
+        height: 100%;
+        width: var(--p, 0%);
+        background: t.$color-brand;
+        border-radius: t.$radius-sm;
+        transition: width .3s;
+    }
+
+    &__empty {
+        padding: t.$space-4;
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+    }
+}
+
+// =============================================================================
+// USER DROPDOWN
+// =============================================================================
+.cv-user {
+    @include m.surface-popover;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+        padding: t.$space-4;
+        background: t.$color-bg-subtle;
+        border-block-end: 1px solid t.$color-border;
+        text-decoration: none;
+        transition: background .1s;
+
+        &:hover {
+            background: t.$color-brand-faint;
+            text-decoration: none;
+        }
+    }
+
+    &__avatar-lg {
+        @include m.flex-center;
+        width: 6.4rem;
+        height: 6.4rem;
+        border-radius: t.$radius-full;
+        background: t.$color-brand;
+        color: t.$color-white;
+        font-size: 2rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        text-transform: uppercase;
+    }
+
+    &__meta {
+        strong {
+            display: block;
+            font-size: t.$text-md;
+            color: t.$color-text;
+        }
+
+        span {
+            display: block;
+            font-size: t.$text-xs;
+            color: t.$color-text-muted;
+            margin-block-start: t.$space-1;
+            word-break: break-all;
+        }
+    }
+
+    &__list {
+        padding-block: t.$space-2;
+        border-block-end: 1px solid t.$color-border-subtle;
+
+        &:last-of-type { border-block-end: none; }
+    }
+
+    &__item {
+        display: block;
+        padding: 0.6rem t.$space-4;
+        font-size: t.$text-sm;
+        color: t.$color-text-body;
+        text-decoration: none;
+        transition: background .1s;
+
+        &:hover {
+            background: t.$color-brand-faint;
+            color: t.$color-brand;
+            text-decoration: none;
+        }
+    }
+
+    &__biz {
+        @include m.flex-between;
+        padding: t.$space-3 t.$space-4;
+        background: t.$color-bg-subtle;
+        border-block-start: 1px solid t.$color-border-subtle;
+        text-decoration: none;
+        transition: background .1s;
+        gap: t.$space-3;
+
+        &:hover {
+            background: t.$color-brand-faint;
+            text-decoration: none;
+        }
+
+        strong {
+            display: block;
+            font-size: t.$text-sm;
+            font-weight: 700;
+            color: t.$color-text;
+        }
+
+        small {
+            display: block;
+            font-size: t.$text-xs;
+            color: t.$color-text-muted;
+        }
+
+        svg {
+            color: t.$color-text-muted;
+            flex-shrink: 0;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+    }
+}

@@ -1,0 +1,133 @@
+// =============================================================================
+// local_catalog — Vendor (clases copiadas de Udemy)
+// Solo tipografía, colores y pequeños detalles visuales.
+// NO tocar layout aquí — eso va en los componentes propios.
+// =============================================================================
+
+// --- Star rating ---
+.star-rating-module--star-wrapper--i1cJH {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.star-rating-module--rating-number--2-qA2 {
+    color: $color-secondary;
+    font-weight: 700;
+    font-size: $font-size-md;
+}
+
+// --- Headings / Text utilities (subset mínimo) ---
+.ud-heading-md { font-size: $font-size-md; font-weight: 700; line-height: 1.4; }
+.ud-heading-lg { font-size: $font-size-lg; font-weight: 700; line-height: 1.4; }
+.ud-heading-sm { font-size: $font-size-sm; font-weight: 700; line-height: 1.4; }
+.ud-text-xs    { font-size: $font-size-xs; line-height: 1.4; }
+.ud-text-sm    { font-size: $font-size-sm; line-height: 1.4; }
+.ud-text-xl    { font-size: $font-size-xl; font-weight: 700; line-height: 1.2; }
+.ud-sr-only    { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+// --- Course stats (números bajo el título) ---
+.course-stats--subdued-text--vj5gh { color: $color-text-muted; }
+.course-stats--num-students--IWOGY,
+.course-stats--video-length--mzPnS {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+}
+
+// --- Alert banner (programa tu aprendizaje) ---
+.alert-banner-module--alert-banner--38ZcQ {
+    display: flex;
+    gap: $space-md;
+    padding: $space-md;
+    border-radius: $radius-md;
+    background: #f0f4ff;
+    border-left: 4px solid $color-primary;
+    margin: $space-lg 0;
+}
+.alert-banner-module--text-frame--t5nwh {
+    flex: 1;
+    h2 { margin: 0 0 $space-sm; font-size: $font-size-md; }
+}
+.alert-banner-module--cta-container--sIlWa {
+    display: flex;
+    gap: $space-sm;
+    margin-top: $space-md;
+    flex-wrap: wrap;
+}
+
+// --- Udemy buttons (mínimo necesario) ---
+.ud-btn {
+    @include btn-base;
+}
+.ud-btn-secondary {
+    background: $color-primary;
+    color: $color-white;
+    &:hover { background: $color-primary-dark; color: $color-white; }
+}
+.ud-btn-ghost {
+    background: transparent;
+    color: $color-primary;
+    border: 1px solid $color-primary;
+    &:hover { background: rgba($color-primary, .05); }
+}
+
+// --- Instructor profile ---
+.instructor-profile--header-row--qOERA {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+    margin-bottom: $space-md;
+}
+.instructor-profile--title--L0lbU {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-primary;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+}
+.instructor-profile--social-links-row--O-W9e {
+    display: flex;
+    gap: $space-sm;
+    margin-bottom: $space-md;
+}
+.instructor-profile--social-profile-btn--nJNj7 {
+    @include flex-center;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    border: 1px solid $color-border;
+    color: $color-text;
+    &:hover { background: $color-bg-light; }
+}
+
+// --- Course overview grid ---
+.course-overview--grid-row--6ytdO {
+    display: grid;
+    grid-template-columns: 18rem 1fr;
+    gap: $space-md;
+    padding: $space-md 0;
+    border-bottom: 1px solid $color-border;
+    dt { font-weight: 700; color: $color-text; }
+    dd { margin: 0; }
+    @include below($bp-md) {
+        grid-template-columns: 1fr;
+    }
+}
+.course-overview--wide--yZeV8 {
+    grid-column: 2;
+    @include below($bp-md) { grid-column: 1; }
+}
+
+// --- Course description sets (lo que aprenderás, requisitos...) ---
+.course-overview--course-description-sets--PnPe8 {
+    margin-top: $space-lg;
+    h4 { margin: $space-lg 0 $space-sm; font-size: $font-size-md; }
+    ul { padding-left: $space-lg; li { margin-bottom: $space-xs; } }
+}
+
+// --- Avatar ---
+.ud-avatar-image {
+    border-radius: 50%;
+    object-fit: cover;
+}

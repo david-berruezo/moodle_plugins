@@ -1,0 +1,204 @@
+{{!
+    Registro — local/catalog/templates/register.mustache
+    URL amigable: /registro
+}}
+<div class="cv-page">
+    {{> local_catalog/navbar }}
+
+    <main class="cv-auth-page" id="cv-main">
+        <div class="cv-auth-page__inner">
+
+            {{! Panel izquierdo: branding }}
+            <div class="cv-auth-page__brand">
+                <div class="cv-auth-page__brand-inner">
+                    <h2 class="cv-auth-page__brand-title">
+                        Empieza a aprender.<br><em>Sin límites.</em>
+                    </h2>
+                    <p class="cv-auth-page__brand-sub">
+                        Únete a más de {{total_students}} profesionales que ya están transformando su carrera.
+                    </p>
+                    <ul class="cv-auth-page__perks">
+                        <li>✅ Acceso a cientos de cursos</li>
+                        <li>✅ Aprende a tu ritmo</li>
+                        <li>✅ Certificados reconocidos</li>
+                        <li>✅ Instructores expertos del sector</li>
+                    </ul>
+                </div>
+            </div>
+
+            {{! Panel derecho: formulario }}
+            <div class="cv-auth-page__form-wrap">
+                <div class="cv-auth-page__card">
+
+                    <h1 class="cv-auth-page__title">Crear cuenta</h1>
+                    <p class="cv-auth-page__hint">
+                        ¿Ya tienes cuenta?
+                        <a href="{{loginurl}}" class="cv-auth-page__switch-link">Inicia sesión</a>
+                    </p>
+
+                    {{#registerenabled}}
+                    {{! Si Moodle tiene auto-registro activo, mostrar botón al form nativo }}
+                    <div class="cv-auth-page__native-wrap">
+                        <p style="color:#6a6f73;font-size:1.4rem;margin:0 0 1.6rem">
+                            Haz clic abajo para completar tu registro con los datos de tu organización.
+                        </p>
+                        <a href="{{nativeregisterurl}}" class="cv-auth-page__submit">
+                            Crear mi cuenta →
+                        </a>
+                    </div>
+                    {{/registerenabled}}
+
+                    {{^registerenabled}}
+                    <div class="cv-auth-page__notice">
+                        <p>⚠️ El registro de nuevas cuentas está desactivado en este campus.</p>
+                        <p>Contacta con tu administrador para solicitar acceso.</p>
+                    </div>
+                    {{/registerenabled}}
+
+                    <div class="cv-auth-page__divider"><span>o accede con</span></div>
+
+                    <a href="{{loginurl}}" class="cv-auth-page__submit cv-auth-page__submit--outline">
+                        Iniciar sesión con cuenta existente
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    {{> local_catalog/footer }}
+</div>
+
+<style>
+.cv-auth-page {
+    min-height: calc(100vh - 6.4rem);
+    display: flex;
+    align-items: stretch;
+}
+.cv-auth-page__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+.cv-auth-page__brand {
+    background: linear-gradient(135deg, #1a0a00 0%, #3d1400 100%);
+    display: flex;
+    align-items: center;
+    padding: 6rem;
+}
+.cv-auth-page__brand-inner { max-width: 48rem; }
+.cv-auth-page__brand-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin: 0 0 1.6rem;
+}
+.cv-auth-page__brand-title em { font-style: normal; color: #F05A28; }
+.cv-auth-page__brand-sub {
+    font-size: 1.6rem;
+    color: rgba(255,255,255,.7);
+    margin: 0 0 2.4rem;
+    line-height: 1.6;
+}
+.cv-auth-page__perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.cv-auth-page__perks li {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,.85);
+}
+.cv-auth-page__form-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: #f7f9fa;
+}
+.cv-auth-page__card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: .8rem;
+    padding: 4rem;
+    width: 100%;
+    max-width: 44rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,.08);
+}
+.cv-auth-page__title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #1c1d1f;
+    margin: 0 0 .8rem;
+}
+.cv-auth-page__hint {
+    font-size: 1.4rem;
+    color: #6a6f73;
+    margin: 0 0 2.8rem;
+}
+.cv-auth-page__switch-link { color: #F05A28; font-weight: 700; text-decoration: none; }
+.cv-auth-page__switch-link:hover { text-decoration: underline; }
+.cv-auth-page__submit {
+    display: block;
+    width: 100%;
+    padding: 1.4rem;
+    background: #F05A28;
+    color: #fff;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    border: none;
+    border-radius: .4rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: .15s;
+    box-sizing: border-box;
+}
+.cv-auth-page__submit:hover { background: #C94820; color: #fff; text-decoration: none; }
+.cv-auth-page__submit--outline {
+    background: transparent;
+    color: #F05A28;
+    border: 2px solid #F05A28;
+}
+.cv-auth-page__submit--outline:hover { background: #FEF0EB; }
+.cv-auth-page__divider {
+    text-align: center;
+    position: relative;
+    margin: 2rem 0;
+    color: #6a6f73;
+    font-size: 1.2rem;
+}
+.cv-auth-page__divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: #e0e0e0;
+}
+.cv-auth-page__divider span {
+    position: relative;
+    background: #fff;
+    padding: 0 1rem;
+}
+.cv-auth-page__native-wrap { margin-bottom: 1.6rem; }
+.cv-auth-page__notice {
+    background: #fff7f4;
+    border: 1px solid #fdd5c7;
+    border-radius: .4rem;
+    padding: 1.6rem;
+    font-size: 1.4rem;
+    color: #3e4143;
+    margin-bottom: 2rem;
+}
+@media (max-width: 768px) {
+    .cv-auth-page__inner { grid-template-columns: 1fr; }
+    .cv-auth-page__brand { display: none; }
+    .cv-auth-page__form-wrap { padding: 2rem 1.6rem; }
+}
+</style>

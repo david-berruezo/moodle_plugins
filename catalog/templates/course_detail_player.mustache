@@ -1,0 +1,306 @@
+{{!
+    Detalle del curso — Template tipo Udemy
+    local/catalog/templates/course_detail.mustache
+}}
+
+<div class="cd-wrapper">
+
+    {{! ── NAVBAR ── }}
+    {{> local_catalog/navbar }}
+
+    {{! ============ HERO (fondo oscuro) ============ }}
+    <div class="cd-hero">
+        <div class="cd-hero__inner">
+            <div class="cd-hero__content">
+
+                {{! Breadcrumbs }}
+                <nav class="cd-breadcrumbs" aria-label="Breadcrumb">
+                    {{#breadcrumbs}}
+                        {{#url}}
+                            <a href="{{url}}" class="cd-breadcrumbs__link">{{text}}</a>
+                            <span class="cd-breadcrumbs__sep">›</span>
+                        {{/url}}
+                        {{^url}}
+                            <span class="cd-breadcrumbs__current">{{text}}</span>
+                        {{/url}}
+                    {{/breadcrumbs}}
+                </nav>
+
+                {{! Título }}
+                <h1 class="cd-hero__title">{{fullname}}</h1>
+
+                {{! Descripción corta }}
+                {{#summary}}
+                    <div class="cd-hero__summary">{{{summary}}}</div>
+                {{/summary}}
+
+                {{! Estrellas + Estudiantes }}
+                <div class="cd-hero__stats">
+                    <span class="cd-hero__stars">{{stars}}</span>
+                    <span class="cd-hero__rating">{{rating}}</span>
+                    <span class="cd-hero__stat">({{ratingcount}} {{#str}}ratings, local_catalog{{/str}})</span>
+                    <span class="cd-hero__stat">{{enrolledcount}} {{#str}}students, local_catalog{{/str}}</span>
+                </div>
+
+                {{! Instructor }}
+                {{#hasinstructors}}
+                    <p class="cd-hero__instructor">
+                        {{#str}}createdby, local_catalog{{/str}}
+                        {{#instructors}}
+                            <a href="{{profileurl}}" class="cd-hero__instructor-link">{{fullname}}</a>
+                        {{/instructors}}
+                    </p>
+                {{/hasinstructors}}
+
+                {{! Meta: actualización, idioma }}
+                <div class="cd-hero__meta">
+                    <span>🕐 {{#str}}lastupdated, local_catalog{{/str}} {{lastupdate}}</span>
+                    {{#hascourselang}}
+                        <span>🌐 {{courselang}}</span>
+                    {{/hascourselang}}
+                    {{#haslevel}}
+                        <span>📊 {{level}}</span>
+                    {{/haslevel}}
+                </div>
+            </div>
+
+            {{! ============ SIDEBAR (card fija) ============ }}
+            <div class="cd-sidebar">
+                <div class="cd-sidebar__card">
+                    {{! Video preview o imagen }}
+                    {{#haspreviewvideo}}
+                    {{!
+                    <div class="cd-sidebar__video">
+                        <iframe src="previewvideo" frameborder="0" allowfullscreen class="cd-sidebar__iframe"></iframe>
+                    </div>
+                    }}
+                        {{#hasimage}}
+                            <img src="{{imageurl}}" alt="{{fullname}}" class="cd-sidebar__img">
+                        {{/hasimage}}
+                        {{^hasimage}}
+                            <div class="cd-sidebar__img-placeholder">
+                                <span>{{initials}}</span>
+                            </div>
+                        {{/hasimage}}
+                    {{/haspreviewvideo}}
+                    {{^haspreviewvideo}}
+                        {{#hasimage}}
+                            <img src="{{imageurl}}" alt="{{fullname}}" class="cd-sidebar__img">
+                        {{/hasimage}}
+                        {{^hasimage}}
+                            <div class="cd-sidebar__img-placeholder">
+                                <span>{{initials}}</span>
+                            </div>
+                        {{/hasimage}}
+                    {{/haspreviewvideo}}
+
+                    {{! Precio }}
+                    <div class="cd-sidebar__price">
+                        {{#is_free}}
+                            <span class="cd-sidebar__price-free">{{#str}}free, local_catalog{{/str}}</span>
+                        {{/is_free}}
+                        {{^is_free}}
+                            <span class="cd-sidebar__price-amount">{{price}}</span>
+                        {{/is_free}}
+                    </div>
+
+                    {{! Botón según estado de matrícula }}
+                    {{#isenrolled}}
+                        <a href="{{learnurl}}" class="cd-sidebar__btn cd-sidebar__btn--learn">
+                            {{#str}}gotocourse, local_catalog{{/str}}
+                        </a>
+                    {{/isenrolled}}
+                    {{^isenrolled}}
+                        <a href="{{enrolurl}}" class="cd-sidebar__btn">
+                            {{#is_free}}
+                                {{#str}}enrollnow, local_catalog{{/str}}
+                            {{/is_free}}
+                            {{^is_free}}
+                                {{#str}}buynow, local_catalog{{/str}}
+                            {{/is_free}}
+                        </a>
+                    {{/isenrolled}}
+
+                    {{! Info rápida }}
+                    <ul class="cd-sidebar__info">
+                        {{#hasduration}}
+                            <li>⏱ {{duration}} {{#str}}totalcontent, local_catalog{{/str}}</li>
+                        {{/hasduration}}
+                        {{#hasactivities}}
+                            <li>📚 {{activitycount}} {{#str}}lessons, local_catalog{{/str}}</li>
+                        {{/hasactivities}}
+                        {{#haslevel}}
+                            <li>📊 {{#str}}level, local_catalog{{/str}}: {{level}}</li>
+                        {{/haslevel}}
+                        <li>📱 {{#str}}mobileaccess, local_catalog{{/str}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! ============ CONTENIDO PRINCIPAL ============ }}
+    <div class="cd-main">
+
+        {{! --- Lo que aprenderás --- }}
+        {{#hasobjectives}}
+            <section class="cd-section cd-objectives">
+                <h2 class="cd-section__title">{{#str}}whatyoulearn, local_catalog{{/str}}</h2>
+                <div class="cd-objectives__grid">
+                    {{#objectives}}
+                        <div class="cd-objectives__item">
+                            <span class="cd-objectives__check">✓</span>
+                            <span>{{text}}</span>
+                        </div>
+                    {{/objectives}}
+                </div>
+            </section>
+        {{/hasobjectives}}
+
+        {{! --- Tags / Temas relacionados --- }}
+        {{#hastags}}
+            <section class="cd-section cd-topics">
+                <h2 class="cd-section__title">{{#str}}relatedtopics, local_catalog{{/str}}</h2>
+                <div class="cd-topics__list">
+                    {{#tags}}
+                        <a href="{{url}}" class="cd-topics__tag">{{name}}</a>
+                    {{/tags}}
+                </div>
+            </section>
+        {{/hastags}}
+
+        {{! --- Contenido del curso (temario) --- }}
+        {{#hassections}}
+            <section class="cd-section cd-curriculum">
+                <h2 class="cd-section__title">{{#str}}coursecontent, local_catalog{{/str}}</h2>
+                <p class="cd-curriculum__summary">
+                    {{sectioncount}} {{#str}}sections, local_catalog{{/str}} •
+                    {{totallessons}} {{#str}}lessons, local_catalog{{/str}}
+                    {{#hasduration}} • {{duration}} {{#str}}totallength, local_catalog{{/str}}{{/hasduration}}
+                </p>
+
+                <div class="cd-curriculum__list">
+                    {{#sections}}
+                        <details class="cd-curriculum__section" {{#isopen}}open{{/isopen}}>
+                            <summary class="cd-curriculum__section-header">
+                                <span class="cd-curriculum__section-name">{{name}}</span>
+                                <span class="cd-curriculum__section-meta">
+                            {{activitycount}} {{#str}}lessons, local_catalog{{/str}}
+                        </span>
+                            </summary>
+                            {{#hasactivities}}
+                                <ul class="cd-curriculum__activities">
+                                    {{#activities}}
+                                        <li class="cd-curriculum__activity">
+                                            <span class="cd-curriculum__activity-icon">{{icon}}</span>
+                                            <span class="cd-curriculum__activity-name">{{name}}</span>
+                                            <span class="cd-curriculum__activity-type">{{type}}</span>
+                                        </li>
+                                    {{/activities}}
+                                </ul>
+                            {{/hasactivities}}
+                        </details>
+                    {{/sections}}
+                </div>
+            </section>
+        {{/hassections}}
+
+        {{! --- Requisitos previos --- }}
+        {{#hasrequirements}}
+            <section class="cd-section cd-requirements">
+                <h2 class="cd-section__title">{{#str}}requirements, local_catalog{{/str}}</h2>
+                <ul class="cd-requirements__list">
+                    {{#requirements}}
+                        <li>{{text}}</li>
+                    {{/requirements}}
+                </ul>
+            </section>
+        {{/hasrequirements}}
+
+        {{! --- Descripción extendida --- }}
+        {{#haslongdescription}}
+            <section class="cd-section cd-description">
+                <h2 class="cd-section__title">{{#str}}description, local_catalog{{/str}}</h2>
+                <div class="cd-description__content">{{{longdescription}}}</div>
+            </section>
+        {{/haslongdescription}}
+
+        {{! --- Instructor --- }}
+        {{#hasinstructors}}
+            <section class="cd-section cd-instructor">
+                <h2 class="cd-section__title">{{#str}}instructor, local_catalog{{/str}}</h2>
+                {{#instructors}}
+                    <div class="cd-instructor__card">
+                        <div class="cd-instructor__header">
+                            <img src="{{avatarurl}}" alt="{{fullname}}" class="cd-instructor__avatar">
+                            <div class="cd-instructor__info">
+                                <h3 class="cd-instructor__name">
+                                    <a href="{{profileurl}}">{{fullname}}</a>
+                                </h3>
+                                <div class="cd-instructor__stats">
+                                    <span>⭐ {{rating}} {{#str}}instructorrating, local_catalog{{/str}}</span>
+                                    <span>👥 {{studentcount}} {{#str}}students, local_catalog{{/str}}</span>
+                                    <span>📚 {{coursecount}} {{#str}}courses, local_catalog{{/str}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {{#hasbio}}
+                            <div class="cd-instructor__bio">{{{bio}}}</div>
+                        {{/hasbio}}
+                    </div>
+                {{/instructors}}
+            </section>
+        {{/hasinstructors}}
+
+        {{! --- Cursos relacionados --- }}
+        {{#hasrelatedcourses}}
+            <section class="cd-section cd-related">
+                <h2 class="cd-section__title">{{#str}}relatedcourses, local_catalog{{/str}}</h2>
+                <div class="cd-related__grid">
+                    {{#relatedcourses}}
+                        <a href="{{url}}" class="cd-related__card">
+                            {{#hasimage}}
+                                <img src="{{imageurl}}" alt="{{fullname}}" class="cd-related__img">
+                            {{/hasimage}}
+                            {{^hasimage}}
+                                <div class="cd-related__img-placeholder"><span>{{initials}}</span></div>
+                            {{/hasimage}}
+                            <div class="cd-related__info">
+                                <h4 class="cd-related__name">{{fullname}}</h4>
+                                <span class="cd-related__price">{{pricelabel}}</span>
+                            </div>
+                        </a>
+                    {{/relatedcourses}}
+                </div>
+            </section>
+        {{/hasrelatedcourses}}
+
+        {{! --- Más cursos del instructor --- }}
+        {{#hasinstructorcourses}}
+            <section class="cd-section cd-related">
+                <h2 class="cd-section__title">{{#str}}moreinstructor, local_catalog{{/str}}</h2>
+                <div class="cd-related__grid">
+                    {{#instructorcourses}}
+                        <a href="{{url}}" class="cd-related__card">
+                            {{#hasimage}}
+                                <img src="{{imageurl}}" alt="{{fullname}}" class="cd-related__img">
+                            {{/hasimage}}
+                            {{^hasimage}}
+                                <div class="cd-related__img-placeholder"><span>{{initials}}</span></div>
+                            {{/hasimage}}
+                            <div class="cd-related__info">
+                                <h4 class="cd-related__name">{{fullname}}</h4>
+                                <span class="cd-related__price">{{pricelabel}}</span>
+                            </div>
+                        </a>
+                    {{/instructorcourses}}
+                </div>
+            </section>
+        {{/hasinstructorcourses}}
+
+    </div>
+
+    {{! ── FOOTER ── }}
+    {{> local_catalog/footer_home }}
+
+</div>

@@ -1,0 +1,107 @@
+// =============================================================================
+// MIXINS
+// =============================================================================
+@use 'tokens' as t;
+
+// ── Breakpoints ──────────────────────────────────────────────────────────────
+$bp-sm:  480px;
+$bp-md:  768px;
+$bp-lg:  1000px;
+$bp-xl:  1200px;
+
+@mixin above($bp) {
+    @media (min-width: #{$bp}) { @content; }
+}
+
+@mixin below($bp) {
+    @media (max-width: calc(#{$bp} - 1px)) { @content; }
+}
+
+@mixin between($min, $max) {
+    @media (min-width: #{$min}) and (max-width: calc(#{$max} - 1px)) { @content; }
+}
+
+// ── Tipografía ───────────────────────────────────────────────────────────────
+@mixin clamp-lines($n) {
+    display: -webkit-box;
+    -webkit-line-clamp: $n;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@mixin truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// ── Accesibilidad ────────────────────────────────────────────────────────────
+@mixin sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@mixin focus-ring($color: t.$color-brand) {
+    &:focus-visible {
+        outline: 2px solid $color;
+        outline-offset: 2px;
+    }
+}
+
+// ── Flex helpers ─────────────────────────────────────────────────────────────
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// ── Superficies / Popover ────────────────────────────────────────────────────
+@mixin surface-popover {
+    background: t.$color-white;
+    border: 1px solid t.$color-border;
+    border-radius: t.$radius;
+    box-shadow: t.$shadow-md;
+    overflow: hidden;
+}
+
+// ── Botón base ───────────────────────────────────────────────────────────────
+@mixin btn-reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: t.$font-sans;
+    text-decoration: none;
+    transition: .15s;
+
+    @include focus-ring;
+}
+
+// ── Skeleton loader ──────────────────────────────────────────────────────────
+@mixin skeleton {
+    background: linear-gradient(
+        90deg,
+        t.$color-border-subtle 25%,
+        t.$color-bg-subtle     50%,
+        t.$color-border-subtle 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.4s ease infinite;
+}
+
+@keyframes skeleton-pulse {
+    to { background-position: -200% 0; }
+}

@@ -1,236 +1,268 @@
-{{!
-    Catálogo de cursos — Template principal
-    local/catalog/templates/catalog.mustache
+{{! ── NAVBAR ── }}
+{{> local_catalog/navbar }}
 
-    Contexto:
-    - courses: array de cursos enriquecidos
-    - categories, levels, priceoptions, tags: filtros laterales
-    - pagination: datos de paginación
-    - activesearch, activecategory, activeprice, activelevel, activetag: filtros activos
-    - baseurl: URL base para los enlaces
-}}
+<main class="cv-page">
 
-<div class="catalog-wrapper">
-
-    {{! ============ BUSCADOR SUPERIOR ============ }}
-    <div class="catalog-searchbar">
-        <form action="{{baseurl}}" method="get" class="catalog-searchbar__form">
-            <input
-                type="text"
-                name="q"
-                value="{{activesearch}}"
-                placeholder="{{#str}}searchplaceholder, local_catalog{{/str}}"
-                class="catalog-searchbar__input"
-                autocomplete="off"
-            >
-            <button type="submit" class="catalog-searchbar__btn">
-                {{#str}}search, local_catalog{{/str}}
-            </button>
-        </form>
+    <section class="cv-search-hero">
         {{#totalcourses}}
-            <p class="catalog-searchbar__count">
-                {{totalcourses}} {{#str}}coursesresults, local_catalog{{/str}}
-                {{#activesearch}}"{{activesearch}}"{{/activesearch}}
-            </p>
+        <div class="container cv-search-hero__inner">
+            <h1 class="cv-search-hero__query">{{totalcourses}} {{#str}}coursesresults, local_catalog{{/str}}: <span>{{#activesearch}}"{{activesearch}}"{{/activesearch}}</span></h1>
+            <p class="cv-search-hero__meta">{{totalcourses}} {{#str}}coursesresults_description, local_catalog{{/str}}</p>
+        </div>
         {{/totalcourses}}
-    </div>
+    </section>
 
-    <div class="catalog-layout">
+    <div class="container">
+        <div class="cv-catalog__layout">
+            <aside class="cv-catalog__sidebar" data-catalog-url="{{catalogurl}}">
 
-        {{! ============ FILTROS LATERALES ============ }}
-        <aside class="catalog-filters">
-            <div class="catalog-filters__header">
-                <h2 class="catalog-filters__title">{{#str}}filters, local_catalog{{/str}}</h2>
-                <a href="{{baseurl}}" class="catalog-filters__clear">
-                    {{#str}}clearfilters, local_catalog{{/str}}
-                </a>
-            </div>
+                {{! --- Filtro por Categoría --- }}
+                {{#categories.0}}
+                    <div class="cv-filter-group">
+                        <button class="cv-filter-group__header" aria-expanded="true">
+                            {{#str}}category, local_catalog{{/str}}
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                        </button>
+                        <div class="cv-filter-group__body">
+                            <ul class="cv-filter-group__list">
+                                {{#categories}}
+                                <li class="cv-filter-item">
+                                    <input type="checkbox"
+                                           class="cv-filter-item__check"
+                                           id="f-cat-{{id}}"
+                                           data-param="{{param}}"
+                                           data-value="{{value}}"
+                                           {{#active}}checked{{/active}}>
 
-            {{! --- Filtro por Categoría --- }}
-            {{#categories.0}}
-            <div class="catalog-filters__group">
-                <h3 class="catalog-filters__group-title">{{#str}}category, local_catalog{{/str}}</h3>
-                <ul class="catalog-filters__list">
-                    {{#categories}}
-                    <li>
-                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
-                            {{name}}
-                            <span class="catalog-filters__count">({{count}})</span>
-                        </a>
-                    </li>
-                    {{/categories}}
-                </ul>
-            </div>
-            {{/categories.0}}
+                                    <label class="cv-filter-item__label" for="f-cat-{{id}}">{{name}}</label>
+                                    <span class="cv-filter-item__count">({{count}})</span>
+                                </li>
+                                {{/categories}}
+                            </ul>
+                        </div>
+                    </div>
+                {{/categories.0}}
 
-            {{! --- Filtro por Precio --- }}
-            <div class="catalog-filters__group">
-                <h3 class="catalog-filters__group-title">{{#str}}price, local_catalog{{/str}}</h3>
-                <ul class="catalog-filters__list">
-                    {{#priceoptions}}
-                    <li>
-                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
-                            {{name}}
-                        </a>
-                    </li>
-                    {{/priceoptions}}
-                </ul>
-            </div>
+                {{! --- Filtro por Precio --- }}
+                <div class="cv-filter-group">
+                    <button class="cv-filter-group__header" aria-expanded="true">
+                        {{#str}}price, local_catalog{{/str}}
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                    </button>
+                    <div class="cv-filter-group__body">
+                        <ul class="cv-filter-group__list">
+                            {{#priceoptions}}
+                                <li class="cv-filter-item">
+                                    <input type="checkbox"
+                                           class="cv-filter-item__check"
+                                           id="f-price-{{value}}"
+                                           data-param="{{param}}"
+                                           data-value="{{value}}"
+                                           {{#active}}checked{{/active}}>
+                                    <label class="cv-filter-item__label" for="f-price-{{value}}">{{name}}</label>
+                                    <span class="cv-filter-item__count">({{count}})</span>
+                                </li>
+                            {{/priceoptions}}
+                        </ul>
+                    </div>
+                </div>
 
-            {{! --- Filtro por Nivel --- }}
-            <div class="catalog-filters__group">
-                <h3 class="catalog-filters__group-title">{{#str}}level, local_catalog{{/str}}</h3>
-                <ul class="catalog-filters__list">
-                    {{#levels}}
-                    <li>
-                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
-                            {{name}}
-                        </a>
-                    </li>
-                    {{/levels}}
-                </ul>
-            </div>
+                {{! --- Filtro por Nivel --- }}
+                <div class="cv-filter-group">
+                    <button class="cv-filter-group__header" aria-expanded="true">
+                        {{#str}}level, local_catalog{{/str}}
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                    </button>
+                    <div class="cv-filter-group__body">
+                        <ul class="cv-filter-group__list">
+                            {{#levels}}
+                                <li class="cv-filter-item">
+                                    <input type="checkbox"
+                                           class="cv-filter-item__check"
+                                           id="f-level-{{value}}"
+                                           data-param="{{param}}"
+                                           data-value="{{value}}"
+                                           {{#active}}checked{{/active}}>
+                                    <label class="cv-filter-item__label" for="f-level-{{value}}">{{name}}</label>
+                                    <span class="cv-filter-item__count">({{count}})</span>
+                                </li>
+                            {{/levels}}
+                        </ul>
+                    </div>
+                </div>
 
-            {{! --- Filtro por Tags --- }}
-            {{#tags.0}}
-            <div class="catalog-filters__group">
-                <h3 class="catalog-filters__group-title">{{#str}}topic, local_catalog{{/str}}</h3>
-                <ul class="catalog-filters__list">
-                    {{#tags}}
-                    <li>
-                        <a href="{{url}}" class="catalog-filters__option {{#active}}catalog-filters__option--active{{/active}}">
-                            {{name}}
-                            {{#count}}<span class="catalog-filters__count">({{count}})</span>{{/count}}
-                        </a>
-                    </li>
-                    {{/tags}}
-                </ul>
-            </div>
-            {{/tags.0}}
-        </aside>
+                {{! --- Filtro por Tags --- }}
+                {{#tags.0}}
+                    <div class="cv-filter-group">
+                        <button class="cv-filter-group__header" aria-expanded="true">
+                            {{#str}}topic, local_catalog{{/str}}
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                        </button>
+                        <div class="cv-filter-group__body">
+                            <ul class="cv-filter-group__list">
+                                {{#tags}}
+                                    <li class="cv-filter-item">
+                                        <input type="checkbox"
+                                               class="cv-filter-item__check"
+                                               id="f-tag-{{name}}"
+                                               data-param="{{param}}"
+                                               data-value="{{value}}"
+                                               {{#active}}checked{{/active}}>
+                                        <label class="cv-filter-item__label" for="f-tag-{{name}}">{{name}}</label>
+                                        <span class="cv-filter-item__count">({{count}})</span>
+                                    </li>
+                                {{/tags}}
+                            </ul>
+                        </div>
+                    </div>
+                {{/tags.0}}
 
-        {{! ============ GRID DE CURSOS ============ }}
-        <main class="catalog-courses">
-            {{#hascourses}}
-            <div class="catalog-grid">
-                {{#courses}}
-                <article class="catalog-card">
-                    {{! --- Imagen --- }}
-                    <a href="{{courseurl}}" class="catalog-card__image-link">
-                        {{#hasimage}}
-                            <img src="{{imageurl}}" alt="{{fullname}}"
-                                 class="catalog-card__img" loading="lazy">
-                        {{/hasimage}}
-                        {{^hasimage}}
-                            <div class="catalog-card__img-placeholder">
-                                <span>{{initials}}</span>
+                <div class="cv-filter-group">
+                    <button class="cv-filter-group__header" aria-expanded="true">
+                        Valoración
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                    </button>
+                    <div class="cv-filter-group__body">
+                        <div class="cv-filter-rating">
+                            <div class="cv-filter-rating__row" data-rating="4.5">
+                                <span class="cv-filter-rating__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></span>
+                                <span class="cv-filter-rating__label">4.5 y más</span>
                             </div>
-                        {{/hasimage}}
-                    </a>
-
-                    {{! --- Contenido --- }}
-                    <div class="catalog-card__body">
-                        <h3 class="catalog-card__title">
-                            <a href="{{courseurl}}">{{fullname}}</a>
-                        </h3>
-
-                        {{#summary}}
-                            <p class="catalog-card__summary">{{summary}}</p>
-                        {{/summary}}
-
-                        {{#hasinstructors}}
-                            <p class="catalog-card__instructor">{{instructornames}}</p>
-                        {{/hasinstructors}}
-
-                        {{! --- Meta: estrellas, duración, clases, nivel --- }}
-                        <div class="catalog-card__meta">
-                            <span class="catalog-card__stars">★★★★☆</span>
-                            <span class="catalog-card__rating-num">4.0</span>
-
-                            {{#hasduration}}
-                                <span class="catalog-card__tag">⏱ {{duration}}</span>
-                            {{/hasduration}}
-
-                            {{#hasactivities}}
-                                <span class="catalog-card__tag">📚 {{activitycount}} {{#str}}lessons, local_catalog{{/str}}</span>
-                            {{/hasactivities}}
-
-                            {{#haslevel}}
-                                <span class="catalog-card__tag">📊 {{level}}</span>
-                            {{/haslevel}}
+                            <div class="cv-filter-rating__row" data-rating="4.0">
+                                <span class="cv-filter-rating__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></span>
+                                <span class="cv-filter-rating__label">4.0 y más</span>
+                            </div>
+                            <div class="cv-filter-rating__row" data-rating="3.5">
+                                <span class="cv-filter-rating__stars"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg></span>
+                                <span class="cv-filter-rating__label">3.5 y más</span>
+                            </div>
                         </div>
-
-                        {{! --- Tags --- }}
-                        {{#hastags}}
-                        <div class="catalog-card__tags">
-                            {{#tags}}
-                                <a href="{{url}}" class="catalog-card__tag-link">{{name}}</a>
-                            {{/tags}}
-                        </div>
-                        {{/hastags}}
                     </div>
+                </div>
 
-                    {{! --- Footer: precio + botón --- }}
-                    <div class="catalog-card__footer">
-                        {{#is_free}}
-                            <span class="catalog-card__price catalog-card__price--free">
-                                {{#str}}free, local_catalog{{/str}}
-                            </span>
-                        {{/is_free}}
-                        {{^is_free}}
-                            <span class="catalog-card__price">{{price}}</span>
-                        {{/is_free}}
+                <div class="cv-filter-group">
+                    <button class="cv-filter-group__header" aria-expanded="true">
+                        Duración
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                    </button>
+                    <div class="cv-filter-group__body"><ul class="cv-filter-group__list"><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Du0"><label class="cv-filter-item__label" for="f-Du0">0–1 hora</label><span class="cv-filter-item__count">(12)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Du1"><label class="cv-filter-item__label" for="f-Du1">1–3 horas</label><span class="cv-filter-item__count">(48)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Du2"><label class="cv-filter-item__label" for="f-Du2">3–6 horas</label><span class="cv-filter-item__count">(67)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Du3"><label class="cv-filter-item__label" for="f-Du3">6–17 horas</label><span class="cv-filter-item__count">(89)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Du4"><label class="cv-filter-item__label" for="f-Du4">17+ horas</label><span class="cv-filter-item__count">(31)</span></li></ul></div>
+                </div>
 
-                        <a href="{{enrolurl}}" class="catalog-card__btn">
-                            {{#is_free}}
-                                {{#str}}enrollnow, local_catalog{{/str}}
-                            {{/is_free}}
-                            {{^is_free}}
-                                {{#str}}buynow, local_catalog{{/str}}
-                            {{/is_free}}
+                <div class="cv-filter-group">
+                    <button class="cv-filter-group__header" aria-expanded="true">
+                        Subtítulos
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                    </button>
+                    <div class="cv-filter-group__body"><ul class="cv-filter-group__list"><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Su0"><label class="cv-filter-item__label" for="f-Su0">Español</label><span class="cv-filter-item__count">(203)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Su1"><label class="cv-filter-item__label" for="f-Su1">Inglés</label><span class="cv-filter-item__count">(184)</span></li><li class="cv-filter-item"><input type="checkbox" class="cv-filter-item__check" id="f-Su2"><label class="cv-filter-item__label" for="f-Su2">Portugués</label><span class="cv-filter-item__count">(34)</span></li></ul></div>
+                </div>
+            </aside>
+
+            {{#hascourses}}
+            <div class="cv-catalog__main">
+                <div class="cv-active-filters" aria-live="polite"></div>
+                <div class="cv-results-bar">
+                    <div class="cv-results-bar__count"><strong>{{totalcourses}}</strong> resultados</div>
+                    <div class="cv-results-bar__right">
+                        <button class="cv-results-bar__mobile-toggle">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+                            Filtros
+                        </button>
+                        <span class="cv-results-bar__label">Ordenar por:</span>
+                        <select class="cv-results-bar__select">
+                            <option>Más relevante</option>
+                            <option>Valoración más alta</option>
+                            <option>Más reciente</option>
+                            <option>Más popular</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cv-courses-grid">
+                    {{#courses}}
+                        <a href="{{courseurl}}" class="cv-card">
+                            {{#hasimage}}
+                                <img src="{{imageurl}}" alt="{{fullname}}" class="catalog-card__img" loading="lazy">
+                            {{/hasimage}}
+                            {{^hasimage}}
+                            <div class="cv-card__img" style="background:#61DAFB22;display:flex;align-items:center;justify-content:center">
+                                <span class="cv-card__img-initials" style="color:#61DAFB">{{fullname}}</span>
+                            </div>
+                            {{/hasimage}}
+                            <div class="cv-card__body">
+                                <div class="cv-card__badge">Más vendido</div>
+                                <div class="cv-card__title">{{fullname}}</div>
+
+                                {{#summary}}
+                                    <div class="cv-card__instructor">{{summary}}</div>
+                                {{/summary}}
+
+                                {{#hasinstructors}}
+                                    <div class="cv-card__instructor">{{instructornames}}</div>
+                                {{/hasinstructors}}
+
+                                {{#hasduration}}
+                                    <span class="catalog-card__tag">⏱ {{duration}}</span>
+                                {{/hasduration}}
+
+                                {{#hasactivities}}
+                                    <span class="catalog-card__tag">📚 {{activitycount}} {{#str}}lessons, local_catalog{{/str}}</span>
+                                {{/hasactivities}}
+
+                                {{#haslevel}}
+                                    <span class="catalog-card__tag">📊 {{level}}</span>
+                                {{/haslevel}}
+
+                                <div class="cv-card__rating">
+                                    <span class="cv-card__score">4.8</span>
+                                    <span class="cv-card__stars">
+                                        <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                                    </span>
+                                    <span class="cv-card__count">(3.241)</span>
+                                </div>
+                                <div class="cv-card__meta"><div class="cv-card__price"><strong>Incluido</strong></div></div>
+                            </div>
                         </a>
-                    </div>
-                </article>
-                {{/courses}}
+                    {{/courses}}
+                </div>
+
+                {{! ============ PAGINACIÓN ============ }}
+                {{#haspagination}}
+                <nav class="cv-pagination" aria-label="Paginación">
+                    {{#pagination.hasprev}}
+                        <a href="{{pagination.prevurl}}" class="cv-pagination__btn" aria-label="{{#str}}previous, local_catalog{{/str}}">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                        </a>
+                    {{/pagination.hasprev}}
+                    {{#pagination.pages}}
+                        <a href="{{url}}"
+                           class="cv-pagination__btn {{#active}}is-active{{/active}}"
+                           aria-label="{{#str}}page, local_catalog{{/str}} {{display}}"
+                           {{#active}}aria-current="page"{{/active}}>
+                            {{display}}
+                        </a>
+                    {{/pagination.pages}}
+
+                    {{#pagination.hasnext}}
+                        <a href="{{pagination.nexturl}}" class="cv-pagination__btn" aria-label="{{#str}}next, local_catalog{{/str}}">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+                        </a>
+                    {{/pagination.hasnext}}
+                </nav>
+                {{/haspagination}}
             </div>
+        </div>
+        {{/hascourses}}
 
-            {{! ============ PAGINACIÓN ============ }}
-            {{#haspagination}}
-            <nav class="catalog-pagination" aria-label="{{#str}}pagination, local_catalog{{/str}}">
-                {{#pagination.hasprev}}
-                    <a href="{{pagination.prevurl}}" class="catalog-pagination__btn" aria-label="{{#str}}previous, local_catalog{{/str}}">
-                        ← {{#str}}previous, local_catalog{{/str}}
-                    </a>
-                {{/pagination.hasprev}}
-
-                {{#pagination.pages}}
-                    <a href="{{url}}"
-                       class="catalog-pagination__page {{#active}}catalog-pagination__page--active{{/active}}"
-                       aria-label="{{#str}}page, local_catalog{{/str}} {{display}}"
-                       {{#active}}aria-current="page"{{/active}}>
-                        {{display}}
-                    </a>
-                {{/pagination.pages}}
-
-                {{#pagination.hasnext}}
-                    <a href="{{pagination.nexturl}}" class="catalog-pagination__btn" aria-label="{{#str}}next, local_catalog{{/str}}">
-                        {{#str}}next, local_catalog{{/str}} →
-                    </a>
-                {{/pagination.hasnext}}
-            </nav>
-            {{/haspagination}}
-
-            {{/hascourses}}
-
-            {{! Sin resultados }}
-            {{^hascourses}}
-            <div class="catalog-empty">
-                <p>{{#str}}nocourses, local_catalog{{/str}}</p>
-                <a href="{{baseurl}}" class="catalog-empty__btn">
-                    {{#str}}clearfilters, local_catalog{{/str}}
-                </a>
+        {{^hascourses}}
+            <div class="cv-active-filters" aria-live="polite"></div>
+            <div class="cv-results-bar">
+                <div class="cv-results-bar__count"><strong>{{totalcourses}}</strong> resultados</div>
+                <div class="cv-results-bar__right">
+                </div>
             </div>
-            {{/hascourses}}
-        </main>
+        {{/hascourses}}
     </div>
-</div>
+</main>
+
+{{! ── FOOTER ── }}
+{{> local_catalog/footer_home }}

@@ -1,0 +1,76 @@
+{{!
+    Tarjeta de curso — partial reutilizable
+    local/catalog/templates/card_course.mustache
+
+    Se usa en: home.mustache (carruseles trending + datacat)
+               catalog.mustache (grid de cursos)
+
+    Variables esperadas (un item del array de cursos):
+      fullname        string
+      courseurl       string   /cursos/slug
+      thumburl        string   URL de imagen (puede estar vacío)
+      hasthumb        bool
+      instructors     string   "Fernando Herrera, Ana López"
+      hasinstructors  bool
+      rating          string   "4.7"
+      ratingcount     int      2341
+      is_free         bool
+      pricelabel      string   "Gratis" | "19,99 €"
+      level           string   "Principiante"
+      haslevel        bool
+}}
+<div class="cv-carousel__item">
+    <a href="{{courseurl}}" class="cv-card">
+    {{! Thumbnail }}
+    <div class="cv-card__thumb">
+        {{#hasthumb}}
+            <img src="{{thumburl}}" alt="{{fullname}}" loading="lazy" class="cv-card__img">
+        {{/hasthumb}}
+        {{^hasthumb}}
+            <div class="cv-card__thumb-placeholder" aria-hidden="true">
+                <svg viewBox="0 0 48 36" width="40" height="30" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".25">
+                    <rect x="2" y="2" width="44" height="32" rx="3"/>
+                    <polygon points="18,10 18,26 34,18"/>
+                </svg>
+            </div>
+        {{/hasthumb}}
+    </div>
+
+    {{! Cuerpo }}
+    <div class="cv-card__body">
+
+        {{#haslevel}}
+            <span class="cv-card__badge">{{level}}</span>
+        {{/haslevel}}
+
+        <h3 class="cv-card__title">{{fullname}}</h3>
+
+        {{#hasinstructors}}
+            <p class="cv-card__author">{{instructors}}</p>
+        {{/hasinstructors}}
+
+        <div class="cv-card__rating" aria-label="Puntuación {{rating}}">
+            <span class="cv-card__score">{{rating}}</span>
+            <span class="cv-card__stars" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+            </span>
+            <span class="cv-card__count">({{ratingcount}})</span>
+        </div>
+
+        <div class="cv-card__footer">
+            {{#is_free}}
+                <strong class="cv-card__price cv-card__price--free">{{pricelabel}}</strong>
+            {{/is_free}}
+            {{^is_free}}
+                <strong class="cv-card__price">{{pricelabel}}</strong>
+            {{/is_free}}
+        </div>
+
+    </div>
+
+    </a>
+</div>

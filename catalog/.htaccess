@@ -1,0 +1,133 @@
+# =============================================================================
+# local_catalog — URLs Amigables Completas
+# Archivo: /local/catalog/.htaccess  (o en la raíz de Moodle según config)
+# =============================================================================
+# IMPORTANTE: El RewriteBase debe ajustarse según la instalación de Moodle.
+# Si Moodle está en la raíz del servidor: RewriteBase /
+# Si Moodle está en un subdirectorio /moodle: RewriteBase /moodle/
+# =============================================================================
+
+# --- URLs amigables del Catálogo ---
+RewriteEngine On
+RewriteBase /
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HOME — Redirige la raíz al plugin
+# ─────────────────────────────────────────────────────────────────────────────
+RewriteRule ^$ /local/catalog/home.php [L,QSA]
+
+# ─── IMPORTANTE: Excluir recursos estáticos y rutas reales de Moodle ───
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. CATÁLOGO
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /cursos  →  Catálogo principal (con filtros vía query string)
+# Ejemplo: /cursos?q=react&cat=3&price=free&level=beginner&page=2
+# /cursos → catálogo
+RewriteRule ^cursos/?$ /local/catalog/index.php [L,QSA]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 2. CURSOS (detalle + player)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /cursos/{slug}/ver/{cmid}  →  Player en actividad específica
+# IMPORTANTE: esta regla debe ir ANTES de /cursos/{slug}/ver
+# /cursos/react-js/ver/15 → player en actividad específica
+RewriteRule ^cursos/([a-z0-9-]+)/ver/([0-9]+)/?$ /local/catalog/learn.php?slug=$1&cmid=$2 [L,QSA]
+
+# /cursos/{slug}/ver  →  Player del curso (primera actividad)
+# /cursos/react-js/ver → player del curso
+RewriteRule ^cursos/([a-z0-9-]+)/ver/?$ /local/catalog/learn.php?slug=$1 [L,QSA]
+
+# /cursos/{slug}  →  Detalle del curso
+# /cursos/react-js → detalle del curso
+RewriteRule ^cursos/([a-z0-9-]+)/?$  /local/catalog/course.php?slug=$1  [L,QSA]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3. INSCRIPCIÓN
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /inscribirse/{slug}  →  Página de inscripción al curso
+RewriteRule ^inscribirse/([a-z0-9-]+)/?$  /local/catalog/enrol.php?slug=$1  [L,QSA]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 4. INSTRUCTORES
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /profesores/{slug}  →  Perfil de instructor
+# IMPORTANTE: esta regla debe ir ANTES de /profesores
+RewriteRule ^profesores/([a-z0-9-]+)/?$  /local/catalog/instructor.php?slug=$1  [L,QSA]
+
+# /profesores  →  Listado de todos los instructores
+RewriteRule ^profesores/?$  /local/catalog/instructors.php  [L,QSA]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 5. ÁREA DE USUARIO
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /mis-cursos  →  Dashboard del estudiante (mis inscripciones)
+RewriteRule ^mis-cursos/?$  /local/catalog/my_courses.php  [L,QSA]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 6. PÁGINAS DE CONTENIDO ESTÁTICO
+# ─────────────────────────────────────────────────────────────────────────────
+RewriteRule ^plan-personal/?$   /local/catalog/plan.php      [L,QSA]
+RewriteRule ^comparar-planes/?$ /local/catalog/compare.php   [L,QSA]
+RewriteRule ^solicitar-demo/?$  /local/catalog/demo.php      [L,QSA]
+
+# Nota: "enseña" contiene ñ — usamos también versión ASCII como alias
+RewriteRule ^ense%C3%B1a-aqui/?$ /local/catalog/teach.php   [L,QSA]
+RewriteRule ^ensena-aqui/?$      /local/catalog/teach.php   [L,QSA]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 6. AUTENTICACIÓN
+# ─────────────────────────────────────────────────────────────────────────────
+
+# /registro  →  Página de registro de nuevo usuario
+RewriteRule ^registro/?$  /local/catalog/register.php  [L,QSA]
+
+# /login  →  Redirige al login nativo de Moodle
+# (Moodle ya tiene /login/index.php, pero exponemos URL amigable)
+RewriteRule ^login/?$  /login/index.php  [L,QSA]
+
+# /logout  →  Cierre de sesión nativo de Moodle
+RewriteRule ^logout/?$  /login/logout.php  [L,QSA]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESUMEN DE URLs
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# PÚBLICAS:
+#   /cursos                          → Catálogo
+#   /cursos?q=X&cat=Y&price=Z&...    → Catálogo filtrado
+#   /cursos/{slug}                   → Detalle del curso
+#   /cursos/{slug}/ver               → Player (1ª actividad)
+#   /cursos/{slug}/ver/{cmid}        → Player en actividad
+#   /profesores                      → Listado de instructores
+#   /profesores/{slug}               → Perfil del instructor
+# PAGINAS PERSONALES
+#  /plan-personal                 → Plan personal (página info)
+#  /comparar-planes               → Comparar planes
+#  /solicitar-demo                → Solicitar demo empresas
+#  /ensena-aqui                   → Enseña aquí / hazte instructor
+# AUTENTICACIÓN:
+#   /registro                        → Registro de usuario
+#   /login                           → Login
+#   /logout                          → Logout
+#
+# USUARIO AUTENTICADO:
+#   /mis-cursos                      → Mis inscripciones
+#   /inscribirse/{slug}              → Inscribirse a un curso
+#
+# INTERNAS (sin URL amigable, solo POST/redirect):
+#   /local/catalog/complete.php      → Marcar actividad completada
+# ─────────────────────────────────────────────────────────────────────────────
+
+# --- Fin URLs catálogo ---

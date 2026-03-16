@@ -1,0 +1,322 @@
+// =============================================================================
+// COURSE PLAYER
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Navbar especial del player ────────────────────────────────────────────────
+.cv-player-nav {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: t.$z-sticky;
+    height: t.$nav-height;
+    background: t.$color-bg-dark;
+    border-block-end: 1px solid t.$color-bg-dark-3;
+    display: flex;
+    align-items: center;
+    padding-inline: t.$space-4;
+    gap: t.$space-4;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+        text-decoration: none;
+        flex-shrink: 0;
+
+        &-mark {
+            @include m.flex-center;
+            width: 3rem;
+            height: 3rem;
+            background: t.$color-brand;
+            border-radius: t.$radius;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: t.$color-white;
+        }
+
+        &:hover { text-decoration: none; }
+    }
+
+    &__divider {
+        width: 1px;
+        height: 2.4rem;
+        background: t.$color-bg-dark-3;
+        flex-shrink: 0;
+    }
+
+    &__title {
+        flex: 1;
+        font-size: t.$text-sm;
+        color: rgba(t.$color-white, .85);
+        @include m.clamp-lines(1);
+        min-width: 0;
+    }
+
+    &__progress {
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+        flex-shrink: 0;
+    }
+
+    &__progress-label {
+        font-size: t.$text-xs;
+        color: rgba(t.$color-white, .6);
+        white-space: nowrap;
+    }
+
+    &__progress-bar {
+        width: 12rem;
+        height: 0.4rem;
+        background: t.$color-bg-dark-3;
+        border-radius: t.$radius-full;
+        overflow: hidden;
+
+        @include m.below(m.$bp-md) { display: none; }
+    }
+
+    &__progress-fill {
+        height: 100%;
+        background: t.$color-brand;
+        border-radius: t.$radius-full;
+        transition: width .3s;
+    }
+
+    &__btn {
+        @include m.btn-reset;
+        @include m.flex-center;
+        height: 3.2rem;
+        padding-inline: t.$space-3;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        border: 1px solid rgba(t.$color-white, .3);
+        border-radius: t.$radius;
+        color: rgba(t.$color-white, .8);
+        gap: t.$space-2;
+        flex-shrink: 0;
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+        &:hover { border-color: t.$color-white; color: t.$color-white; }
+
+        &--primary {
+            background: t.$color-brand;
+            border-color: t.$color-brand;
+            color: t.$color-white;
+            &:hover { background: t.$color-brand-dark; border-color: t.$color-brand-dark; }
+        }
+    }
+}
+
+// ── Layout principal del player ───────────────────────────────────────────────
+.cv-player-layout {
+    display: flex;
+    height: calc(100vh - t.$nav-height);
+    margin-block-start: t.$nav-height;
+    overflow: hidden;
+
+    &__main {
+        flex: 1;
+        overflow-y: auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__sidebar {
+        width: 40rem;
+        flex-shrink: 0;
+        background: t.$color-bg-dark;
+        border-inline-start: 1px solid t.$color-bg-dark-3;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+
+        @include m.below(m.$bp-lg) { display: none; }
+
+        &.is-hidden { display: none; }
+    }
+}
+
+// ── Área de vídeo ─────────────────────────────────────────────────────────────
+.cv-video-area {
+    background: #000;
+    width: 100%;
+    aspect-ratio: 16/9;
+    flex-shrink: 0;
+    position: relative;
+
+    &__placeholder {
+        @include m.flex-center;
+        flex-direction: column;
+        gap: t.$space-4;
+        width: 100%;
+        height: 100%;
+        background: t.$color-bg-dark;
+        color: rgba(t.$color-white, .5);
+
+        svg { width: 8rem; height: 8rem; stroke: rgba(t.$color-white, .2); fill: none; stroke-width: 1.5; }
+
+        p { font-size: t.$text-sm; }
+    }
+
+    // Controles del vídeo
+    &__controls {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        padding: t.$space-4;
+        background: linear-gradient(to top, rgba(0,0,0,.8), transparent);
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+        opacity: 0;
+        transition: opacity .2s;
+
+        &:hover, .cv-video-area:hover & { opacity: 1; }
+    }
+
+    &__ctrl-btn {
+        @include m.btn-reset;
+        @include m.flex-center;
+        color: t.$color-white;
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+        &:hover { color: t.$color-brand; }
+    }
+
+    &__timeline {
+        flex: 1;
+        height: 0.4rem;
+        background: rgba(t.$color-white, .3);
+        border-radius: t.$radius-full;
+        cursor: pointer;
+        position: relative;
+
+        &-fill {
+            height: 100%;
+            width: 30%;
+            background: t.$color-brand;
+            border-radius: t.$radius-full;
+            pointer-events: none;
+        }
+    }
+
+    &__time { font-size: t.$text-xs; color: t.$color-white; white-space: nowrap; }
+}
+
+// ── Tabs bajo el vídeo ────────────────────────────────────────────────────────
+.cv-player-content {
+    flex: 1;
+    padding: t.$space-6;
+
+    &__title { font-size: t.$text-2xl; font-weight: 700; margin-block-end: t.$space-4; }
+}
+
+// ── Sidebar: temario en el player ─────────────────────────────────────────────
+.cv-player-sidebar {
+    &__header {
+        padding: t.$space-4;
+        border-block-end: 1px solid t.$color-bg-dark-3;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        color: t.$color-white;
+        flex-shrink: 0;
+    }
+
+    &__section {
+        border-block-end: 1px solid t.$color-bg-dark-3;
+    }
+
+    &__section-header {
+        @include m.btn-reset;
+        @include m.flex-between;
+        width: 100%;
+        padding: t.$space-3 t.$space-4;
+        background: t.$color-bg-dark-2;
+        border-radius: 0;
+        text-align: start;
+
+        &:hover { background: t.$color-bg-dark-3; }
+    }
+
+    &__section-title {
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: t.$color-white;
+        line-height: 1.4;
+    }
+
+    &__section-meta {
+        font-size: 1.1rem;
+        color: rgba(t.$color-white, .5);
+        margin-block-start: t.$space-1;
+    }
+
+    &__section-arrow {
+        fill: none;
+        stroke: rgba(t.$color-white, .5);
+        stroke-width: 2;
+        stroke-linecap: round;
+        flex-shrink: 0;
+        transition: transform .2s;
+
+        .is-open & { transform: rotate(180deg); }
+    }
+
+    &__lesson {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-3;
+        padding: t.$space-3 t.$space-4;
+        cursor: pointer;
+        transition: background .1s;
+        border-block-start: 1px solid rgba(t.$color-white, .05);
+
+        &:hover { background: rgba(t.$color-white, .05); }
+
+        &.is-active {
+            background: rgba(t.$color-brand, .15);
+            border-inline-start: 3px solid t.$color-brand;
+        }
+    }
+
+    &__check {
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: t.$radius-full;
+        border: 2px solid rgba(t.$color-white, .3);
+        flex-shrink: 0;
+        margin-block-start: 0.2rem;
+        @include m.flex-center;
+
+        svg { fill: none; stroke: t.$color-white; stroke-width: 2.5; display: none; }
+
+        &.is-done {
+            background: t.$color-brand;
+            border-color: t.$color-brand;
+            svg { display: block; }
+        }
+    }
+
+    &__lesson-info { flex: 1; min-width: 0; }
+    &__lesson-title {
+        font-size: t.$text-xs;
+        color: rgba(t.$color-white, .85);
+        line-height: 1.4;
+        @include m.clamp-lines(2);
+
+        .is-active & { color: t.$color-white; font-weight: 700; }
+    }
+    &__lesson-meta {
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+        margin-block-start: t.$space-1;
+        font-size: 1.1rem;
+        color: rgba(t.$color-white, .4);
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; }
+    }
+}

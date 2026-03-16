@@ -1,0 +1,283 @@
+{{! ── NAVBAR ── }}
+{{> local_catalog/navbar }}
+
+<main class="cv-page">
+
+    {{! ═══════════════════════════════════════════════════════════════════ HERO ══ }}
+    <!--
+    <section class="cv-hero" aria-labelledby="hero-title">
+        <div class="cv-hero__bg"></div>
+        <div class="cv-container cv-hero__inner">
+            <h1 class="cv-hero__title" id="hero-title">
+                {{#str}}home_hero_title, local_catalog{{/str}}
+            </h1>
+            <p class="cv-hero__sub">{{#str}}home_hero_sub, local_catalog{{/str}}</p>
+
+            <form class="cv-hero__search" action="{{searchaction}}" method="get" role="search">
+                <input type="text" name="q" class="cv-hero__search-input"
+                       placeholder="{{#str}}home_search_placeholder, local_catalog{{/str}}"
+                       aria-label="{{#str}}search, local_catalog{{/str}}">
+                <button type="submit" class="cv-hero__search-btn">
+                    {{#str}}search, local_catalog{{/str}}
+                </button>
+            </form>
+
+            <div class="cv-hero__stats" aria-label="Estadísticas del campus">
+                <span><strong>{{stats.totalstudents}}</strong> {{#str}}students, local_catalog{{/str}}</span>
+                <span><strong>{{stats.totalcourses}}</strong> {{#str}}coursescount, local_catalog{{/str}}</span>
+                <span><strong>{{stats.totalinstructors}}</strong> {{#str}}instructorscount, local_catalog{{/str}}</span>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- ── HERO ──────────────────────────────────────────── -->
+    <section class="cv-hero">
+        <div class="cv-hero__bg"></div>
+        <div class="container cv-hero__inner">
+            <div class="cv-hero__content">
+                <div class="cv-hero__tag">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{#str}}home_hero_title, local_catalog{{/str}}
+                </div>
+                <h1 class="cv-hero__title">{{#str}}home_hero_sub_one, local_catalog{{/str}}<br>{{#str}}home_hero_sub_two, local_catalog{{/str}}</h1>
+                <p class="cv-hero__sub">{{#str}}home_hero_sub_subtitle_one, local_catalog{{/str}}<br>{{#str}}home_hero_sub_subtitle_two, local_catalog{{/str}}</p>
+                <div class="cv-hero__search">
+                    <form class="cv-hero__search" action="{{searchaction}}" method="get" role="search">
+                    <input name="q" type="text" class="cv-hero__search-input" placeholder="{{#str}}home_search_placeholder, local_catalog{{/str}}">
+                    <button class="cv-hero__search-btn">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                        {{#str}}search, local_catalog{{/str}}
+                    </button>
+                    </form>
+                </div>
+                <div class="cv-hero__stats">
+                    <span class="cv-hero__stat"><strong>+{{stats.totalstudents}}</strong> {{#str}}studentsavailability, local_catalog{{/str}}</span>
+                    <span class="cv-hero__stat"><strong>+{{stats.totalcourses}}</strong> {{#str}}coursesavailability, local_catalog{{/str}}</span>
+                    <span class="cv-hero__stat"><strong>+{{stats.totalinstructors}}</strong> {{#str}}instructorsavailability, local_catalog{{/str}}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! ══════════════════════════════════════════════════════════════ EMPRESAS ═══ }}
+    <section class="cv-companies" aria-label="{{#str}}companies_label, local_catalog{{/str}}">
+        <div class="container">
+            <p class="cv-companies__label">{{#str}}companies_label, local_catalog{{/str}}</p>
+            <div class="cv-companies__logos" aria-hidden="true">
+                <span class="cv-companies__logo">Aubay España</span>
+                <span class="cv-companies__logo">Aubay Portugal</span>
+                <span class="cv-companies__logo">Aubay France</span>
+                <span class="cv-companies__logo">Aubay Italia</span>
+                <span class="cv-companies__logo">Sikkens</span>
+            </div>
+        </div>
+    </section>
+
+    {{! ═════════════════════════════════════════════════ CURSOS EN TENDENCIA ════ }}
+    {{#has_trending}}
+        <section class="cv-section">
+            <div class="container">
+                <div class="cv-section__header">
+                    <h2 class="cv-section__title">{{#str}}trending, local_catalog{{/str}}</h2>
+                    <a href="{{catalogurl}}" class="cv-section__link">
+                        {{#str}}viewall, local_catalog{{/str}} →
+                    </a>
+                </div>
+
+                <div class="cv-carousel" data-carousel>
+                    <button class="cv-carousel__prev"
+                            aria-label="{{#str}}prev, local_catalog{{/str}}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="cv-carousel__track">
+                        {{#cursos_tendencia}}
+                            {{> local_catalog/card_course }}
+                        {{/cursos_tendencia}}
+                    </div>
+                    <button class="cv-carousel__next"
+                            aria-label="{{#str}}next, local_catalog{{/str}}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    {{/has_trending}}
+
+    {{! ═══════════════════════════════════════════════ POR QUÉ CAMPUS VIRTUAL ═══ }}
+    <section class="cv-features" aria-labelledby="features-title">
+        <div class="container">
+            <h2 class="cv-features__title" id="features-title">
+                {{#str}}features_title, local_catalog{{/str}}
+            </h2>
+            <div class="cv-features__grid">
+
+                {{#features}}
+                    <div class="cv-features__item">
+                        <div class="cv-features__icon" aria-hidden="true">
+                            {{#icon}}
+                            {{! Icon 1: estrella de calidad }}
+                                {{#.}}
+                                {{/.}}
+                            {{/icon}}
+                            {{! Usamos SVG directamente ya que Mustache no tiene condicionales }}
+                            <svg viewBox="0 0 24 24" width="28" height="28" fill="none"
+                                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="cv-features__title">{{title}}</h3>
+                        <p class="cv-features__text">{{text}}</p>
+                    </div>
+                {{/features}}
+
+            </div>
+
+            {{! Stats bajo los features }}
+            <div class="cv-features__stats" aria-label="Estadísticas del campus">
+                <div class="cv-features__stat">
+                    <strong>{{stats.totalcourses}}</strong>
+                    <span>{{#str}}coursescount, local_catalog{{/str}}</span>
+                </div>
+                <div class="cv-features__stat">
+                    <strong>{{stats.totalstudents}}</strong>
+                    <span>{{#str}}students, local_catalog{{/str}}</span>
+                </div>
+                <div class="cv-features__stat">
+                    <strong>{{stats.totalinstructors}}</strong>
+                    <span>{{#str}}instructorscount, local_catalog{{/str}}</span>
+                </div>
+                <div class="cv-features__stat">
+                    <strong>{{stats.totalcategories}}</strong>
+                    <span>{{#str}}categories, local_catalog{{/str}}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! ══════════════════════════════════════════════════ LO MÁS NUEVO EN ... ════ }}
+    {{#has_datacat}}
+        <section class="cv-section cv-section--alt" aria-labelledby="datacat-title">
+            <div class="container">
+                <div class="cv-section__header">
+                    <h2 class="cv-section__title" id="datacat-title">
+                        {{#str}}newestin, local_catalog{{/str}} <strong>{{datacat_name}}</strong>
+                    </h2>
+                    <a href="{{datacat_url}}" class="cv-section__link">
+                        {{#str}}viewall, local_catalog{{/str}} →
+                    </a>
+                </div>
+
+                <div class="cv-carousel" data-carousel id="carousel-data">
+                    <button class="cv-carousel__prev" aria-label="{{#str}}prev, local_catalog{{/str}}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="cv-carousel__track">
+                        {{#datacat_courses}}
+                            {{> local_catalog/card_course}}
+                        {{/datacat_courses}}
+                    </div>
+                    <button class="cv-carousel__next"
+                            aria-label="{{#str}}next, local_catalog{{/str}}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    {{/has_datacat}}
+
+    {{! ════════════════════════════════════════════════════════ ENSEÑA LO QUE SABES }}
+    <section class="cv-instructor" aria-label="{{#str}}teachhere, local_catalog{{/str}}">
+        <div class="container">
+            <div class="cv-instructor__inner">
+                <div class="cv-instructor__content">
+                    <h2 class="cv-instructor__title">
+                        {{#str}}teachhere_title, local_catalog{{/str}}
+                    </h2>
+                    <p class="cv-instructor__text">
+                        {{#str}}teachhere_text, local_catalog{{/str}}
+                    </p>
+                    <a href="{{teachurl}}" class="cv-instructor__btn">
+                        {{#str}}teachhere_cta, local_catalog{{/str}}
+                    </a>
+                </div>
+
+                <div class="cv-instructor__img cv-instructor__img--placeholder" style="background:linear-gradient(135deg,#1c1d1f 40%,#F05A28 100%);border-radius:.8rem;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center">
+                    <svg viewBox="0 0 120 80" width="240" height="160" fill="none">
+                        <rect x="10" y="10" width="100" height="60" rx="6" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.15)"></rect>
+                        <circle cx="38" cy="40" r="14" fill="rgba(240,90,40,.3)" stroke="#F05A28" stroke-width="2"></circle>
+                        <polygon points="34,33 34,47 46,40" fill="#F05A28"></polygon>
+                        <rect x="58" y="26" width="40" height="4" rx="2" fill="rgba(255,255,255,.2)"></rect>
+                        <rect x="58" y="36" width="32" height="3" rx="2" fill="rgba(255,255,255,.12)"></rect>
+                        <rect x="58" y="45" width="36" height="3" rx="2" fill="rgba(255,255,255,.12)"></rect>
+                    </svg>
+                </div>
+
+
+                <!--
+                <div class="cv-instructor__graphic" aria-hidden="true">
+                    <svg viewBox="0 0 220 160" width="220" height="160" role="img">
+                        <rect x="20" y="20" width="180" height="120" rx="8"
+                              fill="rgba(240,90,40,.08)" stroke="#F05A28" stroke-width="1.5"/>
+                        <circle cx="110" cy="65" r="28" fill="rgba(240,90,40,.15)" stroke="#F05A28" stroke-width="1.5"/>
+                        <polygon points="102,54 102,76 124,65" fill="#F05A28"/>
+                        <rect x="50" y="110" width="120" height="6" rx="3" fill="rgba(240,90,40,.3)"/>
+                        <rect x="70" y="122" width="80" height="4" rx="2" fill="rgba(240,90,40,.15)"/>
+                    </svg>
+                </div>
+                -->
+            </div>
+        </div>
+    </section>
+
+    {{! ═════════════════════════════════════════════════════════════ TESTIMONIOS ══ }}
+    {{#has_testimonials}}
+        <section class="cv-testimonials" aria-labelledby="testimonials-title">
+            <div class="container">
+                <h2 class="cv-testimonials__title" id="testimonials-title">
+                    {{#str}}testimonials, local_catalog{{/str}}
+                </h2>
+                <div class="cv-testimonials__grid">
+                    {{#testimonials}}
+                        <article class="cv-testimonials__card">
+                            <div class="cv-testimonials__stars" aria-label="5 estrellas">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#F0A500" stroke="none"/></svg>
+                            </div>
+                            <blockquote class="cv-testimonials__text">"{{testimonial}}"</blockquote>
+                            <footer class="cv-testimonials__author">
+                                <div class="cv-testimonials__avatar" aria-hidden="true">{{initials}}</div>
+                                <div>
+                                    <div class="cv-testimonials__name">{{name}}</div>
+                                    {{#hasjobtitle}}
+                                        <div class="cv-testimonials__role">{{jobtitle}}</div>
+                                    {{/hasjobtitle}}
+                                </div>
+                            </footer>
+                        </article>
+                    {{/testimonials}}
+                </div>
+            </div>
+        </section>
+    {{/has_testimonials}}
+
+</main>
+
+{{! ── FOOTER ── }}
+{{> local_catalog/footer_home }}

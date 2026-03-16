@@ -1,0 +1,299 @@
+// =============================================================================
+// BUSINESS — comparar planes + solicitar demo
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Shared: hero de negocio ───────────────────────────────────────────────────
+.cv-biz-hero {
+    background: t.$color-bg-dark;
+    padding-block: t.$space-12;
+    color: t.$color-white;
+
+    &__inner {
+        display: grid;
+        gap: t.$space-8;
+        align-items: center;
+
+        @include m.above(m.$bp-lg) { grid-template-columns: 1fr 1fr; }
+    }
+
+    &__eyebrow {
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: t.$color-brand;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-block-end: t.$space-3;
+    }
+
+    &__title {
+        font-size: t.$text-4xl;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-block-end: t.$space-4;
+
+        @include m.above(m.$bp-md) { font-size: t.$text-5xl; }
+    }
+
+    &__sub {
+        font-size: t.$text-md;
+        color: rgba(t.$color-white, .75);
+        line-height: 1.6;
+        margin-block-end: t.$space-6;
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: t.$space-3;
+    }
+
+    &__cta {
+        @include m.btn-reset;
+        padding: t.$space-3 t.$space-6;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        border-radius: t.$radius;
+
+        &--primary {
+            background: t.$color-brand;
+            color: t.$color-white;
+            &:hover { background: t.$color-brand-dark; text-decoration: none; color: t.$color-white; }
+        }
+
+        &--outline {
+            border: 1px solid rgba(t.$color-white, .4);
+            color: t.$color-white;
+            &:hover { border-color: t.$color-white; text-decoration: none; }
+        }
+    }
+
+    &__img {
+        border-radius: t.$radius-md;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        background: t.$color-bg-dark-2;
+        @include m.flex-center;
+
+        svg { width: 12rem; height: 12rem; stroke: rgba(t.$color-white, .1); fill: none; stroke-width: 1; }
+    }
+}
+
+// ── Planes cards ──────────────────────────────────────────────────────────────
+.cv-plans {
+    padding-block: t.$space-12;
+
+    &__header {
+        text-align: center;
+        margin-block-end: t.$space-10;
+
+        h2 { font-size: t.$text-4xl; font-weight: 900; letter-spacing: -0.02em; margin-block-end: t.$space-3; }
+        p  { font-size: t.$text-md; color: t.$color-text-muted; max-width: 52rem; margin-inline: auto; }
+    }
+
+    &__grid {
+        display: grid;
+        gap: t.$space-6;
+        align-items: start;
+
+        @include m.above(m.$bp-md) { grid-template-columns: repeat(2, 1fr); }
+        @include m.above(m.$bp-lg) { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    &__card {
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius-md;
+        overflow: hidden;
+        background: t.$color-white;
+        transition: box-shadow .15s, transform .15s;
+
+        &:hover { box-shadow: t.$shadow-lg; transform: translateY(-4px); }
+
+        &--featured {
+            border-color: t.$color-brand;
+            box-shadow: 0 0 0 2px t.$color-brand, t.$shadow-lg;
+            transform: scale(1.02);
+
+            &:hover { transform: scale(1.02) translateY(-4px); }
+        }
+    }
+
+    &__card-head {
+        padding: t.$space-6;
+        border-block-end: 1px solid t.$color-border-subtle;
+
+        &--featured { background: t.$color-brand; color: t.$color-white; }
+    }
+
+    &__card-badge {
+        display: inline-block;
+        padding: t.$space-1 t.$space-2;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        background: t.$color-brand;
+        color: t.$color-white;
+        border-radius: t.$radius-full;
+        margin-block-end: t.$space-2;
+
+        .cv-plans__card--featured & { background: rgba(t.$color-white, .25); }
+    }
+
+    &__card-name {
+        font-size: t.$text-xl;
+        font-weight: 700;
+        margin-block-end: t.$space-1;
+    }
+
+    &__card-desc {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        line-height: 1.5;
+
+        .cv-plans__card--featured & { color: rgba(t.$color-white, .8); }
+    }
+
+    &__card-price {
+        padding: t.$space-4 t.$space-6;
+        border-block-end: 1px solid t.$color-border-subtle;
+
+        strong { font-size: 3.6rem; font-weight: 900; letter-spacing: -0.02em; }
+        small  { font-size: t.$text-xs; color: t.$color-text-muted; display: block; margin-block-start: t.$space-1; }
+
+        &--custom strong { font-size: t.$text-xl; }
+    }
+
+    &__card-features {
+        padding: t.$space-6;
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-3;
+    }
+
+    &__card-feature {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-2;
+        font-size: t.$text-sm;
+
+        svg { stroke: t.$color-brand; fill: none; stroke-width: 2.5; stroke-linecap: round; flex-shrink: 0; margin-block-start: 0.2rem; }
+    }
+
+    &__card-cta {
+        padding: 0 t.$space-6 t.$space-6;
+
+        a, button {
+            @include m.btn-reset;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: t.$space-3;
+            font-size: t.$text-sm;
+            font-weight: 700;
+            border-radius: t.$radius;
+            border: 1px solid t.$color-border;
+            color: t.$color-text;
+            transition: .15s;
+
+            &:hover { border-color: t.$color-brand; color: t.$color-brand; background: t.$color-brand-faint; text-decoration: none; }
+        }
+
+        .cv-plans__card--featured & {
+            a, button {
+                background: t.$color-white;
+                border-color: t.$color-white;
+                color: t.$color-brand;
+
+                &:hover { background: t.$color-brand-faint; }
+            }
+        }
+    }
+}
+
+// ── Tabla comparativa de features ────────────────────────────────────────────
+.cv-compare-table {
+    padding-block: t.$space-12;
+    overflow-x: auto;
+
+    &__title {
+        font-size: t.$text-3xl;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin-block-end: t.$space-8;
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 60rem;
+    }
+
+    th, td {
+        padding: t.$space-3 t.$space-4;
+        text-align: start;
+        font-size: t.$text-sm;
+        border-block-end: 1px solid t.$color-border-subtle;
+    }
+
+    th {
+        font-weight: 700;
+        background: t.$color-bg-subtle;
+
+        &:first-child { width: 40%; }
+        &.is-featured { background: t.$color-brand-bg; color: t.$color-brand; }
+    }
+
+    tr:last-child td { border-block-end: none; }
+    tr:hover td { background: t.$color-brand-faint; }
+
+    .check { color: t.$color-brand; font-size: t.$text-lg; font-weight: 900; }
+    .dash  { color: t.$color-text-faint; }
+}
+
+// ── Demo form page ─────────────────────────────────────────────────────────────
+.cv-demo-form {
+    padding-block: t.$space-12;
+
+    &__layout {
+        display: grid;
+        gap: t.$space-10;
+        align-items: start;
+
+        @include m.above(m.$bp-lg) { grid-template-columns: 1fr 44rem; }
+    }
+
+    &__info {
+        h2 { font-size: t.$text-4xl; font-weight: 900; letter-spacing: -0.02em; margin-block-end: t.$space-4; }
+        p  { font-size: t.$text-md; color: t.$color-text-body; line-height: 1.6; margin-block-end: t.$space-6; }
+    }
+
+    &__bullets {
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-4;
+    }
+
+    &__bullet {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-3;
+        font-size: t.$text-sm;
+
+        svg { stroke: t.$color-brand; fill: none; stroke-width: 2.5; stroke-linecap: round; flex-shrink: 0; margin-block-start: 0.2rem; }
+        strong { display: block; font-weight: 700; }
+        span   { color: t.$color-text-muted; }
+    }
+
+    &__form-card {
+        background: t.$color-white;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius-md;
+        padding: t.$space-8;
+        box-shadow: t.$shadow-md;
+
+        h3 { font-size: t.$text-xl; font-weight: 700; margin-block-end: t.$space-2; }
+        p  { font-size: t.$text-sm; color: t.$color-text-muted; margin-block-end: t.$space-6; }
+    }
+}

@@ -1,0 +1,333 @@
+// =============================================================================
+// FILTERS — página de listado de cursos
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Layout principal ──────────────────────────────────────────────────────────
+.cv-catalog {
+    &__layout {
+        display: flex;
+        gap: t.$space-8;
+        align-items: flex-start;
+        padding-block: t.$space-6;
+    }
+
+    &__sidebar {
+        flex-shrink: 0;
+        width: 28rem;
+        position: sticky;
+        top: calc(t.$nav-height + #{t.$space-4});
+
+        @include m.below(m.$bp-lg) { display: none; }
+
+        &.is-open { display: block; }
+    }
+
+    &__main { flex: 1; min-width: 0; }
+}
+
+// ── Barra superior de resultados ──────────────────────────────────────────────
+.cv-results-bar {
+    @include m.flex-between;
+    gap: t.$space-4;
+    margin-block-end: t.$space-4;
+    flex-wrap: wrap;
+
+    &__count {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+
+        strong { color: t.$color-text; font-weight: 700; }
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+    }
+
+    &__label {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        white-space: nowrap;
+    }
+
+    &__select {
+        appearance: none;
+        padding: t.$space-2 t.$space-8 t.$space-2 t.$space-3;
+        font-size: t.$text-sm;
+        font-family: t.$font-sans;
+        color: t.$color-text;
+        background: t.$color-white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a6f73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 1rem center;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius;
+        cursor: pointer;
+
+        &:focus { outline: 2px solid t.$color-brand; outline-offset: 1px; }
+    }
+
+    &__mobile-toggle {
+        @include m.btn-reset;
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+        padding: t.$space-2 t.$space-3;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius;
+        color: t.$color-text;
+
+        @include m.above(m.$bp-lg) { display: none; }
+
+        &:hover { border-color: t.$color-brand; color: t.$color-brand; }
+    }
+}
+
+// ── Chips de filtros activos ──────────────────────────────────────────────────
+.cv-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: t.$space-2;
+    margin-block-end: t.$space-4;
+
+    &:empty { display: none; }
+
+    &__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: t.$space-2;
+        padding: t.$space-1 t.$space-3;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        background: t.$color-brand-light;
+        color: t.$color-brand-dark;
+        border-radius: t.$radius-full;
+
+        button {
+            @include m.btn-reset;
+            @include m.flex-center;
+            width: 1.6rem;
+            height: 1.6rem;
+            color: t.$color-brand-dark;
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+    }
+
+    &__clear {
+        @include m.btn-reset;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: t.$color-brand;
+        text-decoration: underline;
+        align-self: center;
+
+        &:hover { color: t.$color-brand-dark; }
+    }
+}
+
+// ── Sidebar: grupos de filtro ─────────────────────────────────────────────────
+.cv-filter-group {
+    border-block-end: 1px solid t.$color-border-subtle;
+    padding-block: t.$space-4;
+
+    &:first-child { padding-block-start: 0; }
+    &:last-child  { border-block-end: none; }
+
+    &__header {
+        @include m.btn-reset;
+        @include m.flex-between;
+        width: 100%;
+        font-size: t.$text-md;
+        font-weight: 700;
+        color: t.$color-text;
+        border-radius: 0;
+        padding-block-end: t.$space-1;
+
+        svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            transition: transform .2s;
+            flex-shrink: 0;
+        }
+
+        &.is-open svg { transform: rotate(180deg); }
+    }
+
+    &__body {
+        overflow: hidden;
+        max-height: 1000px;
+        transition: max-height .25s ease;
+
+        &.is-collapsed { max-height: 0; }
+    }
+
+    &__list {
+        padding-block-start: t.$space-2;
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-1;
+    }
+}
+
+// ── Filtro individual (checkbox) ──────────────────────────────────────────────
+.cv-filter-item {
+    display: flex;
+    align-items: flex-start;
+    gap: t.$space-2;
+    padding-block: t.$space-1;
+    cursor: pointer;
+
+    &:hover .cv-filter-item__label { color: t.$color-brand; }
+
+    &__check {
+        appearance: none;
+        width: 1.6rem;
+        height: 1.6rem;
+        flex-shrink: 0;
+        margin-block-start: 0.2rem;
+        border: 2px solid t.$color-border;
+        border-radius: t.$radius-sm;
+        background: t.$color-white;
+        cursor: pointer;
+        transition: .15s;
+        position: relative;
+
+        &:checked {
+            background: t.$color-brand;
+            border-color: t.$color-brand;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center/10px no-repeat;
+            }
+        }
+    }
+
+    &__label {
+        flex: 1;
+        font-size: t.$text-sm;
+        color: t.$color-text-body;
+        line-height: 1.4;
+        transition: color .1s;
+    }
+
+    &__count {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        flex-shrink: 0;
+    }
+}
+
+// ── Rating filter (estrellas clicables) ───────────────────────────────────────
+.cv-filter-rating {
+    display: flex;
+    flex-direction: column;
+    gap: t.$space-1;
+    padding-block-start: t.$space-2;
+
+    &__row {
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+        cursor: pointer;
+        padding-block: t.$space-1;
+
+        &:hover .cv-filter-rating__label { color: t.$color-brand; }
+        &.is-selected { font-weight: 700; color: t.$color-brand; }
+    }
+
+    &__stars {
+        display: flex;
+        gap: 1px;
+        svg { width: 1.2rem; height: 1.2rem; fill: #f0a500; }
+    }
+
+    &__label {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        transition: color .1s;
+    }
+}
+
+// ── Resultados: grid de cards ─────────────────────────────────────────────────
+.cv-courses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: t.$space-4;
+
+    @include m.above(m.$bp-sm) { grid-template-columns: repeat(2, 1fr); }
+    @include m.above(m.$bp-xl) { grid-template-columns: repeat(3, 1fr); }
+
+    // Card horizontal en modo lista
+    &--list .cv-card {
+        flex-direction: row;
+
+        .cv-card__img {
+            width: 24rem;
+            flex-shrink: 0;
+            aspect-ratio: unset;
+            height: 14rem;
+        }
+    }
+}
+
+// ── Paginación ────────────────────────────────────────────────────────────────
+.cv-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: t.$space-1;
+    margin-block-start: t.$space-8;
+
+    &__btn {
+        @include m.btn-reset;
+        @include m.flex-center;
+        width: 3.6rem;
+        height: 3.6rem;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius;
+        color: t.$color-text;
+        transition: .15s;
+
+        &:hover { border-color: t.$color-brand; color: t.$color-brand; }
+        &.is-active { background: t.$color-brand; border-color: t.$color-brand; color: t.$color-white; }
+        &:disabled { opacity: .4; cursor: default; }
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    }
+}
+
+// ── Hero de búsqueda ──────────────────────────────────────────────────────────
+.cv-search-hero {
+    background: t.$color-bg-subtle;
+    border-block-end: 1px solid t.$color-border-subtle;
+    padding-block: t.$space-6;
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-2;
+    }
+
+    &__query {
+        font-size: t.$text-4xl;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+
+        span { color: t.$color-brand; }
+    }
+
+    &__meta {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+    }
+}

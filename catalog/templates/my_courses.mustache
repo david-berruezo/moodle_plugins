@@ -1,0 +1,196 @@
+{{!
+    Mis Cursos — local/catalog/templates/my_courses.mustache
+    URL amigable: /mis-cursos
+}}
+<div class="cv-page">
+    {{> local_catalog/navbar }}
+
+    <main id="cv-main">
+        <div class="mc-page">
+            <div class="mc-page__inner">
+
+                {{! Header de sección }}
+                <div class="mc-header">
+                    <div class="mc-header__user">
+                        <img src="{{useravatarurl}}" alt="{{username}}" class="mc-header__avatar">
+                        <div>
+                            <h1 class="mc-header__title">Mi aprendizaje</h1>
+                            <p class="mc-header__name">{{username}}</p>
+                        </div>
+                    </div>
+                    <div class="mc-header__stats">
+                        <div class="mc-header__stat">
+                            <strong>{{totalcourses}}</strong>
+                            <span>cursos</span>
+                        </div>
+                        <div class="mc-header__stat">
+                            <strong>{{inprogress}}</strong>
+                            <span>en progreso</span>
+                        </div>
+                        <div class="mc-header__stat">
+                            <strong>{{completed}}</strong>
+                            <span>completados</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Tabs filtro }}
+                <div class="mc-tabs" role="tablist">
+                    <a href="{{filterallurl}}"
+                       class="mc-tabs__tab {{#filterall}}mc-tabs__tab--active{{/filterall}}"
+                       role="tab"
+                       aria-selected="{{filterall}}">
+                        Todos mis cursos
+                    </a>
+                    <a href="{{filterprogressurl}}"
+                       class="mc-tabs__tab {{#filterinprogress}}mc-tabs__tab--active{{/filterinprogress}}"
+                       role="tab"
+                       aria-selected="{{filterinprogress}}">
+                        En progreso
+                    </a>
+                    <a href="{{filtercompletedurl}}"
+                       class="mc-tabs__tab {{#filtercompleted}}mc-tabs__tab--active{{/filtercompleted}}"
+                       role="tab"
+                       aria-selected="{{filtercompleted}}">
+                        Completados
+                    </a>
+                </div>
+
+                {{! Grid de cursos }}
+                {{#hascourses}}
+                <div class="mc-grid">
+                    {{#courses}}
+                    <article class="mc-card">
+                        <a href="{{learnurl}}" class="mc-card__img-link" tabindex="-1">
+                            {{#hasimage}}
+                                <img src="{{imageurl}}" alt="{{fullname}}" class="mc-card__img" loading="lazy">
+                            {{/hasimage}}
+                            {{^hasimage}}
+                                <div class="mc-card__initials" aria-hidden="true">{{initials}}</div>
+                            {{/hasimage}}
+
+                            {{! Badge estado }}
+                            <span class="mc-card__badge {{#iscompleted}}mc-card__badge--done{{/iscompleted}}">
+                                {{#iscompleted}}✓ Completado{{/iscompleted}}
+                                {{^iscompleted}}En progreso{{/iscompleted}}
+                            </span>
+                        </a>
+
+                        <div class="mc-card__body">
+                            <h3 class="mc-card__title">
+                                <a href="{{learnurl}}">{{fullname}}</a>
+                            </h3>
+                            {{#summary}}<p class="mc-card__summary">{{summary}}</p>{{/summary}}
+
+                            {{! Barra de progreso }}
+                            <div class="mc-card__progress">
+                                <div class="mc-card__progress-bar">
+                                    <div class="mc-card__progress-fill" style="width:{{progress}}%"
+                                         role="progressbar"
+                                         aria-valuenow="{{progress}}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                                <span class="mc-card__progress-pct">{{progress}}% completado</span>
+                            </div>
+
+                            <a href="{{learnurl}}" class="mc-card__cta">
+                                {{#iscompleted}}Repasar curso{{/iscompleted}}
+                                {{^iscompleted}}Continuar aprendiendo →{{/iscompleted}}
+                            </a>
+                        </div>
+                    </article>
+                    {{/courses}}
+                </div>
+
+                {{! Paginación }}
+                {{#haspagination}}
+                <nav class="catalog-pagination" aria-label="Paginación">
+                    {{#pagination}}
+                        {{#hasprev}}<a href="{{prevurl}}" class="catalog-pagination__btn">← Anterior</a>{{/hasprev}}
+                        {{#pages}}
+                            <a href="{{url}}" class="catalog-pagination__page {{#active}}catalog-pagination__page--active{{/active}}" aria-label="Página {{display}}" {{#active}}aria-current="page"{{/active}}>{{display}}</a>
+                        {{/pages}}
+                        {{#hasnext}}<a href="{{nexturl}}" class="catalog-pagination__btn">Siguiente →</a>{{/hasnext}}
+                    {{/pagination}}
+                </nav>
+                {{/haspagination}}
+
+                {{/hascourses}}
+
+                {{! Estado vacío }}
+                {{^hascourses}}
+                <div class="mc-empty">
+                    <div class="mc-empty__icon" aria-hidden="true">📚</div>
+                    <h2 class="mc-empty__title">
+                        {{#filterall}}Todavía no estás inscrito en ningún curso{{/filterall}}
+                        {{#filterinprogress}}No tienes cursos en progreso{{/filterinprogress}}
+                        {{#filtercompleted}}Todavía no has completado ningún curso{{/filtercompleted}}
+                    </h2>
+                    <p class="mc-empty__sub">Explora el catálogo y empieza a aprender hoy mismo.</p>
+                    <a href="{{catalogurl}}" class="mc-empty__cta">Explorar cursos</a>
+                </div>
+                {{/hascourses}}
+
+            </div>
+        </div>
+    </main>
+
+    {{> local_catalog/footer }}
+</div>
+
+<style>
+.mc-page { background: #f7f9fa; min-height: calc(100vh - 6.4rem); }
+.mc-page__inner { max-width: 134rem; margin: 0 auto; padding: 4rem 2rem; }
+
+/* Header */
+.mc-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 3.2rem; }
+.mc-header__user { display: flex; align-items: center; gap: 1.6rem; }
+.mc-header__avatar { width: 6.4rem; height: 6.4rem; border-radius: 50%; object-fit: cover; border: 3px solid #F05A28; }
+.mc-header__title { font-size: 2.8rem; font-weight: 900; color: #1c1d1f; margin: 0; }
+.mc-header__name { font-size: 1.4rem; color: #6a6f73; margin: .3rem 0 0; }
+.mc-header__stats { display: flex; gap: 3.2rem; }
+.mc-header__stat { text-align: center; }
+.mc-header__stat strong { display: block; font-size: 2.8rem; font-weight: 900; color: #F05A28; }
+.mc-header__stat span { font-size: 1.3rem; color: #6a6f73; }
+
+/* Tabs */
+.mc-tabs { display: flex; gap: .4rem; border-bottom: 2px solid #e0e0e0; margin-bottom: 3.2rem; }
+.mc-tabs__tab { padding: 1.2rem 2rem; font-size: 1.5rem; font-weight: 600; color: #6a6f73; text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: .15s; }
+.mc-tabs__tab:hover { color: #1c1d1f; text-decoration: none; }
+.mc-tabs__tab--active { color: #F05A28; border-bottom-color: #F05A28; font-weight: 700; }
+
+/* Grid */
+.mc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4rem; }
+@media (max-width: 1200px) { .mc-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 992px) { .mc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 576px) { .mc-grid { grid-template-columns: 1fr; } }
+
+/* Tarjeta */
+.mc-card { background: #fff; border: 1px solid #e0e0e0; border-radius: .8rem; overflow: hidden; transition: box-shadow .2s, transform .15s; }
+.mc-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); transform: translateY(-2px); }
+.mc-card__img-link { position: relative; display: block; aspect-ratio: 16/9; overflow: hidden; }
+.mc-card__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mc-card__initials { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #F05A28, #C94820); color: #fff; font-size: 2.8rem; font-weight: 700; }
+.mc-card__badge { position: absolute; top: 1rem; right: 1rem; padding: .4rem .8rem; border-radius: 1.2rem; font-size: 1.1rem; font-weight: 700; background: rgba(30,64,56,.85); color: #fff; backdrop-filter: blur(4px); }
+.mc-card__badge--done { background: rgba(30,96,85,.85); }
+.mc-card__body { padding: 1.6rem; }
+.mc-card__title { font-size: 1.4rem; font-weight: 700; margin: 0 0 .6rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mc-card__title a { color: #1c1d1f; text-decoration: none; }
+.mc-card__title a:hover { color: #F05A28; }
+.mc-card__summary { font-size: 1.2rem; color: #6a6f73; margin: 0 0 1.2rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mc-card__progress { margin-bottom: 1.2rem; }
+.mc-card__progress-bar { height: .6rem; background: #e0e0e0; border-radius: 1rem; overflow: hidden; margin-bottom: .4rem; }
+.mc-card__progress-fill { height: 100%; background: #F05A28; border-radius: 1rem; transition: width .3s; }
+.mc-card__progress-pct { font-size: 1.2rem; color: #6a6f73; }
+.mc-card__cta { display: block; padding: 1rem; text-align: center; background: #F05A28; color: #fff; font-size: 1.3rem; font-weight: 700; border-radius: .4rem; text-decoration: none; transition: background .15s; }
+.mc-card__cta:hover { background: #C94820; color: #fff; text-decoration: none; }
+
+/* Vacío */
+.mc-empty { text-align: center; padding: 8rem 2rem; }
+.mc-empty__icon { font-size: 5.6rem; margin-bottom: 2rem; display: block; }
+.mc-empty__title { font-size: 2.4rem; font-weight: 800; color: #1c1d1f; margin: 0 0 1rem; }
+.mc-empty__sub { font-size: 1.6rem; color: #6a6f73; margin: 0 0 2.4rem; }
+.mc-empty__cta { display: inline-block; padding: 1.2rem 3.2rem; background: #F05A28; color: #fff; font-size: 1.5rem; font-weight: 700; border-radius: .4rem; text-decoration: none; transition: background .15s; }
+.mc-empty__cta:hover { background: #C94820; color: #fff; text-decoration: none; }
+</style>

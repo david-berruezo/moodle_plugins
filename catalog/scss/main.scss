@@ -1,0 +1,24 @@
+// =============================================================================
+// CAMPUS VIRTUAL — main.scss
+// Compilar: sass scss/main.scss styles.css --style=compressed --no-source-map
+// =============================================================================
+
+// ── Base ─────────────────────────────────────────────────────────────────────
+@use 'tokens';    // design tokens (sin alias, se usa en cada componente)
+@use 'mixins';    // ídem
+@use 'reset';     // reset + utilidades globales
+
+// ── Componentes — base ────────────────────────────────────────────────────────
+@use 'components/navbar-desktop';
+@use 'components/navbar-mobile';
+@use 'components/hero';
+@use 'components/card';
+@use 'components/sections';
+
+// ── Componentes — páginas interiores ─────────────────────────────────────────
+@use 'components/filters';
+@use 'components/course-detail';
+@use 'components/player';
+@use 'components/plan';
+@use 'components/business';
+@use 'components/teach-auth';

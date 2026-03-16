@@ -31,11 +31,32 @@ class course_player {
      * @param int $cmid ID de la actividad actual (0 = primera actividad)
      * @return array|null Datos para el template
      */
-    public function get_player_data(\stdClass $course, int $cmid = 0): ?array {
+    public function get_player_data(\stdClass $course, int $cmid = 0 , bool $isenrolled = false, bool $isguest = true): ?array {
         global $USER, $DB;
 
         $modinfo = get_fast_modinfo($course);
         $context = \context_course::instance($course->id);
+
+        // Obtener todos los campos personalizados de un curso
+        $handler = \core_customfield\handler::get_handler('core_course', 'course');
+        $datos_personalizados   = $handler->get_instance_data($course->id);
+        $personalizados = array();
+        foreach ($datos_personalizados as $data) {
+            $field = $data->get_field();
+            $name  = $field->get('shortname');  // ej: "idioma", "nivel", "duracion"
+            $value = $data->get_value();        // el valor guardado
+            $personalizados[$name] = strip_tags($value);
+            // echo $name . ': ' . $value;
+        }
+
+        // --- Instructores (detallado) ---
+        $instructores = array();
+        $instructores['instructors'] = $this->get_instructors_detail($course->id);
+        $instructores['hasinstructors'] = !empty($instructores['instructors']);
+        $instructores['instructornames'] = implode(', ', array_column($instructores['instructors'], 'fullname'));
+
+        // print_r($instructores);
+        // die();
 
         // --- 1. Construir lista ordenada de todas las actividades navegables ---
         $allactivities = $this->get_ordered_activities($modinfo);
@@ -86,10 +107,15 @@ class course_player {
 
         // --- 6. Progreso del curso ---
         $completioninfo = new \completion_info($course);
-        $progress = $this->get_course_progress($completioninfo, $modinfo);
+        // $progress = $this->get_course_progress($completioninfo, $modinfo);
+        $progress = ['percentage' => 0, 'completed' => 0, 'total' => 0, 'text' => ''];
+        if (!$isguest && $isenrolled) {
+            $progress = $this->get_course_progress($completioninfo, $modinfo);
+        }
 
         // --- 7. Completar actividad actual vía AJAX (URL para marcar como completada) ---
         $completeurl = '';
+        /*
         if ($completioninfo->is_enabled($cm) == COMPLETION_TRACKING_MANUAL) {
             $completeurl = (new \moodle_url('/local/catalog/complete.php', [
                 'id'     => $course->id,
@@ -97,16 +123,28 @@ class course_player {
                 'sesskey' => sesskey(),
             ]))->out(false);
         }
+        */
+        if (!$isguest && $isenrolled) {
+            if ($completioninfo->is_enabled($cm) == COMPLETION_TRACKING_MANUAL) {
+                $completeurl = (new \moodle_url('/local/catalog/complete.php', [
+                    'id'     => $course->id,
+                    'cmid'   => $cmid,
+                    'sesskey' => sesskey(),
+                ]))->out(false);
+            }
+        }
 
         // --- Datos para el template ---
         return [
             // Curso
             'courseid'     => $course->id,
             'coursename'   => $course->fullname,
+            'coursedescription' => strip_tags($course->summary),
             'courseurl'     => (new \moodle_url('/local/catalog/course.php', ['id' => $course->id]))->out(false),
             'catalogurl'   => (new \moodle_url('/local/catalog/index.php'))->out(false),
             'dashboardurl' => (new \moodle_url('/my/'))->out(false),
-
+            // Curso campos personalizados
+            'personalizados' => $personalizados,
             // Actividad actual
             'current_cmid'    => $cmid,
             'current_name'    => $cm->name,
@@ -122,6 +160,11 @@ class course_player {
             'video_url'    => $activitycontent['video_url'] ?? '',
             'html_content' => $activitycontent['html_content'] ?? '',
             'activity_url' => $activitycontent['activity_url'] ?? '',
+
+            // instructores
+            'instructores' => $instructores['instructors'],
+            'tiene_instructores' => $instructores['hasinstructors'],
+            'instructores_nombres' => $instructores['instructornames'],
 
             // Navegación
             'hasprev' => $hasprev,
@@ -142,6 +185,11 @@ class course_player {
             'cancomplete'  => !empty($completeurl),
             'completeurl'  => $completeurl,
             'iscompleted'  => $this->is_activity_completed($completioninfo, $cm),
+
+            'isguest'      => $isguest,
+            'isenrolled'   => $isenrolled,
+            'showenroll'   => $isguest && !$isenrolled,
+            'enrollurl'    => (new \moodle_url('/local/catalog/course.php', ['id' => $course->id]))->out(false),
         ];
     }
 
@@ -477,4 +525,80 @@ class course_player {
             'text'       => $completed . '/' . $total . ' (' . $percentage . '%)',
         ];
     }
+
+
+    /**
+     * Obtiene instructores con datos detallados del perfil.
+     */
+    private function get_instructors_detail(int $courseid): array {
+
+        global $DB, $OUTPUT , $PAGE;
+
+        $context = \context_course::instance($courseid);
+        $instructors = [];
+
+        // u.id, u.firstname, u.lastname, u.email, u.description, u.picture, u.imagealt
+        foreach ([3, 4] as $roleid) {
+            $users = get_role_users($roleid, $context, false,'');
+
+            // print_r($users);
+            // die();
+
+            foreach ($users as $user) {
+
+                // Cargar el perfil completo
+                $fulluser = $DB->get_record('user', ['id' => $user->id],
+                    'id, firstname, lastname, description, descriptionformat, picture, email, city'
+                );
+
+                // La descripción puede tener formato Moodle, procesarla así:
+                $user->description = format_text(
+                    $fulluser->description,
+                    $fulluser->descriptionformat
+                );
+
+                // Contar cursos del instructor
+                $sql = "SELECT COUNT(DISTINCT ra.contextid)
+                          FROM {role_assignments} ra
+                          JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
+                         WHERE ra.userid = :userid AND ra.roleid IN (3, 4)";
+                $coursecount = $DB->count_records_sql($sql, ['userid' => $user->id]);
+
+                // Contar estudiantes totales del instructor
+                $sql = "SELECT COUNT(DISTINCT ue.userid)
+                          FROM {user_enrolments} ue
+                          JOIN {enrol} e ON e.id = ue.enrolid
+                          JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = 50
+                          JOIN {role_assignments} ra ON ra.contextid = ctx.id AND ra.userid = :teacherid
+                         WHERE ra.roleid IN (3, 4)";
+                $studentcount = $DB->count_records_sql($sql, ['teacherid' => $user->id]);
+
+                // Avatar
+                $userpicture = new \user_picture($user);
+                $userpicture->size = 100; // tamaño en px
+                $url_imagen_avatar = $userpicture->get_url($PAGE)->out(false);
+
+                $instructors[] = [
+                    'id'           => $user->id,
+                    'fullname'     => fullname($user),
+                    'description' => strip_tags($user->description),
+                    'bio'          => format_text($user->description ?? '', FORMAT_HTML),
+                    'hasbio'       => !empty($user->description),
+                    //'avatarurl'    => $userpicture->get_url($GLOBALS['PAGE'], $GLOBALS['OUTPUT'])->out(false),
+                    'avatarurl'    => $url_imagen_avatar,
+                    'profileurl'   => (new \moodle_url('/user/profile.php', ['id' => $user->id]))->out(false),
+                    'coursecount'   => $coursecount,
+                    'studentcount'  => $studentcount,
+                    'rating'        => '4.5', // Placeholder fase 2
+                    'reviewcount'   => 0,     // Placeholder fase 2
+                ];
+            }
+        }
+
+        //print_r($instructors);
+        //die();
+
+        return $instructors;
+    }
+
 }

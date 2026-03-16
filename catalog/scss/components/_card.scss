@@ -1,0 +1,212 @@
+// =============================================================================
+// COURSE CARD
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+.cv-card {
+    display: flex;
+    flex-direction: column;
+    background: t.$color-white;
+    border: 1px solid t.$color-border;
+    border-radius: t.$radius;
+    overflow: hidden;
+    transition: box-shadow .15s, transform .15s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+        box-shadow: 0 0 0 1px t.$color-brand, 0 4px 16px rgba(0, 0, 0, .1);
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    // Thumbnail
+    &__img {
+        aspect-ratio: 16 / 9;
+        background: t.$color-border-subtle;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s;
+
+            .cv-card:hover & { transform: scale(1.04); }
+        }
+
+        // Initials placeholder
+        &-initials {
+            font-size: 3.6rem;
+            font-weight: 900;
+            opacity: .8;
+        }
+    }
+
+    &__body {
+        padding: t.$space-3;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: #eceb98;
+        color: #3d3c0a;
+        border-radius: t.$radius-sm;
+        margin-block-end: t.$space-1;
+    }
+
+    &__title {
+        font-size: t.$text-sm;
+        font-weight: 700;
+        color: t.$color-text;
+        line-height: 1.4;
+        margin-block-end: t.$space-1;
+        @include m.clamp-lines(2);
+    }
+
+    &__instructor {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        margin-block-end: t.$space-2;
+    }
+
+    &__rating {
+        display: flex;
+        align-items: center;
+        gap: t.$space-1;
+        margin-block-end: t.$space-1;
+    }
+
+    &__stars {
+        display: flex;
+        gap: 1px;
+
+        svg { display: block; }
+    }
+
+    &__score {
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: #c4710b;
+    }
+
+    &__count {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+    }
+
+    &__meta {
+        margin-block-start: auto;
+        padding-block-start: t.$space-2;
+    }
+
+    &__price {
+        display: flex;
+        align-items: center;
+        gap: t.$space-2;
+
+        strong {
+            font-size: t.$text-md;
+            font-weight: 700;
+            color: t.$color-text;
+        }
+
+        del {
+            font-size: t.$text-xs;
+            color: t.$color-text-muted;
+        }
+    }
+}
+
+// =============================================================================
+// CAROUSEL
+// =============================================================================
+.cv-carousel {
+    position: relative;
+
+    // Mobile: grid responsivo
+    &__track {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: t.$space-4;
+
+        @include m.above(m.$bp-sm)  { grid-template-columns: repeat(3, 1fr); }
+        @include m.above(m.$bp-md)  { grid-template-columns: repeat(4, 1fr); }
+        @include m.above(m.$bp-xl)  { grid-template-columns: repeat(5, 1fr); }
+    }
+
+    // Desktop: flex con overflow controlado por JS
+    @include m.above(m.$bp-lg) {
+        &__track {
+            display: flex;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        &__item {
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding-inline-end: t.$space-4;
+        }
+    }
+
+    // Flechas
+    &__prev,
+    &__next {
+        display: none;
+        position: absolute;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        width: 4.4rem;
+        height: 4.4rem;
+        background: t.$color-white;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius-full;
+        box-shadow: t.$shadow-sm;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: .15s;
+
+        svg {
+            fill: none;
+            stroke: t.$color-text;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        @include m.above(m.$bp-lg) { display: flex; }
+
+        &:hover {
+            background: t.$color-brand;
+            border-color: t.$color-brand;
+            svg { stroke: t.$color-white; }
+        }
+
+        &:disabled {
+            opacity: .4;
+            cursor: default;
+            &:hover {
+                background: t.$color-white;
+                border-color: t.$color-border;
+                svg { stroke: t.$color-text; }
+            }
+        }
+    }
+
+    &__prev { inset-inline-start: -2.2rem; }
+    &__next { inset-inline-end: -2.2rem; }
+}

@@ -1,0 +1,144 @@
+// =============================================================================
+// HERO
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+.cv-hero {
+    background: t.$color-bg-dark;
+    min-height: 48rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        background-image: url('https://s.udemycdn.com/home/non-student-cta/v2/desktop-v3.jpg');
+        background-size: cover;
+        background-position: center right;
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 1;
+        padding-block: t.$space-10;
+    }
+
+    &__content {
+        max-width: 60rem;
+        padding: t.$space-8;
+        background: rgba(t.$color-bg-dark, .8);
+        backdrop-filter: blur(4px);
+        border-radius: t.$radius-md;
+
+        @include m.above(m.$bp-md) {
+            padding: t.$space-10;
+        }
+    }
+
+    &__tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: t.$text-xs;
+        font-weight: 700;
+        color: t.$color-brand;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-block-end: t.$space-3;
+
+        svg {
+            fill: none;
+            stroke: t.$color-brand;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    }
+
+    &__title {
+        font-size: t.$text-4xl;
+        font-weight: 900;
+        color: t.$color-white;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-block-end: t.$space-4;
+
+        @include m.above(m.$bp-md) { font-size: t.$text-5xl; }
+        @include m.above(m.$bp-lg) { font-size: t.$text-6xl; }
+    }
+
+    &__sub {
+        font-size: t.$text-lg;
+        color: rgba(t.$color-white, .8);
+        line-height: 1.5;
+        margin-block-end: t.$space-6;
+    }
+
+    &__search {
+        display: flex;
+        height: 5.2rem;
+        background: t.$color-white;
+        border-radius: t.$radius-full;
+        overflow: hidden;
+        border: 1px solid transparent;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+        margin-block-end: t.$space-5;
+        transition: border-color .15s;
+        width:100%;
+
+
+        &:focus-within { border-color: t.$color-brand; }
+    }
+
+    &__search-input {
+        flex: 1;
+        padding-inline: t.$space-5;
+        font-size: t.$text-md;
+        font-family: t.$font-sans;
+        border: none;
+        outline: none;
+        color: t.$color-text;
+
+        &::placeholder { color: t.$color-text-muted; }
+    }
+
+    &__search-btn {
+        @include m.btn-reset;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding-inline: t.$space-6;
+        background: t.$color-brand;
+        color: t.$color-white;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: background .15s;
+
+        svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+        &:hover { background: t.$color-brand-dark; text-decoration: none; }
+    }
+
+    &__stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: t.$space-4;
+    }
+
+    &__stat {
+        font-size: t.$text-xs;
+        color: rgba(t.$color-white, .7);
+
+        strong {
+            color: t.$color-white;
+            font-weight: 700;
+            margin-inline-end: 0.3rem;
+        }
+    }
+}

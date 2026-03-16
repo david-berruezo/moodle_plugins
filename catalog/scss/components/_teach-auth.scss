@@ -1,0 +1,362 @@
+// =============================================================================
+// TEACH HERE
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+.cv-teach {
+    &-hero {
+        background: t.$color-bg-dark;
+        color: t.$color-white;
+        padding-block: t.$space-16;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 60%, rgba(t.$color-brand, .12) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        &__inner {
+            display: grid;
+            gap: t.$space-8;
+            align-items: center;
+            position: relative;
+
+            @include m.above(m.$bp-lg) { grid-template-columns: 1fr 40rem; }
+        }
+
+        &__title {
+            font-size: t.$text-5xl;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-block-end: t.$space-4;
+
+            @include m.above(m.$bp-lg) { font-size: t.$text-6xl; }
+        }
+
+        &__sub {
+            font-size: t.$text-lg;
+            color: rgba(t.$color-white, .75);
+            line-height: 1.6;
+            margin-block-end: t.$space-6;
+        }
+
+        &__cta {
+            @include m.btn-reset;
+            padding: t.$space-4 t.$space-8;
+            font-size: t.$text-md;
+            font-weight: 700;
+            background: t.$color-brand;
+            color: t.$color-white;
+            border-radius: t.$radius;
+            transition: .15s;
+
+            &:hover { background: t.$color-brand-dark; text-decoration: none; color: t.$color-white; }
+        }
+
+        &__image {
+            border-radius: t.$radius-md;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: t.$color-bg-dark-2;
+            @include m.flex-center;
+
+            svg { width: 16rem; height: 16rem; stroke: rgba(t.$color-white, .08); fill: none; stroke-width: 1; }
+        }
+    }
+
+    &-stats {
+        background: t.$color-brand;
+        padding-block: t.$space-6;
+
+        &__grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: t.$space-6;
+            text-align: center;
+
+            @include m.above(m.$bp-lg) { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        &__item {
+            strong { display: block; font-size: t.$text-4xl; font-weight: 900; color: t.$color-white; letter-spacing: -0.02em; }
+            span   { font-size: t.$text-sm; color: rgba(t.$color-white, .8); margin-block-start: t.$space-1; display: block; }
+        }
+    }
+
+    &-steps {
+        padding-block: t.$space-12;
+        background: t.$color-bg-subtle;
+        border-block: 1px solid t.$color-border-subtle;
+
+        &__title {
+            font-size: t.$text-3xl;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-block-end: t.$space-10;
+        }
+
+        &__grid {
+            display: grid;
+            gap: t.$space-8;
+            @include m.above(m.$bp-md) { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        &__item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: t.$space-4;
+        }
+
+        &__num {
+            @include m.flex-center;
+            width: 5.6rem;
+            height: 5.6rem;
+            border-radius: t.$radius-full;
+            background: t.$color-brand;
+            color: t.$color-white;
+            font-size: t.$text-xl;
+            font-weight: 900;
+        }
+
+        &__title-item { font-size: t.$text-lg; font-weight: 700; }
+        &__text       { font-size: t.$text-sm; color: t.$color-text-muted; line-height: 1.6; max-width: 28rem; }
+    }
+}
+
+// =============================================================================
+// AUTH — login + registro
+// =============================================================================
+.cv-auth {
+    min-height: calc(100vh - t.$nav-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: t.$color-bg-subtle;
+    padding: t.$space-6;
+
+    &__card {
+        width: 100%;
+        max-width: 48rem;
+        background: t.$color-white;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius-md;
+        padding: t.$space-8;
+        box-shadow: t.$shadow-md;
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: t.$space-2;
+        text-decoration: none;
+        margin-block-end: t.$space-6;
+
+        &-mark {
+            @include m.flex-center;
+            width: 3.6rem;
+            height: 3.6rem;
+            background: t.$color-brand;
+            border-radius: t.$radius;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: t.$color-white;
+        }
+
+        &-text { font-size: 1.8rem; font-weight: 900; color: t.$color-text; letter-spacing: -0.02em; }
+
+        &:hover { text-decoration: none; }
+    }
+
+    &__title {
+        font-size: t.$text-2xl;
+        font-weight: 700;
+        text-align: center;
+        margin-block-end: t.$space-2;
+    }
+
+    &__sub {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        text-align: center;
+        margin-block-end: t.$space-6;
+    }
+
+    // Social buttons
+    &__social {
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-3;
+        margin-block-end: t.$space-4;
+    }
+
+    &__social-btn {
+        @include m.btn-reset;
+        display: flex;
+        align-items: center;
+        gap: t.$space-3;
+        width: 100%;
+        padding: t.$space-3 t.$space-4;
+        font-size: t.$text-sm;
+        font-weight: 700;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius;
+        color: t.$color-text;
+        background: t.$color-white;
+        transition: .15s;
+
+        img { width: 2rem; height: 2rem; flex-shrink: 0; }
+        svg { width: 2rem; height: 2rem; flex-shrink: 0; }
+        span { flex: 1; text-align: center; }
+
+        &:hover { border-color: t.$color-brand; color: t.$color-brand; background: t.$color-brand-faint; }
+
+        &--ms { // Microsoft
+            &:hover { border-color: #0078d4; color: #0078d4; background: #f0f8ff; }
+        }
+    }
+
+    &__divider {
+        display: flex;
+        align-items: center;
+        gap: t.$space-4;
+        margin-block: t.$space-4;
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+
+        &::before, &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: t.$color-border-subtle;
+        }
+    }
+
+    &__terms {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        text-align: center;
+        line-height: 1.6;
+        margin-block-start: t.$space-4;
+
+        a { color: t.$color-brand; text-decoration: underline; }
+    }
+
+    &__switch {
+        text-align: center;
+        font-size: t.$text-sm;
+        margin-block-start: t.$space-4;
+        padding-block-start: t.$space-4;
+        border-block-start: 1px solid t.$color-border-subtle;
+
+        a { color: t.$color-brand; font-weight: 700; text-decoration: none;
+            &:hover { text-decoration: underline; }
+        }
+    }
+}
+
+// =============================================================================
+// FORMS — elementos reutilizables de formulario
+// =============================================================================
+.cv-form {
+    display: flex;
+    flex-direction: column;
+    gap: t.$space-4;
+
+    &__group {
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-1;
+
+        &--row {
+            @include m.above(m.$bp-sm) {
+                flex-direction: row;
+                gap: t.$space-3;
+
+                > * { flex: 1; }
+            }
+        }
+    }
+
+    &__label {
+        font-size: t.$text-sm;
+        font-weight: 700;
+        color: t.$color-text;
+    }
+
+    &__input, &__select, &__textarea {
+        width: 100%;
+        padding: t.$space-3 t.$space-4;
+        font-size: t.$text-sm;
+        font-family: t.$font-sans;
+        color: t.$color-text;
+        background: t.$color-white;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius;
+        transition: border-color .15s;
+        outline: none;
+
+        &::placeholder { color: t.$color-text-muted; }
+        &:focus { border-color: t.$color-brand; box-shadow: 0 0 0 3px rgba(t.$color-brand, .1); }
+        &.is-error { border-color: #e74c3c; }
+    }
+
+    &__select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a6f73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1.2rem center;
+        padding-inline-end: t.$space-8;
+        cursor: pointer;
+    }
+
+    &__textarea { resize: vertical; min-height: 12rem; }
+
+    &__error {
+        font-size: t.$text-xs;
+        color: #e74c3c;
+        display: none;
+
+        .is-error + & { display: block; }
+    }
+
+    &__hint { font-size: t.$text-xs; color: t.$color-text-muted; }
+
+    &__submit {
+        @include m.btn-reset;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: t.$space-2;
+        padding: t.$space-3 t.$space-6;
+        font-size: t.$text-md;
+        font-weight: 700;
+        background: t.$color-brand;
+        color: t.$color-white;
+        border-radius: t.$radius;
+        width: 100%;
+        transition: background .15s;
+
+        &:hover { background: t.$color-brand-dark; }
+        &:disabled { opacity: .6; cursor: not-allowed; }
+    }
+
+    &__checkbox-group {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-2;
+        cursor: pointer;
+
+        input { margin-block-start: 0.3rem; flex-shrink: 0; accent-color: t.$color-brand; }
+        span  { font-size: t.$text-sm; color: t.$color-text-body; line-height: 1.5; }
+    }
+}

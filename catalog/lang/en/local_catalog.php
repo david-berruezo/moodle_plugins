@@ -9,7 +9,7 @@ $string['catalog']           = 'Course Catalog';
 $string['searchplaceholder'] = 'Search courses...';
 $string['search']            = 'Search';
 $string['coursesresults']    = 'courses found for';
-
+$string['coursesresults_description'] = 'results founds';
 // Filters
 $string['filters']           = 'Filters';
 $string['clearfilters']      = 'Clear all filters';
@@ -61,3 +61,114 @@ $string['openactivity']      = 'This activity opens in a separate window.';
 $string['openinnewwindow']   = 'Open activity';
 $string['togglesidebar']     = 'Toggle sidebar';
 $string['gotocourse']        = 'Go to course';
+
+
+// =============================================================================
+// STRINGS HOME — Añadir a lang/es/local_catalog.php
+// =============================================================================
+
+// ── Página ────────────────────────────────────────────────────────────────────
+$string['home_title']               = 'Campus Virtual Aubay';
+
+// ── Navbar / menú ─────────────────────────────────────────────────────────────
+$string['explore']                  = 'Explorar';
+$string['personalplan']             = 'Plan Personal';
+$string['business']                 = 'Campus Empresarial';
+$string['teachhere']                = 'Enseña aquí';
+$string['mylearning']               = 'Mi aprendizaje';
+$string['myprofile']                = 'Mi perfil';
+$string['allcourses']               = 'Ver todos los cursos';
+$string['login']                    = 'Iniciar sesión';
+$string['logout']                   = 'Cerrar sesión';
+$string['register']                 = 'Registrarse';
+$string['account']                  = 'Cuenta';
+$string['learn']                    = 'Aprende';
+$string['morefromcampus']           = 'Más del campus';
+$string['welcomeback']              = '¡Bienvenido/a de nuevo!';
+$string['menu']                     = 'Menú';
+$string['openmenu']                 = 'Abrir menú';
+$string['closemenu']                = 'Cerrar menú';
+$string['close']                    = 'Cerrar';
+$string['prev']                     = 'Anterior';
+$string['next']                     = 'Siguiente';
+$string['search']                   = 'Buscar';
+$string['searchplaceholder']        = 'Buscar cualquier cosa';
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+$string['home_hero_label']          = 'Buscador principal';
+$string['home_hero_title']          = 'Aprende sin límites. Crece sin parar.';
+$string['home_hero_sub']            = 'Accede a toda la formación del Grupo Aubay en un solo lugar.';
+$string['home_search_placeholder']  = 'Buscar cualquier cosa…';
+
+// ── Estadísticas ──────────────────────────────────────────────────────────────
+$string['students']                 = 'estudiantes';
+$string['coursescount']             = 'cursos';
+$string['instructorscount']         = 'instructores';
+$string['categories']               = 'Categorías';
+$string['compareurl']               = 'Comparar planes';
+
+// ── Secciones de la home ──────────────────────────────────────────────────────
+$string['trending']                 = 'Cursos en tendencia';
+$string['newestin']                 = 'Lo más nuevo en';
+$string['populartopics']            = 'Habilidades más populares';
+$string['viewall']                  = 'Ver todo';
+$string['companies_label']          = 'La formación elegida por el Grupo Aubay';
+
+// ── Por qué Campus Virtual (features) ────────────────────────────────────────
+$string['features_label']           = 'Por qué elegir Campus Virtual';
+$string['features_title']           = '¿Por qué elegir Campus Virtual?';
+$string['feature1_title_default']   = 'Contenido de calidad';
+$string['feature1_text_default']    = 'Cursos creados por expertos internos del Grupo Aubay, actualizados constantemente.';
+$string['feature2_title_default']   = 'Aprende a tu ritmo';
+$string['feature2_text_default']    = 'Accede cuando quieras, desde cualquier dispositivo. Sin horarios fijos.';
+$string['feature3_title_default']   = 'Certifícate';
+$string['feature3_text_default']    = 'Obtén certificados reconocidos por todo el grupo al completar tus cursos.';
+
+// ── Enseña aquí ───────────────────────────────────────────────────────────────
+$string['teachhere_title']          = 'Comparte lo que sabes';
+$string['teachhere_text']           = 'Únete a los instructores del Campus Virtual y forma al equipo Aubay.';
+$string['teachhere_cta']            = 'Empieza a enseñar';
+
+// ── Testimonios ───────────────────────────────────────────────────────────────
+$string['testimonials']             = 'Lo que dicen nuestros estudiantes';
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+$string['footer_tagline']           = 'La plataforma de formación interna del Grupo Aubay.';
+$string['footer_col_learning']      = 'Formación';
+$string['footer_col_community']     = 'Comunidad';
+$string['footer_col_account']       = 'Cuenta';
+$string['allrightsreserved']        = 'Todos los derechos reservados.';
+$string['privacy']                  = 'Privacidad';
+
+// ── Settings del plugin ───────────────────────────────────────────────────────
+$string['settings_home']            = 'Secciones de la Home';
+$string['settings_home_sections']   = 'Configuración de secciones';
+$string['settings_features']        = 'Por qué Campus Virtual';
+$string['settings_features_desc']   = 'Textos de la sección "¿Por qué elegir Campus Virtual?". Si se dejan vacíos se usan los valores por defecto.';
+$string['settings_testimonials']    = 'Testimonios';
+$string['settings_testimonials_desc'] = 'Escribe los testimonios que aparecerán en la home. Si se dejan vacíos se muestran ejemplos de demostración.';
+
+$string['home_datacat_id']          = 'ID de categoría "Lo más nuevo en..."';
+$string['home_datacat_id_desc']     = 'ID de la categoría Moodle para la sección de cursos recientes (ej. "Data & IA"). 0 = sección desactivada.';
+
+$string['feature1_title']           = 'Feature 1 — Título';
+$string['feature1_text']            = 'Feature 1 — Texto';
+$string['feature2_title']           = 'Feature 2 — Título';
+$string['feature2_text']            = 'Feature 2 — Texto';
+$string['feature3_title']           = 'Feature 3 — Título';
+$string['feature3_text']            = 'Feature 3 — Texto';
+
+$string['testimonial_n']            = 'Testimonio {$a}';
+$string['testimonial_name']         = 'Nombre completo';
+$string['testimonial_role']         = 'Cargo / Empresa';
+$string['testimonial_text']         = 'Texto del testimonio';
+
+// mismas que es
+$string['home_hero_sub_one'] = 'Aprende las habilidades';
+$string['home_hero_sub_two'] = 'que necesitas para crecer';
+$string['home_hero_sub_subtitle_one'] = 'Más de 200 cursos creados por expertos de Aubay.';
+$string['home_hero_sub_subtitle_two'] = 'Aprende a tu ritmo, donde quieras.';
+
+$string['coursesavailability'] = 'cursos disponibles';
+$string['instructorsavailability'] = 'instructores internos';
+$string['studentsavailability'] = 'estudiantes activos';

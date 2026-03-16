@@ -1,0 +1,100 @@
+// =============================================================================
+// TOKENS — design tokens del sistema
+// Importar con: @use '../tokens' as t;
+// =============================================================================
+
+// ── Colores de marca ─────────────────────────────────────────────────────────
+$color-brand:          #F05A28;
+$color-brand-dark:     #C94820;
+$color-brand-light:    #FEE8DF;
+$color-brand-faint:    #FFF7F4;
+$color-brand-bg:       #FEF0EB;
+
+// ── Escala de grises (inspirada en Udemy) ────────────────────────────────────
+$color-ink-900:   #1c1d1f;   // fondo dark / texto principal
+$color-ink-800:   #2d2f31;
+$color-ink-700:   #3e4143;
+$color-ink-500:   #6a6f73;   // texto secundario
+$color-ink-300:   #9aa0a6;
+$color-ink-200:   #d1d7dc;   // bordes
+$color-ink-100:   #e8ecef;   // bordes suaves
+$color-ink-50:    #f7f9fa;   // fondos claros
+$color-white:     #ffffff;
+
+// ── Semánticos ───────────────────────────────────────────────────────────────
+$color-text:          $color-ink-900;
+$color-text-body:     $color-ink-800;
+$color-text-muted:    $color-ink-500;
+$color-text-faint:    $color-ink-300;
+
+$color-bg:            $color-white;
+$color-bg-subtle:     $color-ink-50;
+$color-bg-dark:       $color-ink-900;
+$color-bg-dark-2:     $color-ink-800;
+$color-bg-dark-3:     $color-ink-700;
+
+$color-border:        $color-ink-200;
+$color-border-subtle: $color-ink-100;
+
+// ── Superficies de navbar ─────────────────────────────────────────────────────
+$nav-bg:              $color-ink-900;
+$nav-border:          1px solid $color-ink-700;
+$nav-text:            #d1d7dc;
+$nav-text-active:     $color-white;
+
+// ── Tipografía ───────────────────────────────────────────────────────────────
+$font-sans:   'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono:   'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+// escala (rem, base 10px)
+$text-xs:   1.2rem;
+$text-sm:   1.4rem;
+$text-md:   1.6rem;
+$text-lg:   1.8rem;
+$text-xl:   2.0rem;
+$text-2xl:  2.4rem;
+$text-3xl:  2.8rem;
+$text-4xl:  3.2rem;
+$text-5xl:  4.0rem;
+$text-6xl:  4.8rem;
+
+// ── Espaciado ────────────────────────────────────────────────────────────────
+$space-1:  0.4rem;
+$space-2:  0.8rem;
+$space-3:  1.2rem;
+$space-4:  1.6rem;
+$space-5:  2.0rem;
+$space-6:  2.4rem;
+$space-8:  3.2rem;
+$space-10: 4.0rem;
+$space-12: 4.8rem;
+$space-16: 6.4rem;
+
+// ── Radios ───────────────────────────────────────────────────────────────────
+$radius-sm:   0.2rem;
+$radius:      0.4rem;
+$radius-md:   0.8rem;
+$radius-lg:   1.2rem;
+$radius-full: 9999px;
+
+// ── Sombras ──────────────────────────────────────────────────────────────────
+$shadow-xs:   0 1px 2px rgba(0, 0, 0, .06);
+$shadow-sm:   0 2px 4px rgba(0, 0, 0, .08);
+$shadow-md:   0 2px 4px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .08);
+$shadow-lg:   0 8px 24px rgba(0, 0, 0, .12);
+$shadow-focus: 0 0 0 2px $color-brand;
+
+// ── Layout ───────────────────────────────────────────────────────────────────
+$nav-height:         6.4rem;
+$nav-height-mobile:  5.6rem;
+$container-max:      117.6rem;
+$container-padding:  2.4rem;
+
+// ── Z-index scale ────────────────────────────────────────────────────────────
+$z-base:      0;
+$z-dropdown:  100;
+$z-sticky:    200;
+$z-overlay:   300;
+$z-drawer:    400;
+$z-modal:     500;
+$z-toast:     600;

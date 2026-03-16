@@ -28,4 +28,5 @@ if ($completion->is_enabled($cm) == COMPLETION_TRACKING_MANUAL) {
     $completion->update_state($cm, $newstate);
 }
 
-redirect(new moodle_url('/local/catalog/learn.php', ['id' => $courseid, 'cmid' => $cmid]));
+// redirect(new moodle_url('/local/catalog/learn.php', ['id' => $courseid, 'cmid' => $cmid]));
+redirect(new moodle_url('/cursos/' . $slug . '/ver/' . $cmid));
