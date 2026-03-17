@@ -46,6 +46,7 @@ class catalog_manager {
         $slug = catalog_manager::slugify($record->shortname ?: $record->fullname);
 
         $course = new \core_course_list_element(get_course($courseid));
+
         $context = \context_course::instance($courseid);
 
         // --- Datos básicos ---
@@ -58,34 +59,27 @@ class catalog_manager {
             'courseurl' => '/cursos/' . $slug,
             'enrolurl'  => (new \moodle_url('/enrol/index.php', ['id' => $record->id]))->out(false),
         ];
-
         // --- Breadcrumbs ---
         $data['breadcrumbs'] = $this->get_breadcrumbs($record);
-
         // --- Imagen ---
         $imageurl = $this->get_course_image($course);
         $data['imageurl'] = $imageurl;
         $data['hasimage'] = !empty($imageurl);
         $data['initials'] = strtoupper(substr($record->fullname, 0, 2));
-
         // --- Instructores (detallado) ---
         $data['instructors'] = $this->get_instructors_detail($courseid);
         $data['hasinstructors'] = !empty($data['instructors']);
         $data['instructornames'] = implode(', ', array_column($data['instructors'], 'fullname'));
-
         // --- Estadísticas ---
         $data['enrolledcount'] = count_enrolled_users($context);
         $data['activitycount'] = $this->get_activity_count($courseid);
         $data['hasactivities'] = $data['activitycount'] > 0;
-
         // --- Fechas ---
         $data['lastupdate'] = userdate($record->timemodified, get_string('strftimedate', 'langconfig'));
         $data['timecreated'] = userdate($record->timecreated, get_string('strftimedate', 'langconfig'));
-
         // --- Idioma del curso ---
         $data['courselang'] = $this->get_course_language($record->lang);
         $data['hascourselang'] = !empty($data['courselang']);
-
         // --- Precio ---
         $price = $this->get_price($courseid);
         $data['is_free'] = $price['is_free'];
@@ -93,38 +87,32 @@ class catalog_manager {
         $data['pricelabel'] = $price['is_free']
             ? get_string('free', 'local_catalog')
             : $price['cost'] . ' ' . $price['currency'];
-
         // --- Custom fields ---
         $customfields = $this->get_all_custom_fields($courseid);
-
         // Nivel y duración
         $data['level'] = $customfields['course_level'] ?? '';
         $data['haslevel'] = !empty($data['level']);
         $data['duration'] = $customfields['course_duration'] ?? '';
         $data['hasduration'] = !empty($data['duration']);
-
         // Video preview
         $data['previewvideo'] = $customfields['course_preview_video'] ?? '';
         $data['haspreviewvideo'] = !empty($data['previewvideo']);
-
         // Objetivos de aprendizaje (textarea → lista)
         $data['objectives'] = $this->textarea_to_list($customfields['course_objectives'] ?? '');
         $data['hasobjectives'] = !empty($data['objectives']);
-
         // Requisitos previos (textarea → lista)
         $data['requirements'] = $this->textarea_to_list($customfields['course_requirements'] ?? '');
         $data['hasrequirements'] = !empty($data['requirements']);
-
         // Descripción extendida
         $data['longdescription'] = $customfields['course_long_description'] ?? '';
         $data['haslongdescription'] = !empty($data['longdescription']);
-
         // --- Tags ---
         $data['tags'] = $this->get_tags($courseid);
         $data['hastags'] = !empty($data['tags']);
-
         // --- Temario (secciones + actividades) ---
-        $data['sections'] = $this->get_course_sections($courseid);
+        //$data['sections'] = $this->get_course_sections($courseid);
+        $sectionsdata = $this->get_course_sections($courseid);
+        $data = array_merge($data, $sectionsdata);  // añade todas las claves al $data principal
         $data['hassections'] = !empty($data['sections']);
         $data['sectioncount'] = count($data['sections']);
         $totalduration = 0;
@@ -133,26 +121,36 @@ class catalog_manager {
             $totallessons += count($section['activities']);
         }
         $data['totallessons'] = $totallessons;
-
         // --- Cursos relacionados (misma categoría) ---
         $data['relatedcourses'] = $this->get_related_courses($courseid, $record->category);
         $data['hasrelatedcourses'] = !empty($data['relatedcourses']);
-
         // --- Más cursos del instructor ---
         $data['instructorcourses'] = $this->get_instructor_courses($courseid, $data['instructors']);
         $data['hasinstructorcourses'] = !empty($data['instructorcourses']);
-
         // --- Valoraciones (placeholder Fase 2) ---
         $data['rating'] = '4.0';
         $data['ratingcount'] = $data['enrolledcount'];
         $data['stars'] = '★★★★☆';
-
         // --- Estado de matriculacion del usuario actual ---
         $data["isenrolled"] = is_enrolled($context, $USER);
         $data["isloggedin"] = isloggedin() && !isguestuser();
         // $data["learnurl"] = (new \moodle_url("/local/catalog/learn.php", ["id" => $courseid]))->out(false);
         $data['learnurl']  = '/cursos/' . $slug . '/ver';
-        $data["loginurl"] = (new \moodle_url("/login/index.php"))->out(false);
+        // ── URLs de navegación ────────────────────────────────────────────────
+        $data['homeurl']        = (new \moodle_url('/'))->out(false);
+        $data['catalogurl']     = (new \moodle_url('/cursos'))->out(false);
+        $data['searchaction']   = (new \moodle_url('/cursos'))->out(false);
+        $data['mycoursesurl']   = (new \moodle_url('/mis-cursos'))->out(false);
+        $data["loginurl"]       = (new \moodle_url("/login"))->out(false);
+        $data['loginactionurl'] = (new \moodle_url('/local/catalog/login.php'))->out(false); // para el form action
+        $data['logouturl']      = (new \moodle_url('/login/logout.php',['sesskey' => sesskey()]))->out(false);
+        $data['registerurl']    = (new \moodle_url('/registro'))->out(false);
+        $data['instructorsurl'] = (new \moodle_url('/profesores'))->out(false);
+        $data['planurl']        = (new \moodle_url('/plan-personal'))->out(false);
+        $data['compareurl']     = (new \moodle_url('/comparar-planes'))->out(false);
+        $data['demourl']        = (new \moodle_url('/solicitar-demo'))->out(false);
+        $data['teachurl']       = (new \moodle_url('/ensena-aqui'))->out(false);
+        $data['privacyurl']     = '#'; // Sustituir por URL real de privacidad
 
         return $data;
     }
@@ -559,8 +557,22 @@ class catalog_manager {
             'reviewcount'  => 0,     // Placeholder fase 2
             'courses'      => $courses,
             'hascourses'   => !empty($courses),
-            'catalogurl'   => (new \moodle_url('/cursos'))->out(false),
             'allurl'       => (new \moodle_url('/profesores'))->out(false),
+            // ── URLs de navegación ────────────────────────────────────────────────
+            'homeurl'        => (new \moodle_url('/'))->out(false),
+            'catalogurl'     => (new \moodle_url('/cursos'))->out(false),
+            'searchaction'   => (new \moodle_url('/cursos'))->out(false),
+            'mycoursesurl'   => (new \moodle_url('/mis-cursos'))->out(false),
+            'loginurl'       => (new \moodle_url('/login/index.php'))->out(false),
+            'logouturl'      => (new \moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
+            'registerurl'    => (new \moodle_url('/registro'))->out(false),
+            'instructorsurl' => (new \moodle_url('/profesores'))->out(false),
+            'planurl'        => (new \moodle_url('/plan-personal'))->out(false),
+            'compareurl'     => (new \moodle_url('/comparar-planes'))->out(false),
+            'demourl'        => (new \moodle_url('/solicitar-demo'))->out(false),
+            'teachurl'       => (new \moodle_url('/ensena-aqui'))->out(false),
+            'termsurl'       => (new \moodle_url('/terminos'))->out(false),
+            'privacyurl'     => (new \moodle_url('/privacidad'))->out(false),
         ];
     }
 
@@ -633,11 +645,13 @@ class catalog_manager {
      *   - 1. Instalando VS Code (Página, 2 min)
      *   - 2. Extensiones (Página, 15 min)
      */
-    private function get_course_sections(int $courseid): array {
+    private function get_course_sections_anterior(int $courseid): array {
         $sections = [];
 
         try {
             $modinfo = get_fast_modinfo($courseid);
+            $this->print_sql($modinfo);
+
             $courseformat = course_get_format($courseid);
 
             foreach ($modinfo->get_section_info_all() as $sectionnum => $sectioninfo) {
@@ -655,7 +669,7 @@ class catalog_manager {
                 if (isset($modinfo->sections[$sectionnum])) {
                     foreach ($modinfo->sections[$sectionnum] as $cmid) {
                         $cm = $modinfo->cms[$cmid];
-                        if (!$cm->uservisible && !$cm->visible) {
+                        if (!$cm->uservisible && !$cm->visible ) {
                             continue;
                         }
 
@@ -699,6 +713,537 @@ class catalog_manager {
         }
 
         return $sections;
+    }
+
+    private function get_course_sections(int $courseid): array {
+
+        $sections_full    = [];  // todo (para el player sidebar)
+        $sections_videos  = [];  // solo actividades con isvideo=true
+        $sections_files   = [];  // solo actividades con isfile=true
+
+        try {
+            $modinfo      = get_fast_modinfo($courseid);
+            $courseformat = course_get_format($courseid);
+
+            foreach ($modinfo->get_section_info_all() as $sectionnum => $sectioninfo) {
+
+                if ($sectionnum == 0 && empty($modinfo->sections[0])) {
+                    continue;
+                }
+
+                $sectionname = $courseformat->get_section_name($sectioninfo);
+                if (empty($sectionname)) {
+                    $sectionname = get_string('section') . ' ' . $sectionnum;
+                }
+
+                $all_activities   = [];
+                $video_activities = [];
+                $file_activities  = [];
+
+                if (isset($modinfo->sections[$sectionnum])) {
+                    foreach ($modinfo->sections[$sectionnum] as $cmid) {
+                        $cm = $modinfo->cms[$cmid];
+
+                        if ((!$cm->uservisible && !$cm->visible) || $cm->modname === 'label') {
+                            continue;
+                        }
+
+                        $detail = $this->get_activity_detail($cm);
+
+                        $all_activities[] = $detail;
+
+                        if (!empty($detail['isvideo'])) {
+                            $video_activities[] = $detail;
+                        }
+
+                        if (!empty($detail['isfile'])) {
+                            $file_activities[] = $detail;
+                        }
+                    }
+                }
+
+                // ── Sección completa (player sidebar) ────────────────────
+                if (!empty($all_activities)) {
+                    $sections_full[] = [
+                        'name'          => $sectionname,
+                        'num'           => $sectionnum,
+                        'activitycount' => count($all_activities),
+                        'activities'    => $all_activities,
+                        'hasactivities' => true,
+                        'isopen'        => ($sectionnum <= 1),
+                        'progress_text' => '0 / ' . count($all_activities),
+                    ];
+                }
+
+                // ── Solo videos (detalle del curso + player sidebar) ──────
+                if (!empty($video_activities)) {
+                    $sections_videos[] = [
+                        'name'           => $sectionname,
+                        'num'            => $sectionnum,
+                        'activitycount'  => count($video_activities),
+                        'activities'     => $video_activities,
+                        'hasactivities'  => true,
+                        'isopen'         => ($sectionnum <= 1),
+                        'progress_text'  => '0 / ' . count($video_activities),
+                    ];
+                }
+
+                // ── Solo ficheros (detalle del curso) ─────────────────────
+                if (!empty($file_activities)) {
+                    $sections_files[] = [
+                        'name'          => $sectionname,
+                        'num'           => $sectionnum,
+                        'activitycount' => count($file_activities),
+                        'activities'    => $file_activities,
+                        'hasactivities' => true,
+                        'isopen'        => ($sectionnum <= 1),
+                    ];
+                }
+            }
+
+        } catch (\Exception $e) {
+            // Silently fail
+        }
+
+        return [
+            // Para el sidebar del player (todo el contenido)
+            'sections'          => $sections_full,
+            'hassections'       => !empty($sections_full),
+            'sectioncount'      => count($sections_full),
+
+            // Para la pestaña "Videos" del detalle del curso
+            'sections_videos'   => $sections_videos,
+            'hassections_videos'=> !empty($sections_videos),
+            'videocount'        => array_sum(array_column($sections_videos, 'activitycount')),
+
+            // Para la pestaña "Recursos" del detalle del curso
+            'sections_files'    => $sections_files,
+            'hassections_files' => !empty($sections_files),
+            'filecount'         => array_sum(array_column($sections_files, 'activitycount')),
+        ];
+    }
+
+    /**
+     * Wrapper público de get_course_sections() para course_player.
+     */
+    public function get_course_sections_public(int $courseid): array {
+        return $this->get_course_sections($courseid);
+    }
+
+    /**
+     * Instructores en formato simplificado para el player.
+     */
+    public function get_instructors_for_player(int $courseid): array {
+        return $this->get_instructors_detail($courseid);
+    }
+
+    private function get_course_sections_actual(int $courseid): array {
+
+        $sections = [];
+
+        try {
+            $modinfo     = get_fast_modinfo($courseid);
+            $courseformat = course_get_format($courseid);
+
+            foreach ($modinfo->get_section_info_all() as $sectionnum => $sectioninfo) {
+
+                // Saltar sección 0 (general) si está vacía
+                if ($sectionnum == 0 && empty($modinfo->sections[0])) {
+                    continue;
+                }
+
+                $sectionname = $courseformat->get_section_name($sectioninfo);
+                if (empty($sectionname)) {
+                    $sectionname = get_string('section') . ' ' . $sectionnum;
+                }
+
+                $activities = [];
+                if (isset($modinfo->sections[$sectionnum])) {
+                    foreach ($modinfo->sections[$sectionnum] as $cmid) {
+                        $cm = $modinfo->cms[$cmid];
+
+                        // Saltar ocultos y labels
+                        if ((!$cm->uservisible && !$cm->visible) || $cm->modname === 'label') {
+                            continue;
+                        }
+
+                        // Detalle enriquecido según tipo
+                        $detail = $this->get_activity_detail($cm);
+
+                        $activities[] = $detail;
+                    }
+                }
+
+                if (!empty($activities) || $sectionnum == 0) {
+                    $sections[] = [
+                        'name'          => $sectionname,
+                        'num'           => $sectionnum,
+                        'activitycount' => count($activities),
+                        'activities'    => $activities,
+                        'hasactivities' => !empty($activities),
+                        'isopen'        => ($sectionnum <= 1),
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            // Silently fail
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Enriquece una actividad/recurso con datos específicos de su tipo.
+     *
+     * Accede a la tabla propia del módulo ({page}, {resource}, {url},
+     * {assign}, {quiz}, {h5pactivity}…) para obtener metadatos relevantes
+     * que la vista de detalle necesita mostrar al alumno.
+     *
+     * @param  \cm_info  $cm  Objeto course-module de get_fast_modinfo()
+     * @return array          Array plano listo para Mustache
+     */
+    private function get_activity_detail(\cm_info $cm): array {
+
+        global $DB;
+
+        // ── Base común a todos los tipos ─────────────────────────────────
+        $base = [
+            'id'       => $cm->id,
+            'name'     => $cm->name,
+            'modname'  => $cm->modname,
+            'visible'  => (bool) $cm->visible,
+            'viewurl'  => (new \moodle_url('/mod/' . $cm->modname . '/view.php',
+                ['id' => $cm->id]))->out(false),
+
+            // Tipo legible
+            'typename' => get_string('modulename', $cm->modname),
+
+            // Icono (emoji rápido + clase CSS por si prefieres iconos reales)
+            'icon'       => $this->get_activity_icon($cm->modname),
+            'iconclass'  => 'mod-icon mod-' . $cm->modname,
+
+            // Flags de tipo (útiles para {{#isfile}} etc. en Mustache)
+            'ispage'     => false,
+            'isfile'     => false,
+            'isurl'      => false,
+            'isquiz'     => false,
+            'isassign'   => false,
+            'isforum'    => false,
+            'islesson'   => false,
+            'ish5p'      => false,
+            'isvideo'    => false,   // true si la URL/embed es un video
+            'isother'    => false,
+
+            // Metadatos extra (vacíos por defecto)
+            'fileurl'        => '',
+            'filesize'       => '',
+            'filetype'       => '',
+            'filename'       => '',
+            'videourl'       => '',
+            'videoembedurl'  => '',
+            'externalurl'    => '',
+            'duedate'        => '',
+            'hasduedate'     => false,
+            'timelimit'      => '',
+            'hastimelimit'   => false,
+            'description'    => '',
+            'hasdescription' => false,
+            'previewurl'     => '',   // URL de imagen de previsualización
+            'haspreview'     => false,
+        ];
+
+        // ── Detalle por tipo de módulo ───────────────────────────────────
+        switch ($cm->modname) {
+
+            // ── Página (contenido HTML, puede tener video embebido) ───────
+            case 'page':
+                $base['ispage'] = true;
+                $record = $DB->get_record('page', ['id' => $cm->instance],
+                    'id, intro, content', IGNORE_MISSING);
+                if ($record) {
+                    // Descripción corta
+                    if (!empty($record->intro)) {
+                        $intro = strip_tags($record->intro);
+                        $base['description']    = mb_strimwidth($intro, 0, 160, '…');
+                        $base['hasdescription'] = true;
+                    }
+                    // Detectar video embebido dentro del contenido HTML
+                    $videourl = $this->extract_video_url($record->content);
+                    if ($videourl) {
+                        $base['isvideo']        = true;
+                        $base['videourl']       = $videourl['url'];
+                        $base['videoembedurl']  = $videourl['embed'];
+                        $base['haspreview']     = !empty($videourl['thumb']);
+                        $base['previewurl']     = $videourl['thumb'] ?? '';
+                    }
+                }
+                break;
+
+            // ── Fichero (recurso descargable) ─────────────────────────────
+            case 'resource':
+                $base['isfile'] = true;
+                $record = $DB->get_record('resource', ['id' => $cm->instance],
+                    'id, intro', IGNORE_MISSING);
+                if ($record && !empty($record->intro)) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro), 0, 160, '…');
+                    $base['hasdescription'] = !empty($record->intro);
+                }
+                // Obtener el fichero real de la tabla {files}
+                $fileinfo = $this->get_module_file($cm);
+                if ($fileinfo) {
+                    $base['fileurl']  = $fileinfo['url'];
+                    $base['filename'] = $fileinfo['filename'];
+                    $base['filesize'] = $this->format_filesize($fileinfo['filesize']);
+                    $base['filetype'] = $fileinfo['mimetype'];
+
+                    // Si el fichero es un video (mp4, webm…)
+                    if ($this->is_video_mimetype($fileinfo['mimetype'])) {
+                        $base['isvideo']    = true;
+                        $base['videourl']   = $fileinfo['url'];
+                    }
+                }
+                break;
+
+            // ── URL externa (puede ser YouTube, Vimeo, etc.) ──────────────
+            case 'url':
+                $base['isurl'] = true;
+                $record = $DB->get_record('url', ['id' => $cm->instance],
+                    'id, externalurl, intro', IGNORE_MISSING);
+                if ($record) {
+                    $base['externalurl']    = $record->externalurl;
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro ?? ''), 0, 160, '…');
+                    $base['hasdescription'] = !empty($record->intro);
+
+                    // Detectar si la URL es un video conocido
+                    $videourl = $this->extract_video_url($record->externalurl);
+                    if ($videourl) {
+                        $base['isvideo']       = true;
+                        $base['videourl']      = $record->externalurl;
+                        $base['videoembedurl'] = $videourl['embed'];
+                        $base['haspreview']    = !empty($videourl['thumb']);
+                        $base['previewurl']    = $videourl['thumb'] ?? '';
+                    }
+                }
+                break;
+
+            // ── Cuestionario ─────────────────────────────────────────────
+            case 'quiz':
+                $base['isquiz'] = true;
+                $record = $DB->get_record('quiz', ['id' => $cm->instance],
+                    'id, intro, timeopen, timeclose, timelimit', IGNORE_MISSING);
+                if ($record) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro ?? ''), 0, 160, '…');
+                    $base['hasdescription'] = !empty($record->intro);
+                    if (!empty($record->timeclose)) {
+                        $base['duedate']    = userdate($record->timeclose,
+                            get_string('strftimedatetimeshort', 'langconfig'));
+                        $base['hasduedate'] = true;
+                    }
+                    if (!empty($record->timelimit)) {
+                        $base['timelimit']    = format_time($record->timelimit);
+                        $base['hastimelimit'] = true;
+                    }
+                }
+                break;
+
+            // ── Tarea ─────────────────────────────────────────────────────
+            case 'assign':
+                $base['isassign'] = true;
+                $record = $DB->get_record('assign', ['id' => $cm->instance],
+                    'id, intro, duedate', IGNORE_MISSING);
+                if ($record) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro ?? ''), 0, 160, '…');
+                    $base['hasdescription'] = !empty($record->intro);
+                    if (!empty($record->duedate)) {
+                        $base['duedate']    = userdate($record->duedate,
+                            get_string('strftimedatetimeshort', 'langconfig'));
+                        $base['hasduedate'] = true;
+                    }
+                }
+                break;
+
+            // ── Foro ──────────────────────────────────────────────────────
+            case 'forum':
+                $base['isforum'] = true;
+                $record = $DB->get_record('forum', ['id' => $cm->instance],
+                    'id, intro', IGNORE_MISSING);
+                if ($record && !empty($record->intro)) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro), 0, 160, '…');
+                    $base['hasdescription'] = true;
+                }
+                break;
+
+            // ── Lección ───────────────────────────────────────────────────
+            case 'lesson':
+                $base['islesson'] = true;
+                $record = $DB->get_record('lesson', ['id' => $cm->instance],
+                    'id, intro', IGNORE_MISSING);
+                if ($record && !empty($record->intro)) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro), 0, 160, '…');
+                    $base['hasdescription'] = true;
+                }
+                break;
+
+            // ── H5P ───────────────────────────────────────────────────────
+            case 'h5pactivity':
+            case 'h5p':
+                $base['ish5p'] = true;
+                $table  = ($cm->modname === 'h5pactivity') ? 'h5pactivity' : 'hvp';
+                $record = $DB->get_record($table, ['id' => $cm->instance],
+                    'id, intro', IGNORE_MISSING);
+                if ($record && !empty($record->intro)) {
+                    $base['description']    = mb_strimwidth(strip_tags($record->intro), 0, 160, '…');
+                    $base['hasdescription'] = true;
+                }
+                break;
+
+            default:
+                $base['isother'] = true;
+                break;
+        }
+
+        return $base;
+    }
+
+    /**
+     * Devuelve el emoji/icono según el tipo de módulo.
+     */
+    private function get_activity_icon(string $modname): string {
+        $icons = [
+            'page'        => '📝',
+            'url'         => '🔗',
+            'resource'    => '📎',
+            'quiz'        => '📋',
+            'forum'       => '💬',
+            'assign'      => '📤',
+            'lesson'      => '📖',
+            'h5pactivity' => '🎮',
+            'h5p'         => '🎮',
+            'folder'      => '📁',
+            'book'        => '📚',
+            'choice'      => '☑️',
+            'survey'      => '📊',
+            'workshop'    => '🔧',
+        ];
+        return $icons[$modname] ?? '📄';
+    }
+
+    /**
+     * Obtiene el fichero principal de un módulo resource/folder.
+     * Devuelve ['url', 'filename', 'filesize', 'mimetype'] o null.
+     */
+    private function get_module_file(\cm_info $cm): ?array {
+
+        $fs      = get_file_storage();
+        $context = \context_module::instance($cm->id);
+
+        $files = $fs->get_area_files(
+            $context->id,
+            'mod_resource',       // component
+            'content',            // filearea
+            false,                // itemid
+            'sortorder DESC, id ASC',
+            false                 // no directorios
+        );
+
+        foreach ($files as $file) {
+            if ($file->get_filename() === '.') {
+                continue;  // Saltar entrada raíz
+            }
+            $url = \moodle_url::make_pluginfile_url(
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename()
+            );
+            return [
+                'url'      => $url->out(false),
+                'filename' => $file->get_filename(),
+                'filesize' => $file->get_filesize(),
+                'mimetype' => $file->get_mimetype(),
+            ];
+        }
+        return null;
+    }
+
+    /**
+     * Extrae la URL de video de un string HTML o URL directa.
+     * Soporta: YouTube, Vimeo, y tags <video src=...>
+     *
+     * Devuelve ['url', 'embed', 'thumb'] o null.
+     */
+    private function extract_video_url(string $content): ?array {
+
+        if (empty($content)) {
+            return null;
+        }
+
+        // ── YouTube ───────────────────────────────────────────────────────
+        // Formatos: watch?v=ID, youtu.be/ID, embed/ID, /shorts/ID
+        if (preg_match(
+            '/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
+            $content, $m
+        )) {
+            $id = $m[1];
+            return [
+                'url'   => 'https://www.youtube.com/watch?v=' . $id,
+                'embed' => 'https://www.youtube.com/embed/' . $id . '?rel=0&modestbranding=1',
+                'thumb' => 'https://img.youtube.com/vi/' . $id . '/hqdefault.jpg',
+            ];
+        }
+
+        // ── Vimeo ─────────────────────────────────────────────────────────
+        if (preg_match('/vimeo\.com\/(?:video\/)?(\d+)/', $content, $m)) {
+            $id = $m[1];
+            return [
+                'url'   => 'https://vimeo.com/' . $id,
+                'embed' => 'https://player.vimeo.com/video/' . $id . '?title=0&byline=0',
+                'thumb' => '',  // Vimeo requiere API para la miniatura
+            ];
+        }
+
+        // ── Tag <video src="..."> dentro del HTML de una page ─────────────
+        if (preg_match('/<video[^>]+src=["\']([^"\']+)["\']/', $content, $m)) {
+            return [
+                'url'   => $m[1],
+                'embed' => $m[1],
+                'thumb' => '',
+            ];
+        }
+
+        // ── Pluginfile de Moodle (video subido al módulo page) ────────────
+        if (preg_match('/pluginfile\.php[^"\']+\.(mp4|webm|ogg)/i', $content, $m)) {
+            $url = $m[0];
+            return [
+                'url'   => $url,
+                'embed' => $url,
+                'thumb' => '',
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Comprueba si un mimetype corresponde a un video.
+     */
+    private function is_video_mimetype(string $mimetype): bool {
+        return str_starts_with($mimetype, 'video/');
+    }
+
+    /**
+     * Formatea el tamaño de un fichero en KB/MB legibles.
+     */
+    private function format_filesize(int $bytes): string {
+        if ($bytes >= 1048576) {
+            return round($bytes / 1048576, 1) . ' MB';
+        }
+        if ($bytes >= 1024) {
+            return round($bytes / 1024) . ' KB';
+        }
+        return $bytes . ' B';
     }
 
     /**

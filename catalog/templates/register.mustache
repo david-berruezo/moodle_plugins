@@ -1,204 +1,183 @@
-{{!
-    Registro — local/catalog/templates/register.mustache
-    URL amigable: /registro
-}}
-<div class="cv-page">
-    {{> local_catalog/navbar }}
+{{! ── HEADER ── }}
+{{> local_catalog/navbar }}
 
-    <main class="cv-auth-page" id="cv-main">
-        <div class="cv-auth-page__inner">
+{{! ══════════════════════════════════════════════════════════ MAIN ══ }}
+<main class="cv-auth cv-page">
+    <div class="cv-auth__card">
 
-            {{! Panel izquierdo: branding }}
-            <div class="cv-auth-page__brand">
-                <div class="cv-auth-page__brand-inner">
-                    <h2 class="cv-auth-page__brand-title">
-                        Empieza a aprender.<br><em>Sin límites.</em>
-                    </h2>
-                    <p class="cv-auth-page__brand-sub">
-                        Únete a más de {{total_students}} profesionales que ya están transformando su carrera.
-                    </p>
-                    <ul class="cv-auth-page__perks">
-                        <li>✅ Acceso a cientos de cursos</li>
-                        <li>✅ Aprende a tu ritmo</li>
-                        <li>✅ Certificados reconocidos</li>
-                        <li>✅ Instructores expertos del sector</li>
-                    </ul>
+        <a href="{{homeurl}}" class="cv-auth__logo">
+            <div class="cv-auth__logo-mark">A</div>
+            <span class="cv-auth__logo-text">Campus Virtual</span>
+        </a>
+
+        {{! ── Pantalla de ÉXITO ──────────────────────────────────────── }}
+        {{#success}}
+            <div class="cv-auth__success">
+                <div class="cv-auth__success-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
                 </div>
+                <h1 class="cv-auth__title">{{#str}}reg_success_title, local_catalog{{/str}}</h1>
+                <p class="cv-auth__sub">{{#str}}reg_success_sub, local_catalog{{/str}}</p>
+                <a href="{{loginurl}}" class="cv-form__submit" style="display:block;text-align:center;margin-top:2.4rem;text-decoration:none">
+                    {{#str}}login, local_catalog{{/str}}
+                </a>
             </div>
+        {{/success}}
 
-            {{! Panel derecho: formulario }}
-            <div class="cv-auth-page__form-wrap">
-                <div class="cv-auth-page__card">
+        {{! ── Formulario de registro ─────────────────────────────────── }}
+        {{^success}}
 
-                    <h1 class="cv-auth-page__title">Crear cuenta</h1>
-                    <p class="cv-auth-page__hint">
-                        ¿Ya tienes cuenta?
-                        <a href="{{loginurl}}" class="cv-auth-page__switch-link">Inicia sesión</a>
-                    </p>
+            <h1 class="cv-auth__title">{{#str}}register_title, local_catalog{{/str}}</h1>
+            <p class="cv-auth__sub">{{#str}}register_sub, local_catalog{{/str}}</p>
 
-                    {{#registerenabled}}
-                    {{! Si Moodle tiene auto-registro activo, mostrar botón al form nativo }}
-                    <div class="cv-auth-page__native-wrap">
-                        <p style="color:#6a6f73;font-size:1.4rem;margin:0 0 1.6rem">
-                            Haz clic abajo para completar tu registro con los datos de tu organización.
-                        </p>
-                        <a href="{{nativeregisterurl}}" class="cv-auth-page__submit">
-                            Crear mi cuenta →
-                        </a>
-                    </div>
-                    {{/registerenabled}}
-
-                    {{^registerenabled}}
-                    <div class="cv-auth-page__notice">
-                        <p>⚠️ El registro de nuevas cuentas está desactivado en este campus.</p>
-                        <p>Contacta con tu administrador para solicitar acceso.</p>
-                    </div>
-                    {{/registerenabled}}
-
-                    <div class="cv-auth-page__divider"><span>o accede con</span></div>
-
-                    <a href="{{loginurl}}" class="cv-auth-page__submit cv-auth-page__submit--outline">
-                        Iniciar sesión con cuenta existente
-                    </a>
-
+            {{! Error general }}
+            {{#hasgeneralerror}}
+                <div class="cv-auth__error" role="alert">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4M12 16h.01"/>
+                    </svg>
+                    {{generalerror}}
                 </div>
-            </div>
+            {{/hasgeneralerror}}
 
-        </div>
-    </main>
+            <form class="cv-form" method="post" action="{{registeractionurl}}" novalidate>
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
 
-    {{> local_catalog/footer }}
-</div>
+                {{! Nombre + Apellidos en fila }}
+                <div class="cv-form__row">
+                    <div class="cv-form__group">
+                        <label class="cv-form__label" for="reg-firstname">
+                            {{#str}}reg_firstname, local_catalog{{/str}} *
+                        </label>
+                        <input class="cv-form__input {{#has_firstname_error}}cv-form__input--error{{/has_firstname_error}}"
+                               id="reg-firstname"
+                               type="text"
+                               name="firstname"
+                               value="{{firstname}}"
+                               placeholder="{{#str}}reg_firstname_placeholder, local_catalog{{/str}}"
+                               autocomplete="given-name"
+                               required>
+                        {{#has_firstname_error}}
+                            <span class="cv-form__hint cv-form__hint--error">{{firstname_error}}</span>
+                        {{/has_firstname_error}}
+                    </div>
 
-<style>
-.cv-auth-page {
-    min-height: calc(100vh - 6.4rem);
-    display: flex;
-    align-items: stretch;
-}
-.cv-auth-page__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-}
-.cv-auth-page__brand {
-    background: linear-gradient(135deg, #1a0a00 0%, #3d1400 100%);
-    display: flex;
-    align-items: center;
-    padding: 6rem;
-}
-.cv-auth-page__brand-inner { max-width: 48rem; }
-.cv-auth-page__brand-title {
-    font-size: 4rem;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.2;
-    margin: 0 0 1.6rem;
-}
-.cv-auth-page__brand-title em { font-style: normal; color: #F05A28; }
-.cv-auth-page__brand-sub {
-    font-size: 1.6rem;
-    color: rgba(255,255,255,.7);
-    margin: 0 0 2.4rem;
-    line-height: 1.6;
-}
-.cv-auth-page__perks {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.cv-auth-page__perks li {
-    font-size: 1.5rem;
-    color: rgba(255,255,255,.85);
-}
-.cv-auth-page__form-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    background: #f7f9fa;
-}
-.cv-auth-page__card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: .8rem;
-    padding: 4rem;
-    width: 100%;
-    max-width: 44rem;
-    box-shadow: 0 2px 16px rgba(0,0,0,.08);
-}
-.cv-auth-page__title {
-    font-size: 2.8rem;
-    font-weight: 900;
-    color: #1c1d1f;
-    margin: 0 0 .8rem;
-}
-.cv-auth-page__hint {
-    font-size: 1.4rem;
-    color: #6a6f73;
-    margin: 0 0 2.8rem;
-}
-.cv-auth-page__switch-link { color: #F05A28; font-weight: 700; text-decoration: none; }
-.cv-auth-page__switch-link:hover { text-decoration: underline; }
-.cv-auth-page__submit {
-    display: block;
-    width: 100%;
-    padding: 1.4rem;
-    background: #F05A28;
-    color: #fff;
-    text-align: center;
-    font-size: 1.6rem;
-    font-weight: 700;
-    border: none;
-    border-radius: .4rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: .15s;
-    box-sizing: border-box;
-}
-.cv-auth-page__submit:hover { background: #C94820; color: #fff; text-decoration: none; }
-.cv-auth-page__submit--outline {
-    background: transparent;
-    color: #F05A28;
-    border: 2px solid #F05A28;
-}
-.cv-auth-page__submit--outline:hover { background: #FEF0EB; }
-.cv-auth-page__divider {
-    text-align: center;
-    position: relative;
-    margin: 2rem 0;
-    color: #6a6f73;
-    font-size: 1.2rem;
-}
-.cv-auth-page__divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0; right: 0;
-    height: 1px;
-    background: #e0e0e0;
-}
-.cv-auth-page__divider span {
-    position: relative;
-    background: #fff;
-    padding: 0 1rem;
-}
-.cv-auth-page__native-wrap { margin-bottom: 1.6rem; }
-.cv-auth-page__notice {
-    background: #fff7f4;
-    border: 1px solid #fdd5c7;
-    border-radius: .4rem;
-    padding: 1.6rem;
-    font-size: 1.4rem;
-    color: #3e4143;
-    margin-bottom: 2rem;
-}
-@media (max-width: 768px) {
-    .cv-auth-page__inner { grid-template-columns: 1fr; }
-    .cv-auth-page__brand { display: none; }
-    .cv-auth-page__form-wrap { padding: 2rem 1.6rem; }
-}
-</style>
+                    <div class="cv-form__group">
+                        <label class="cv-form__label" for="reg-lastname">
+                            {{#str}}reg_lastname, local_catalog{{/str}} *
+                        </label>
+                        <input class="cv-form__input {{#has_lastname_error}}cv-form__input--error{{/has_lastname_error}}"
+                               id="reg-lastname"
+                               type="text"
+                               name="lastname"
+                               value="{{lastname}}"
+                               placeholder="{{#str}}reg_lastname_placeholder, local_catalog{{/str}}"
+                               autocomplete="family-name"
+                               required>
+                        {{#has_lastname_error}}
+                            <span class="cv-form__hint cv-form__hint--error">{{lastname_error}}</span>
+                        {{/has_lastname_error}}
+                    </div>
+                </div>
+
+                {{! Email }}
+                <div class="cv-form__group">
+                    <label class="cv-form__label" for="reg-email">
+                        {{#str}}reg_email, local_catalog{{/str}} *
+                    </label>
+                    <input class="cv-form__input {{#has_email_error}}cv-form__input--error{{/has_email_error}}"
+                           id="reg-email"
+                           type="email"
+                           name="email"
+                           value="{{email}}"
+                           placeholder="{{#str}}reg_email_placeholder, local_catalog{{/str}}"
+                           autocomplete="email"
+                           required>
+                    {{#has_email_error}}
+                        <span class="cv-form__hint cv-form__hint--error">{{email_error}}</span>
+                    {{/has_email_error}}
+                </div>
+
+                {{! Contraseña }}
+                <div class="cv-form__group">
+                    <label class="cv-form__label" for="reg-password">
+                        {{#str}}reg_password, local_catalog{{/str}} *
+                    </label>
+                    <div class="cv-form__input-wrap">
+                        <input class="cv-form__input {{#has_password_error}}cv-form__input--error{{/has_password_error}}"
+                               id="reg-password"
+                               type="password"
+                               name="password"
+                               placeholder="{{#str}}reg_password_placeholder, local_catalog{{/str}}"
+                               autocomplete="new-password"
+                               required>
+                        <button type="button" class="cv-form__eye"
+                                data-toggle-password="reg-password"
+                                aria-label="{{#str}}toggle_password, local_catalog{{/str}}">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {{#has_password_error}}
+                        <span class="cv-form__hint cv-form__hint--error">{{password_error}}</span>
+                    {{/has_password_error}}
+                    {{^has_password_error}}
+                        <span class="cv-form__hint">{{#str}}reg_password_hint, local_catalog{{/str}}</span>
+                    {{/has_password_error}}
+                </div>
+
+                {{! Checkbox términos }}
+                <div class="cv-form__group">
+                    <label class="cv-form__checkbox">
+                        <input type="checkbox" name="acceptterms" value="1"
+                               class="cv-form__checkbox-input
+                                  {{#has_terms_error}}cv-form__checkbox-input--error{{/has_terms_error}}">
+                        <span class="cv-form__checkbox-label">
+                        {{#str}}reg_accept_prefix, local_catalog{{/str}}
+                            <a href="{{termsurl}}" target="_blank">{{#str}}terms, local_catalog{{/str}}</a>
+                            {{#str}}reg_accept_and, local_catalog{{/str}}
+                            <a href="{{privacyurl}}" target="_blank">{{#str}}privacy, local_catalog{{/str}}</a>.
+                    </span>
+                    </label>
+                    {{#has_terms_error}}
+                        <span class="cv-form__hint cv-form__hint--error">{{terms_error}}</span>
+                    {{/has_terms_error}}
+                </div>
+
+                {{! Checkbox marketing (opcional) }}
+                <div class="cv-form__group">
+                    <label class="cv-form__checkbox">
+                        <input type="checkbox" name="marketing" value="1"
+                               class="cv-form__checkbox-input">
+                        <span class="cv-form__checkbox-label">
+                            {{#str}}reg_marketing, local_catalog{{/str}}
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="cv-form__submit">
+                    {{#str}}register_cta, local_catalog{{/str}}
+                </button>
+            </form>
+
+            <p class="cv-auth__switch">
+                {{#str}}register_already, local_catalog{{/str}}
+                <a href="{{loginurl}}">{{#str}}login, local_catalog{{/str}}</a>
+            </p>
+
+        {{/success}}
+
+    </div>
+</main>
+
+{{! ── FOOTER ── }}
+{{> local_catalog/footer_home }}

@@ -51,17 +51,27 @@ $templatecontext = [
     'instructors'    => $result['instructors'],
     'totalcount'     => $result['total'],
     'hasinstructors' => !empty($result['instructors']),
-
     // Búsqueda activa
     'activesearch'   => $search,
-    'searchaction'   => (new moodle_url('/profesores'))->out(false),
-
     // Paginación
     'pagination'     => $result['pagination'],
     'haspagination'  => $result['total'] > $perpage,
-
-    // Navegación
+    // ── URLs de navegación ────────────────────────────────────────────────
+    'homeurl'        => (new moodle_url('/'))->out(false),
     'catalogurl'     => (new moodle_url('/cursos'))->out(false),
+    'searchaction'   => (new moodle_url('/profesores'))->out(false),
+    'mycoursesurl'   => (new moodle_url('/mis-cursos'))->out(false),
+    'loginurl'       => (new moodle_url('/login/index.php'))->out(false),
+    'logouturl'      => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
+    'registerurl'    => (new moodle_url('/registro'))->out(false),
+    'instructorsurl' => (new moodle_url('/profesores'))->out(false),
+    'planurl'        => (new moodle_url('/plan-personal'))->out(false),
+    'compareurl'     => (new moodle_url('/comparar-planes'))->out(false),
+    'demourl'        => (new moodle_url('/solicitar-demo'))->out(false),
+    'teachurl'       => (new moodle_url('/ensena-aqui'))->out(false),
+    'termsurl'       => (new moodle_url('/terminos'))->out(false),
+    'privacyurl'     => (new moodle_url('/privacidad'))->out(false),
+
 ];
 
 // --- Renderizar ---

@@ -177,7 +177,8 @@ $templatecontext = array_merge($homedata, [
     'compareurl'     => (new moodle_url('/comparar-planes'))->out(false),
     'demourl'        => (new moodle_url('/solicitar-demo'))->out(false),
     'teachurl'       => (new moodle_url('/ensena-aqui'))->out(false),
-    'privacyurl'     => '#', // Sustituir por URL real de privacidad
+    'termsurl'       => (new moodle_url('/terminos'))->out(false),
+    'privacyurl'     => (new moodle_url('/privacidad'))->out(false),
     // variables del menu
     'username'     => $username,
     'initials'     => $initials,

@@ -58,7 +58,6 @@ $templatecontext = [
     'courses'        => $result['courses'],
     'totalcourses'   => $result['total'],
     'hascourses'     => !empty($result['courses']),
-
     // Filtros de estado
     'filterall'       => $filter === 'all',
     'filterinprogress'=> $filter === 'inprogress',
@@ -66,18 +65,28 @@ $templatecontext = [
     'filterallurl'    => (new moodle_url('/mis-cursos'))->out(false),
     'filterprogressurl'=> (new moodle_url('/mis-cursos', ['filter' => 'inprogress']))->out(false),
     'filtercompletedurl'=> (new moodle_url('/mis-cursos', ['filter' => 'completed']))->out(false),
-
     // Paginación
     'pagination'     => $result['pagination'],
     'haspagination'  => $result['total'] > $perpage,
-
     // Usuario
     'username'       => fullname($USER),
     'useravatarurl'  => (new user_picture($USER, ['size' => 100]))->get_url($PAGE)->out(false),
-
     // Navegación
+    // ── URLs de navegación ────────────────────────────────────────────────
+    'homeurl'        => (new moodle_url('/'))->out(false),
     'catalogurl'     => (new moodle_url('/cursos'))->out(false),
+    'searchaction'   => (new moodle_url('/cursos'))->out(false),
+    'mycoursesurl'   => (new moodle_url('/mis-cursos'))->out(false),
+    'loginurl'       => (new moodle_url('/login/index.php'))->out(false),
     'logouturl'      => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
+    'registerurl'    => (new moodle_url('/registro'))->out(false),
+    'instructorsurl' => (new moodle_url('/profesores'))->out(false),
+    'planurl'        => (new moodle_url('/plan-personal'))->out(false),
+    'compareurl'     => (new moodle_url('/comparar-planes'))->out(false),
+    'demourl'        => (new moodle_url('/solicitar-demo'))->out(false),
+    'teachurl'       => (new moodle_url('/ensena-aqui'))->out(false),
+    'termsurl'       => (new moodle_url('/terminos'))->out(false),
+    'privacyurl'     => (new moodle_url('/privacidad'))->out(false),
 ];
 
 // --- Renderizar ---

@@ -363,7 +363,7 @@
             </div>{{! /cv-popper__content }}
         </div>{{! /cv-popper }}
 
-        <a href="plan-personal.html" class="cv-header__nav-btn">Plan Personal</a>
+        <a href="{{planurl}}" class="cv-header__nav-btn">Plan Personal</a>
 
         <div class="cv-header__search">
             <form class="cv-header__search-form" action="{{searchaction}}" method="get" role="search">
@@ -376,20 +376,20 @@
 
         <div class="cv-header__right">
             <div class="cv-popper" data-trigger="hover">
-                <a href="comparar-planes.html" class="cv-header__nav-btn">Campus Empresarial</a>
+                <a href="{{compareurl}}" class="cv-header__nav-btn">Campus Empresarial</a>
                 <div class="cv-popper__content cv-popper__content--right cv-popper__content--panel">
                     <div class="cv-panel"><div class="cv-panel__list">
-                        <a href="comparar-planes.html" class="cv-panel__item">Comparar planes</a>
-                        <a href="solicitar-demo.html" class="cv-panel__item">Solicitar demo</a>
+                        <a href="{{compareurl}}" class="cv-panel__item">Comparar planes</a>
+                        <a href="{{demourl}}" class="cv-panel__item">Solicitar demo</a>
                     </div></div>
                 </div>
             </div>
             <div class="cv-popper" data-trigger="hover">
-                <a href="enseña-aqui.html" class="cv-header__nav-btn">Enseña aquí</a>
+                <a href="{{teachurl}}" class="cv-header__nav-btn">Enseña aquí</a>
                 <div class="cv-popper__content cv-popper__content--right cv-popper__content--panel">
                     <div class="cv-panel"><div class="cv-panel__promo">
                         <p>Comparte tu conocimiento con el campus.</p>
-                        <a href="enseña-aqui.html" class="cv-panel__cta">Más información</a>
+                        <a href="{{teachurl}}" class="cv-panel__cta">Más información</a>
                     </div></div>
                 </div>
             </div>
@@ -409,8 +409,8 @@
                 </div>
             </div>
             <div id="nav-guest-btns">
-                <a href="login.html" class="cv-header__btn cv-header__btn--outline">Iniciar sesión</a>
-                <a href="registro.html" class="cv-header__btn cv-header__btn--primary">Registrarse</a>
+                <a href="{{loginurl}}" class="cv-header__btn cv-header__btn--outline">Iniciar sesión</a>
+                <a href="{{registerurl}}" class="cv-header__btn cv-header__btn--primary">Registrarse</a>
             </div>
             <div class="cv-popper" data-trigger="hover" id="nav-user-menu" style="display:none">
                 <a href="#" class="cv-header__icon-btn" aria-label="Mi perfil">

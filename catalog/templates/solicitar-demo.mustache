@@ -1,0 +1,81 @@
+{{! ── NAVBAR ── }}
+{{> local_catalog/navbar }}
+
+<main class="cv-page">
+    <div class="cv-demo-form">
+        <div class="container">
+            <div class="cv-demo-form__layout">
+                <div class="cv-demo-form__info">
+                    <p style="font-size:1.3rem;font-weight:700;color:#F05A28;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.2rem">Campus Empresarial</p>
+                    <h1 style="font-size:3.6rem;font-weight:900;letter-spacing:-.02em;margin-bottom:1.6rem">Solicita una demostración gratuita</h1>
+                    <p style="font-size:1.6rem;color:#2d2f31;line-height:1.6;margin-bottom:3.2rem">Nuestro equipo te mostrará cómo el Campus Virtual puede transformar la formación de tu organización. Sin compromiso.</p>
+                    <div class="cv-demo-form__bullets">
+                        <div class="cv-demo-form__bullet">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+                            <div><strong>Demo personalizada</strong><span>Adaptada a las necesidades concretas de tu empresa</span></div>
+                        </div>
+                        <div class="cv-demo-form__bullet">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+                            <div><strong>Sin compromiso</strong><span>La demo es totalmente gratuita y sin obligación de contratar</span></div>
+                        </div>
+                        <div class="cv-demo-form__bullet">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+                            <div><strong>Respuesta en 24h</strong><span>Nos ponemos en contacto contigo el mismo día hábil</span></div>
+                        </div>
+                        <div class="cv-demo-form__bullet">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+                            <div><strong>Prueba gratuita de 14 días</strong><span>Tras la demo podrás probar la plataforma con tu equipo</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cv-demo-form__form-card">
+                    <h3>Cuéntanos sobre tu empresa</h3>
+                    <p>Rellena el formulario y contactaremos contigo en menos de 24 horas.</p>
+                    <div class="cv-form">
+                        <div class="cv-form__group cv-form__group--row">
+                            <div><label class="cv-form__label" for="demo-name">Nombre *</label><input class="cv-form__input" id="demo-name" type="text" placeholder="Tu nombre"></div>
+                            <div><label class="cv-form__label" for="demo-lastname">Apellidos *</label><input class="cv-form__input" id="demo-lastname" type="text" placeholder="Tus apellidos"></div>
+                        </div>
+                        <div class="cv-form__group">
+                            <label class="cv-form__label" for="demo-email">Email corporativo *</label>
+                            <input class="cv-form__input" id="demo-email" type="email" placeholder="nombre@empresa.com">
+                        </div>
+                        <div class="cv-form__group">
+                            <label class="cv-form__label" for="demo-company">Empresa *</label>
+                            <input class="cv-form__input" id="demo-company" type="text" placeholder="Nombre de tu empresa">
+                        </div>
+                        <div class="cv-form__group cv-form__group--row">
+                            <div>
+                                <label class="cv-form__label" for="demo-size">Tamaño del equipo *</label>
+                                <select class="cv-form__select" id="demo-size">
+                                    <option value="">Selecciona...</option>
+                                    <option>1–10 empleados</option>
+                                    <option>11–50 empleados</option>
+                                    <option>51–200 empleados</option>
+                                    <option>201–1000 empleados</option>
+                                    <option>+1000 empleados</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="cv-form__label" for="demo-phone">Teléfono</label>
+                                <input class="cv-form__input" id="demo-phone" type="tel" placeholder="+34 600 000 000">
+                            </div>
+                        </div>
+                        <div class="cv-form__group">
+                            <label class="cv-form__label" for="demo-message">¿En qué podemos ayudarte?</label>
+                            <textarea class="cv-form__textarea" id="demo-message" placeholder="Cuéntanos tus necesidades de formación..."></textarea>
+                        </div>
+                        <label class="cv-form__checkbox-group">
+                            <input type="checkbox">
+                            <span>Acepto la <a href="#" style="color:#F05A28">política de privacidad</a> y el tratamiento de mis datos.</span>
+                        </label>
+                        <button class="cv-form__submit">Solicitar demo gratuita</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{{! ── FOOTER ── }}
+{{> local_catalog/footer_home }}

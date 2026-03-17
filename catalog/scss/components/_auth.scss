@@ -1,0 +1,374 @@
+// =============================================================================
+// AUTH — Páginas de login y registro
+// Fichero: scss/components/_auth.scss
+// =============================================================================
+@use '../tokens' as t;
+@use '../mixins' as m;
+
+// ── Contenedor centrado ───────────────────────────────────────────────────────
+.cv-auth {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: calc(100vh - t.$nav-height - 8rem);
+    padding: t.$space-10 t.$space-4;
+    background: t.$color-bg-subtle;
+
+    &__success {
+        text-align: center;
+        padding-block: t.$space-6;
+    }
+
+    &__success-icon {
+        @include m.flex-center;
+        width: 7.2rem;
+        height: 7.2rem;
+        background: #f0fdf4;
+        border-radius: t.$radius-full;
+        margin: 0 auto t.$space-6;
+        color: #16a34a;
+    }
+
+    &__card {
+        width: 100%;
+        max-width: 44rem;
+        background: t.$color-white;
+        border: 1px solid t.$color-border;
+        border-radius: t.$radius-md;
+        padding: t.$space-10 t.$space-8;
+        box-shadow: t.$shadow-sm;
+
+        @include m.below(m.$bp-sm) {
+            padding: t.$space-8 t.$space-6;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+        }
+    }
+
+    // ── Logo ─────────────────────────────────────────────────────────────────
+    &__logo {
+        @include m.flex-center;
+        justify-content: flex-start;
+        gap: t.$space-2;
+        margin-bottom: t.$space-8;
+        text-decoration: none;
+    }
+
+    &__logo-mark {
+        @include m.flex-center;
+        width: 3.2rem;
+        height: 3.2rem;
+        background: t.$color-brand;
+        border-radius: t.$radius;
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: t.$color-white;
+        flex-shrink: 0;
+    }
+
+    &__logo-text {
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: t.$color-text;
+        letter-spacing: -0.02em;
+    }
+
+    // ── Títulos ───────────────────────────────────────────────────────────────
+    &__title {
+        font-size: t.$text-3xl;
+        font-weight: 700;
+        color: t.$color-text;
+        line-height: 1.2;
+        margin-bottom: t.$space-2;
+    }
+
+    &__sub {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        margin-bottom: t.$space-6;
+    }
+
+    // ── Error ─────────────────────────────────────────────────────────────────
+    &__error {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-2;
+        padding: t.$space-3 t.$space-4;
+        background: #fff5f5;
+        border: 1px solid #fca5a5;
+        border-radius: t.$radius;
+        color: #dc2626;
+        font-size: t.$text-sm;
+        margin-bottom: t.$space-5;
+
+        svg {
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+    }
+
+    // ── Textos secundarios ────────────────────────────────────────────────────
+    &__terms {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        text-align: center;
+        margin-top: t.$space-4;
+        line-height: 1.6;
+
+        a {
+            color: t.$color-text-muted;
+            text-decoration: underline;
+
+            &:hover {
+                color: t.$color-brand;
+            }
+        }
+    }
+
+    &__switch {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        text-align: center;
+        margin-top: t.$space-4;
+
+        a {
+            color: t.$color-brand;
+            font-weight: 700;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// =============================================================================
+// FORM — Componente de formulario reutilizable (login + registro)
+// =============================================================================
+.cv-form {
+    display: flex;
+    flex-direction: column;
+    gap: t.$space-5;
+
+    // Fila de dos columnas (nombre + apellidos)
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: t.$space-4;
+
+        @include m.below(m.$bp-sm) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    // Checkbox personalizado
+    &__checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: t.$space-2;
+        cursor: pointer;
+    }
+
+    &__checkbox-input {
+        flex-shrink: 0;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-top: 0.1rem;
+        accent-color: t.$color-brand;
+        cursor: pointer;
+
+        &--error {
+            outline: 2px solid #dc2626;
+            outline-offset: 2px;
+        }
+    }
+
+    &__checkbox-label {
+        font-size: t.$text-sm;
+        color: t.$color-text-body;
+        line-height: 1.5;
+
+        a {
+            color: t.$color-brand;
+            font-weight: 600;
+            text-decoration: none;
+            &:hover { text-decoration: underline; }
+        }
+    }
+
+    &__group {
+        display: flex;
+        flex-direction: column;
+        gap: t.$space-2;
+    }
+
+    // ── Label row (label + enlace "¿la olvidaste?") ───────────────────────────
+    &__label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__label {
+        font-size: t.$text-sm;
+        font-weight: 600;
+        color: t.$color-text;
+    }
+
+    &__forgot {
+        font-size: t.$text-xs;
+        color: t.$color-brand;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    // ── Input ─────────────────────────────────────────────────────────────────
+    &__input-wrap {
+        position: relative;
+    }
+
+    &__input {
+        width: 100%;
+        height: 4.4rem;
+        padding-inline: t.$space-4;
+        font-size: t.$text-sm;
+        font-family: t.$font-sans;
+        color: t.$color-text;
+        background: t.$color-white;
+        border: 1.5px solid t.$color-border;
+        border-radius: t.$radius;
+        outline: none;
+        transition: border-color .15s;
+
+        &::placeholder {
+            color: t.$color-text-muted;
+        }
+
+        &:focus {
+            border-color: t.$color-brand;
+        }
+
+        // Input dentro de input-wrap (tiene padding para el botón ojo)
+        .cv-form__input-wrap & {
+            padding-inline-end: 4.4rem;
+        }
+
+        // Estado error
+        &--error {
+            border-color: #dc2626;
+
+            &:focus {
+                border-color: #dc2626;
+            }
+        }
+    }
+
+    // ── Botón mostrar/ocultar contraseña ──────────────────────────────────────
+    &__eye {
+        @include m.btn-reset;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        width: 4.4rem;
+        height: 4.4rem;
+        color: t.$color-text-muted;
+
+        &:hover {
+            color: t.$color-text;
+        }
+    }
+
+    // ── Submit ────────────────────────────────────────────────────────────────
+    &__submit {
+        @include m.btn-reset;
+        width: 100%;
+        height: 4.8rem;
+        background: t.$color-brand;
+        color: t.$color-white;
+        font-size: t.$text-md;
+        font-weight: 700;
+        border-radius: t.$radius;
+        margin-top: t.$space-2;
+        transition: background .15s;
+
+        &:hover {
+            background: t.$color-brand-dark;
+        }
+
+        &:disabled {
+            background: t.$color-border;
+            cursor: not-allowed;
+        }
+    }
+
+    // ── Hint / helper text ────────────────────────────────────────────────────
+    &__hint {
+        font-size: t.$text-xs;
+        color: t.$color-text-muted;
+        margin-top: -#{t.$space-2};
+    }
+
+    &__hint--error {
+        color: #dc2626;
+    }
+}
+
+
+// Página legal
+.cv-legal {
+    padding-block: t.$space-10;
+
+    &__inner {
+        max-width: 72rem;
+        margin-inline: auto;
+    }
+
+    &__title {
+        font-size: t.$text-4xl;
+        font-weight: 700;
+        color: t.$color-text;
+        margin-bottom: t.$space-2;
+    }
+
+    &__meta {
+        font-size: t.$text-sm;
+        color: t.$color-text-muted;
+        margin-bottom: t.$space-8;
+        padding-bottom: t.$space-8;
+        border-bottom: 1px solid t.$color-border;
+    }
+
+    &__content {
+        h2 {
+            font-size: t.$text-xl;
+            font-weight: 700;
+            color: t.$color-text;
+            margin-top: t.$space-8;
+            margin-bottom: t.$space-3;
+        }
+        p {
+            font-size: t.$text-md;
+            color: t.$color-text-body;
+            line-height: 1.7;
+            margin-bottom: t.$space-4;
+        }
+    }
+
+    &__back {
+        margin-top: t.$space-10;
+        padding-top: t.$space-6;
+        border-top: 1px solid t.$color-border;
+    }
+
+    &__back-link {
+        font-size: t.$text-sm;
+        color: t.$color-brand;
+        text-decoration: none;
+        &:hover { text-decoration: underline; }
+    }
+}

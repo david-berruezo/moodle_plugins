@@ -42,8 +42,6 @@ if (empty($courseid) && !empty($slug)) {
 
 // Obtener datos del curso
 $coursedata = $manager->get_course_detail($courseid);
-//var_dump($coursedata['sections'][0])['activities'];
-//die();
 
 if (!$coursedata) {
     throw new moodle_exception('invalidcourseid', 'error');

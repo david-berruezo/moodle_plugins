@@ -1,149 +1,269 @@
 <nav class="cv-player-nav">
-    <a href="index.html" class="cv-player-nav__logo">
+    <a href="{{homeurl}}" class="cv-player-nav__logo">
         <div class="cv-player-nav__logo-mark">A</div>
     </a>
     <div class="cv-player-nav__divider"></div>
-    <span class="cv-player-nav__title">React JS de cero a experto</span>
+    <span class="cv-player-nav__title">{{coursename}}</span>
     <div class="cv-player-nav__progress">
-        <span class="cv-player-nav__progress-label">8% completado</span>
+        <span class="cv-player-nav__progress-label">{{progress_percent}}% completado</span>
         <div class="cv-player-nav__progress-bar">
-            <div class="cv-player-nav__progress-fill" style="width:8%"></div>
+            <div class="cv-player-nav__progress-fill"
+                 style="width:{{progress_percent}}%"></div>
         </div>
     </div>
-    <button class="cv-player-nav__btn cv-player-nav__btn--primary">
-        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Dejar valoración
-    </button>
-    <a href="course-detail.html" class="cv-player-nav__btn">Volver al curso</a>
+    {{#isenrolled}}
+        <button class="cv-player-nav__btn cv-player-nav__btn--primary">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            Dejar valoración
+        </button>
+    {{/isenrolled}}
+    <a href="{{courseurl}}" class="cv-player-nav__btn">Volver al curso</a>
 </nav>
 
 <div class="cv-player-layout">
+
+    {{! ── ÁREA PRINCIPAL ────────────────────────────────────────────────── }}
     <div class="cv-player-layout__main">
 
-        {{! Video player }}
-        {{#is_video}}
-            <iframe src="{{video_url}}" class="lp-video__iframe" frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-style="min-height:600px;"></iframe>
-        {{/is_video}}
+        {{! ── MODO ÍNDICE: listado de vídeos por secciones ───────────────── }}
+        {{#show_index}}
 
-        {{#html_content}}
-            <div class="lp-content__below-video">
-                {{{html_content}}}
-            </div>
-        {{/html_content}}
-
-
-        <div class="cv-player-content" data-tabs>
-            <h1 class="cv-player-content__title">JSX en profundidad</h1>
-            <nav class="cv-tabs">
-                <button class="cv-tabs__btn is-active" data-tab="p-overview">Descripción</button>
-                <button class="cv-tabs__btn" data-tab="p-qa">Instructores</button>
-                <button class="cv-tabs__btn" data-tab="p-notes">Notas</button>
-                <button class="cv-tabs__btn" data-tab="p-resources">Recursos</button>
-            </nav>
-            <div class="cv-tab-panel is-active" data-tab="p-overview">
-                <p style="font-size:1.4rem;color:#2d2f31;line-height:1.7;margin-bottom:1.6rem">{{personalizados.course_long_description}}</p>
-                <div style="background:#f7f9fa;border:1px solid #e8ecef;border-radius:.4rem;padding:1.6rem;font-size:1.3rem">
-                    <strong style="display:block;margin-bottom:.8rem">Objetivos</strong>
-                    <a href="#" style="display:flex;align-items:center;gap:.8rem;color:#F05A28;font-weight:700;text-decoration:none">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        {{personalizados.course_objectives}}
-                    </a>
+            <div class="cv-player-index">
+                <div class="cv-player-index__header">
+                    <h1 class="cv-player-index__title">{{coursename}}</h1>
+                    <p class="cv-player-index__meta">
+                        {{progress_done}} de {{progress_total}} vídeos completados
+                    </p>
                 </div>
-                <br><br>
-                <div class="cv-what-learn">
-                    <h2 class="cv-what-learn__title">Requerimientos</h2>
-                    <div class="cv-what-learn__grid">
-                      <div class="cv-what-learn__item">
-                          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-                          <span>{{personalizados.course_requirements}}</span>
-                      </div>
+
+                {{#index_sections}}
+                    <div class="cv-player-index__section">
+                         <!--
+                        <div class="cv-player-index__section-header">
+                            <h2 class="cv-player-index__section-title">{{name}}</h2>
+                            <span class="cv-player-index__section-count">
+                                {{activitycount}} vídeos
+                            </span>
+                        </div>
+
+                        <div class="cv-player-index__grid">
+                            {{#activities}}
+                                <a href="{{playerurl}}" class="cv-player-index__card">
+                                    {{! Thumbnail o preview }}
+                                    <div class="cv-player-index__thumb">
+                                        {{#haspreview}}
+                                            <img src="{{previewurl}}" alt="{{name}}" loading="lazy">
+                                        {{/haspreview}}
+                                        {{^haspreview}}
+                                            <div class="cv-player-index__thumb-placeholder">
+                                                <svg viewBox="0 0 24 24" width="32" height="32"
+                                                     fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                    <polygon points="10,8 16,12 10,16 10,8"
+                                                             fill="currentColor" stroke="none"/>
+                                                </svg>
+                                            </div>
+                                        {{/haspreview}}
+                                        <div class="cv-player-index__thumb-overlay">
+                                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                                <circle cx="12" cy="12" r="10"
+                                                        fill="rgba(255,255,255,.9)"/>
+                                                <polygon points="10,8 16,12 10,16 10,8"
+                                                         fill="#F05A28"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {{! Info del vídeo }}
+                                    <div class="cv-player-index__card-body">
+                                        <span class="cv-player-index__card-title">{{name}}</span>
+                                        {{#hasdescription}}
+                                            <span class="cv-player-index__card-desc">
+                                                {{description}}
+                                            </span>
+                                        {{/hasdescription}}
+                                        <span class="cv-player-index__card-type">{{typename}}</span>
+                                    </div>
+
+                                </a>
+                            {{/activities}}
+                        </div>
+                        -->
                     </div>
+
+                {{/index_sections}}
+            </div>
+
+        {{/show_index}}
+
+        {{! ── MODO PLAYER: reproductor ───────────────────────────────────── }}
+        {{#show_player}}
+
+        {{! iFrame embed (YouTube, Vimeo, pluginfile) }}
+            {{#is_video}}
+                <div class="cv-player-video">
+                    <iframe src="{{video_url}}"
+                            class="lp-video__iframe"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write;
+                               encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen style="min-height:600px;width:100%;">
+                    </iframe>
                 </div>
+            {{/is_video}}
+
+            {{! Navegación anterior / siguiente }}
+            <div class="cv-player-nav-controls">
+                {{#hasprev}}
+                    <a href="{{prevurl}}" class="cv-player-nav-controls__btn
+                                             cv-player-nav-controls__btn--prev"
+                       title="{{prevname}}">
+                        <svg viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M15 18l-6-6 6-6" stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        Anterior
+                    </a>
+                {{/hasprev}}
+                {{#hasnext}}
+                    <a href="{{nexturl}}" class="cv-player-nav-controls__btn
+                                             cv-player-nav-controls__btn--next"
+                       title="{{nextname}}">
+                        Siguiente
+                        <svg viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </a>
+                {{/hasnext}}
             </div>
 
-            <div class="cv-tab-panel" data-tab="p-qa">
-                {{! --- Instructor --- }}
+            {{! Pestañas del player }}
+            <div class="cv-player-content" data-tabs>
+                <h1 class="cv-player-content__title">{{current_name}}</h1>
+                <nav class="cv-tabs">
+                    <button class="cv-tabs__btn is-active"
+                            data-tab="p-overview">Descripción</button>
+                    <button class="cv-tabs__btn"
+                            data-tab="p-instructor">Instructor</button>
+                    <button class="cv-tabs__btn"
+                            data-tab="p-resources">Recursos</button>
+                </nav>
 
-                        {{#instructores}}
-                            <div class="cv-instructor-card">
-                                <div class="cv-instructor-card__header">
-                                    <div class="cv-instructor-card__avatar" style="background:url({{avatarurl}})"></div>
-                                    <div>
-                                        <h3 class="cv-instructor-card__name">{{fullname}}</h3>
-                                        <p class="cv-instructor-card__role">Senior Frontend Developer & Instructor</p>
-                                    </div>
+                <div class="cv-tab-panel is-active" data-tab="p-overview">
+                    {{#has_description}}
+                        <p class="cv-player-content__description">
+                            {{description}}
+                        </p>
+                    {{/has_description}}
+                    {{#personalizados}}
+                        {{#course_long_description}}
+                            <p class="cv-player-content__description">
+                                {{course_long_description}}
+                            </p>
+                        {{/course_long_description}}
+                    {{/personalizados}}
+                </div>
+
+                <div class="cv-tab-panel" data-tab="p-instructor">
+                    {{#instructores}}
+                        <div class="cv-instructor-card">
+                            <div class="cv-instructor-card__header">
+                                <div class="cv-instructor-card__avatar"
+                                     style="background:url({{avatarurl}}) center/cover"></div>
+                                <div>
+                                    <h3 class="cv-instructor-card__name">{{fullname}}</h3>
                                 </div>
-                                <div class="cv-instructor-card__stats">
-                                    <div class="cv-instructor-card__stat">
-                                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f0a500" stroke="none"/></svg>
-                                        <span><strong>{{rating}}</strong> {{#str}}instructorrating, local_catalog{{/str}}</span>
-                                    </div>
-                                    <div class="cv-instructor-card__stat">
-                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                        <span><strong>{{studentcount}}</strong> {{#str}}students, local_catalog{{/str}}</span>
-                                    </div>
-                                    <div class="cv-instructor-card__stat"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                        <span><strong>{{coursecount}}</strong> {{#str}}courses, local_catalog{{/str}}</span>
-                                    </div>
-                                </div>
-                                {{#hasbio}}
-                                    <p class="cv-instructor-card__bio">{{{bio}}}</p>
-                                {{/hasbio}}
                             </div>
-                        {{/instructores}}
+                            <div class="cv-instructor-card__stats">
+                                <div class="cv-instructor-card__stat">
+                                    <strong>{{coursecount}}</strong> cursos
+                                </div>
+                                <div class="cv-instructor-card__stat">
+                                    <strong>{{studentcount}}</strong> estudiantes
+                                </div>
+                            </div>
+                            {{#hasbio}}
+                                <p class="cv-instructor-card__bio">{{{bio}}}</p>
+                            {{/hasbio}}
+                        </div>
+                    {{/instructores}}
+                </div>
 
+                <div class="cv-tab-panel" data-tab="p-resources">
+                    <p style="font-size:1.4rem;color:#6a6f73;padding:2.4rem 0">
+                        Recursos adicionales de esta lección.
+                    </p>
+                </div>
 
             </div>
 
-            <div class="cv-tab-panel" data-tab="p-notes">
-                <p style="font-size:1.4rem;color:#6a6f73;padding:2.4rem 0">Tus notas personales de esta lección aparecerán aquí.</p>
-            </div>
-            <div class="cv-tab-panel" data-tab="p-resources">
-                <p style="font-size:1.4rem;color:#6a6f73;padding:2.4rem 0">Recursos adicionales de esta lección.</p>
-            </div>
-        </div>
+        {{/show_player}}
 
-        {{! ── FOOTER ── }}
-        {{> local_catalog/footer }}
+        {{> local_catalog/footer}}
 
     </div>
 
+    {{! ── SIDEBAR — solo vídeos ──────────────────────────────────────────── }}
     <aside class="cv-player-layout__sidebar">
         <div class="cv-player-sidebar">
             <div class="cv-player-sidebar__header">Contenido del curso</div>
 
             <div class="cv-player-sidebar__section">
-                {{#sections}}
-                <button class="cv-player-sidebar__section-header">
-                    <div>
-                        <div class="cv-player-sidebar__section-title">{{name}}</div>
-                        <div class="cv-player-sidebar__section-meta">{{progress_text}} completadas</div>
-                    </div>
-                    <svg class="cv-player-sidebar__section-arrow" viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke-linecap="round"/></svg>
-                </button>
-
-                <div class="cv-player-sidebar__lessons">
-                    {{#activities}}
-                    <div class="cv-player-sidebar__lesson ">
-                        <div class="cv-player-sidebar__check is-done">
-                            <svg viewBox="0 0 24 24" width="10" height="10"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="cv-player-sidebar__lesson-info">
-                            <div class="cv-player-sidebar__lesson-title">{{name}}</div>
-                            <div class="cv-player-sidebar__lesson-meta">
-                                <svg viewBox="0 0 24 24" width="12" height="12"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8" fill="currentColor"/></svg>
-                                5:32
+                {{#sections_videos}}
+                    <button class="cv-player-sidebar__section-header
+                               {{#section_active}}is-active{{/section_active}}"
+                            aria-expanded="{{#isopen}}true{{/isopen}}{{^isopen}}false{{/isopen}}">
+                        <div>
+                            <div class="cv-player-sidebar__section-title">{{name}}</div>
+                            <div class="cv-player-sidebar__section-meta">
+                                {{progress_text}} completadas
                             </div>
                         </div>
-                    </div>
-                    {{/activities}}
-                </div>
+                        <svg class="cv-player-sidebar__section-arrow"
+                             viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </button>
 
-                {{/sections}}
+                    <div class="cv-player-sidebar__lessons
+                        {{#isopen}}is-open{{/isopen}}">
+                        {{#activities}}
+                            <a href="{{playerurl}}"
+                               class="cv-player-sidebar__lesson
+                              {{#is_active}}is-current{{/is_active}}">
+                                <div class="cv-player-sidebar__check">
+                                    <svg viewBox="0 0 24 24" width="10" height="10">
+                                        <path d="M20 6L9 17l-5-5" stroke="currentColor"
+                                              stroke-width="2.5" stroke-linecap="round"
+                                              fill="none"/>
+                                    </svg>
+                                </div>
+                                <div class="cv-player-sidebar__lesson-info">
+                                    <div class="cv-player-sidebar__lesson-title">
+                                        {{name}}
+                                    </div>
+                                    <div class="cv-player-sidebar__lesson-meta">
+                                        <svg viewBox="0 0 24 24" width="12" height="12">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polygon points="10,8 16,12 10,16 10,8"
+                                                     fill="currentColor"/>
+                                        </svg>
+                                        Vídeo
+                                    </div>
+                                </div>
+                            </a>
+                        {{/activities}}
+                    </div>
+
+                {{/sections_videos}}
             </div>
 
         </div>
     </aside>
+
 </div>

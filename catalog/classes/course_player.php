@@ -1,604 +1,378 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
-//
 // @package    local_catalog
-// @copyright  2026 Campus Virtual
-// @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 
 namespace local_catalog;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($GLOBALS['CFG']->dirroot . '/course/lib.php');
-require_once($GLOBALS['CFG']->dirroot . '/mod/page/lib.php');
-require_once($GLOBALS['CFG']->libdir . '/completionlib.php');
-
 /**
- * Gestor del player de curso (aula virtual tipo Udemy).
+ * Orquesta todos los datos del aula virtual (player tipo Udemy).
  *
- * Maneja:
- * - Obtención del contenido de la actividad actual
- * - Sidebar con temario y progreso
- * - Navegación anterior/siguiente
- * - Estado de completación por actividad
+ * Responsabilidades:
+ *  - Construir el sidebar de vídeos por secciones
+ *  - Resolver la actividad actual (por cmid o primera del curso)
+ *  - Extraer el contenido reproducible (iframe embed, HTML, fichero)
+ *  - Calcular la navegación anterior/siguiente entre vídeos
+ *  - Calcular el progreso del alumno
  */
-class course_player {
+class course_player
+{
+
+    /** @var catalog_manager */
+    private catalog_manager $manager;
+
+    public function __construct()
+    {
+        $this->manager = new catalog_manager();
+    }
+
+    // =========================================================================
+    // PUNTO DE ENTRADA — llamado desde learn.php
+    // =========================================================================
 
     /**
-     * Obtiene todos los datos necesarios para el player.
+     * Devuelve el array completo de datos para course_player.mustache.
      *
-     * @param \stdClass $course El curso
-     * @param int $cmid ID de la actividad actual (0 = primera actividad)
-     * @return array|null Datos para el template
+     * @param \stdClass $course Objeto curso de get_course()
+     * @param int $cmid CM actual (0 = mostrar índice)
+     * @param bool $isenrolled El usuario está matriculado
+     * @param bool $isguest Usuario sin login
+     * @return array|null
      */
-    public function get_player_data(\stdClass $course, int $cmid = 0 , bool $isenrolled = false, bool $isguest = true): ?array {
-        global $USER, $DB;
+    public function get_player_data(
+        \stdClass $course,
+        int       $cmid,
+        bool      $isenrolled,
+        bool      $isguest
+    ): ?array
+    {
 
-        $modinfo = get_fast_modinfo($course);
-        $context = \context_course::instance($course->id);
+        global $USER, $OUTPUT, $PAGE;
 
-        // Obtener todos los campos personalizados de un curso
-        $handler = \core_customfield\handler::get_handler('core_course', 'course');
-        $datos_personalizados   = $handler->get_instance_data($course->id);
-        $personalizados = array();
-        foreach ($datos_personalizados as $data) {
-            $field = $data->get_field();
-            $name  = $field->get('shortname');  // ej: "idioma", "nivel", "duracion"
-            $value = $data->get_value();        // el valor guardado
-            $personalizados[$name] = strip_tags($value);
-            // echo $name . ': ' . $value;
-        }
+        $courseid = (int)$course->id;
+        $slug = catalog_manager::slugify($course->shortname ?: $course->fullname);
 
-        // --- Instructores (detallado) ---
-        $instructores = array();
-        $instructores['instructors'] = $this->get_instructors_detail($course->id);
-        $instructores['hasinstructors'] = !empty($instructores['instructors']);
-        $instructores['instructornames'] = implode(', ', array_column($instructores['instructors'], 'fullname'));
+        // ── 1. Secciones de vídeo (sidebar + índice central) ─────────────────
+        $sectionsdata = $this->manager->get_course_sections_public($courseid);
+        $sections_videos = $sectionsdata['sections_videos'];
 
-        // print_r($instructores);
-        // die();
-
-        // --- 1. Construir lista ordenada de todas las actividades navegables ---
-        $allactivities = $this->get_ordered_activities($modinfo);
-
-        if (empty($allactivities)) {
+        if (empty($sections_videos)) {
             return null;
         }
 
-        // --- 2. Determinar actividad actual ---
-        if ($cmid == 0) {
-            // Si no se especifica, ir a la primera actividad
-            $cmid = $allactivities[0]['cmid'];
+        // ── 2. Lista plana de todos los vídeos (para nav prev/next) ──────────
+        $all_videos = $this->flatten_videos($sections_videos);
+        //var_dump($all_videos);
+
+        if (empty($all_videos)) {
+            return null;
         }
 
-        // Buscar índice actual
-        $currentindex = 0;
-        foreach ($allactivities as $idx => $act) {
-            if ($act['cmid'] == $cmid) {
-                $currentindex = $idx;
-                break;
+        // ── 3. Resolver actividad actual ──────────────────────────────────────
+        // Si cmid=0 → modo índice (sin vídeo activo)
+        // Si cmid>0 → reproducir ese vídeo
+        $current = null;
+        $show_index = ($cmid === 0);
+
+        if (!$show_index) {
+            $current = $this->find_video_by_cmid($all_videos, $cmid);
+            if (!$current) {
+                // cmid inválido → volver al índice
+                $show_index = true;
             }
         }
 
-        // --- 3. Obtener contenido de la actividad actual ---
-        $cm = $modinfo->get_cm($cmid);
-        $activitycontent = $this->get_activity_content($cm, $course);
-
-        // --- 4. Navegación anterior/siguiente ---
-        $hasprev = $currentindex > 0;
-        $hasnext = $currentindex < (count($allactivities) - 1);
-
-        $prevurl = $hasprev
-            ? (new \moodle_url('/local/catalog/learn.php', [
-                'id' => $course->id,
-                'cmid' => $allactivities[$currentindex - 1]['cmid'],
-            ]))->out(false)
-            : '';
-
-        $nexturl = $hasnext
-            ? (new \moodle_url('/local/catalog/learn.php', [
-                'id' => $course->id,
-                'cmid' => $allactivities[$currentindex + 1]['cmid'],
-            ]))->out(false)
-            : '';
-
-        // --- 5. Construir sidebar con secciones y estado de completación ---
-        $sections = $this->build_sidebar($modinfo, $course, $cmid);
-
-        // --- 6. Progreso del curso ---
-        $completioninfo = new \completion_info($course);
-        // $progress = $this->get_course_progress($completioninfo, $modinfo);
-        $progress = ['percentage' => 0, 'completed' => 0, 'total' => 0, 'text' => ''];
-        if (!$isguest && $isenrolled) {
-            $progress = $this->get_course_progress($completioninfo, $modinfo);
-        }
-
-        // --- 7. Completar actividad actual vía AJAX (URL para marcar como completada) ---
-        $completeurl = '';
-        /*
-        if ($completioninfo->is_enabled($cm) == COMPLETION_TRACKING_MANUAL) {
-            $completeurl = (new \moodle_url('/local/catalog/complete.php', [
-                'id'     => $course->id,
-                'cmid'   => $cmid,
-                'sesskey' => sesskey(),
-            ]))->out(false);
-        }
-        */
-        if (!$isguest && $isenrolled) {
-            if ($completioninfo->is_enabled($cm) == COMPLETION_TRACKING_MANUAL) {
-                $completeurl = (new \moodle_url('/local/catalog/complete.php', [
-                    'id'     => $course->id,
-                    'cmid'   => $cmid,
-                    'sesskey' => sesskey(),
-                ]))->out(false);
+        // obtenemos por defecto el primero
+        if ($show_index){
+            if (!$current && is_array($all_videos) && count($all_videos) > 0){
+                $current = $this->find_video_by_cmid($all_videos, $all_videos[0]["id"]);
+                if ($current){
+                    $show_index = false;
+                }
             }
         }
 
-        // --- Datos para el template ---
-        return [
-            // Curso
-            'courseid'     => $course->id,
-            'coursename'   => $course->fullname,
-            'coursedescription' => strip_tags($course->summary),
-            'courseurl'     => (new \moodle_url('/local/catalog/course.php', ['id' => $course->id]))->out(false),
-            'catalogurl'   => (new \moodle_url('/local/catalog/index.php'))->out(false),
-            'dashboardurl' => (new \moodle_url('/my/'))->out(false),
-            // Curso campos personalizados
-            'personalizados' => $personalizados,
-            // Actividad actual
-            'current_cmid'    => $cmid,
-            'current_name'    => $cm->name,
-            'current_type'    => $cm->modname,
-            'current_content' => $activitycontent,
-            'current_number'  => $currentindex + 1,
-            'total_activities' => count($allactivities),
+        // ── 4. Navegación anterior / siguiente ────────────────────────────────
+        $prevnext = $this->get_prevnext($all_videos, $cmid, $courseid, $slug);
 
-            // Tipo de contenido (para condicionales en template)
-            'is_video'     => $activitycontent['is_video'] ?? false,
-            'is_page'      => $activitycontent['is_page'] ?? false,
-            'is_other'     => $activitycontent['is_other'] ?? false,
-            'video_url'    => $activitycontent['video_url'] ?? '',
-            'html_content' => $activitycontent['html_content'] ?? '',
-            'activity_url' => $activitycontent['activity_url'] ?? '',
+        // ── 5. Marcar actividad activa en el sidebar ──────────────────────────
+        $sections_sidebar = $this->mark_active($sections_videos, $cmid, $courseid, $slug);
 
-            // instructores
-            'instructores' => $instructores['instructors'],
-            'tiene_instructores' => $instructores['hasinstructors'],
-            'instructores_nombres' => $instructores['instructornames'],
+        // ── 6. Progreso del alumno ────────────────────────────────────────────
+        $progress = $isenrolled
+            ? $this->get_progress($courseid, (int)$USER->id)
+            : ['percent' => 0, 'done' => 0, 'total' => count($all_videos)];
 
-            // Navegación
-            'hasprev' => $hasprev,
-            'hasnext' => $hasnext,
-            'prevurl' => $prevurl,
-            'nexturl' => $nexturl,
+        // ── 7. Instructores ───────────────────────────────────────────────────
+        $instructors = $this->manager->get_instructors_for_player($courseid);
 
-            // Sidebar
-            'sections' => $sections,
+        // ── 8. Custom fields del curso (para la pestaña Descripción) ─────────
+        $customfields = $this->get_course_customfields($courseid);
 
-            // Progreso
-            'progress'         => $progress['percentage'],
-            'progress_text'    => $progress['text'],
-            'completed_count'  => $progress['completed'],
-            'total_count'      => $progress['total'],
+        // ── 9. Componer el $data ──────────────────────────────────────────────
+        $data = [
+            // ── Estado de vista ───────────────────────────────────────────────
+            'show_index' => $show_index,   // true → muestra índice de vídeos
+            'show_player' => !$show_index,  // true → muestra el player
 
-            // Completar manualmente
-            'cancomplete'  => !empty($completeurl),
-            'completeurl'  => $completeurl,
-            'iscompleted'  => $this->is_activity_completed($completioninfo, $cm),
+            // ── Curso ─────────────────────────────────────────────────────────
+            'courseid' => $courseid,
+            'coursename' => $course->fullname,
+            'courseurl' => '/cursos/' . $slug,
+            'learnurl' => '/cursos/' . $slug . '/ver',
 
-            'isguest'      => $isguest,
-            'isenrolled'   => $isenrolled,
-            'showenroll'   => $isguest && !$isenrolled,
-            'enrollurl'    => (new \moodle_url('/local/catalog/course.php', ['id' => $course->id]))->out(false),
+            // ── Sidebar ───────────────────────────────────────────────────────
+            'sections_videos' => $sections_sidebar,
+
+            // ── Índice central (cuando show_index=true) ───────────────────────
+            'index_sections' => $show_index ? $this->build_index($sections_videos, $courseid, $slug) : [],
+
+            // ── Player (cuando show_player=true) ──────────────────────────────
+            'current_cmid' => $current['id'] ?? 0,
+            'current_name' => $current['name'] ?? $course->fullname,
+            'is_video' => !empty($current['videoembedurl']),
+            'video_url' => $current['videoembedurl'] ?? '',
+            'has_description' => !empty($current['description']),
+            'description' => $current['description'] ?? '',
+            'has_preview' => !empty($current['previewurl']),
+            'previewurl' => $current['previewurl'] ?? '',
+
+            // ── Navegación ────────────────────────────────────────────────────
+            'hasprev' => !empty($prevnext['prev']),
+            'hasnext' => !empty($prevnext['next']),
+            'prevurl' => $prevnext['prev']['url'] ?? '',
+            'prevname' => $prevnext['prev']['name'] ?? '',
+            'nexturl' => $prevnext['next']['url'] ?? '',
+            'nextname' => $prevnext['next']['name'] ?? '',
+
+            // ── Progreso ──────────────────────────────────────────────────────
+            'progress_percent' => $progress['percent'],
+            'progress_done' => $progress['done'],
+            'progress_total' => $progress['total'],
+
+            // ── Instructor / custom fields (pestañas) ─────────────────────────
+            'instructores' => $instructors,
+            'hasinstructores' => !empty($instructors),
+            'personalizados' => $customfields,
+
+            // ── Acceso ────────────────────────────────────────────────────────
+            'isenrolled' => $isenrolled,
+            'isguest' => $isguest,
+
+            // ── URLs globales ─────────────────────────────────────────────────
+            'homeurl' => (new \moodle_url('/'))->out(false),
+            'catalogurl' => (new \moodle_url('/cursos'))->out(false),
+            'logouturl' => (new \moodle_url('/login/logout.php',
+                ['sesskey' => sesskey()]))->out(false),
+            'searchaction'   => (new moodle_url('/cursos'))->out(false),
+            'mycoursesurl'   => (new moodle_url('/mis-cursos'))->out(false),
+            'loginurl'       => (new moodle_url('/login/index.php'))->out(false),
+            'registerurl'    => (new moodle_url('/registro'))->out(false),
+            'instructorsurl' => (new moodle_url('/profesores'))->out(false),
+            'planurl'        => (new moodle_url('/plan-personal'))->out(false),
+            'compareurl'     => (new moodle_url('/comparar-planes'))->out(false),
+            'demourl'        => (new moodle_url('/solicitar-demo'))->out(false),
+            'teachurl'       => (new moodle_url('/ensena-aqui'))->out(false),
+            'termsurl'       => (new moodle_url('/terminos'))->out(false),
+            'privacyurl'     => (new moodle_url('/privacidad'))->out(false),
         ];
+
+        // Añadir navbar y footer
+        $data = array_merge($data, $this->manager->get_navbar_data());
+
+        return $data;
+    }
+
+    // =========================================================================
+    // MÉTODO PÚBLICO — expone get_course_sections a learn.php si hiciera falta
+    // =========================================================================
+    // (lo usamos internamente vía catalog_manager)
+
+
+    // =========================================================================
+    // PRIVADOS — lógica interna
+    // =========================================================================
+
+    /**
+     * Aplana las secciones de vídeo en una lista plana de actividades.
+     * Resultado: [ ['id'=>cmid, 'name'=>..., 'videoembedurl'=>...], ... ]
+     */
+    private function flatten_videos(array $sections_videos): array
+    {
+        $flat = [];
+        foreach ($sections_videos as $section) {
+            foreach ($section['activities'] as $activity) {
+                $flat[] = $activity;
+            }
+        }
+        return $flat;
     }
 
     /**
-     * Obtiene la lista ordenada de actividades navegables.
-     * Excluye labels y recursos no visibles.
+     * Busca una actividad por cmid en la lista plana.
      */
-    private function get_ordered_activities(\course_modinfo $modinfo): array {
-        $activities = [];
+    private function find_video_by_cmid(array $all_videos, int $cmid): ?array
+    {
+        foreach ($all_videos as $video) {
+            if ((int)$video['id'] === $cmid) {
+                return $video;
+            }
+        }
+        return null;
+    }
 
-        foreach ($modinfo->get_section_info_all() as $sectionnum => $sectioninfo) {
-            if (!isset($modinfo->sections[$sectionnum])) {
+    /**
+     * Calcula la URL anterior y siguiente respecto al cmid actual.
+     */
+    private function get_prevnext(array $all_videos, int $cmid, int $courseid, string $slug): array
+    {
+        $result = ['prev' => null, 'next' => null];
+
+        if ($cmid === 0 || empty($all_videos)) {
+            return $result;
+        }
+
+        $baseurl = '/cursos/' . $slug . '/ver?cmid=';
+
+        foreach ($all_videos as $i => $video) {
+            if ((int)$video['id'] !== $cmid) {
                 continue;
             }
-
-            foreach ($modinfo->sections[$sectionnum] as $cmid) {
-                $cm = $modinfo->cms[$cmid];
-
-                // Excluir labels y actividades no visibles
-                if ($cm->modname === 'label' || !$cm->uservisible) {
-                    continue;
-                }
-
-                $activities[] = [
-                    'cmid'    => $cm->id,
-                    'name'    => $cm->name,
-                    'modname' => $cm->modname,
-                    'section' => $sectionnum,
+            if ($i > 0) {
+                $prev = $all_videos[$i - 1];
+                $result['prev'] = [
+                    'url' => $baseurl . $prev['id'],
+                    'name' => $prev['name'],
                 ];
             }
-        }
-
-        return $activities;
-    }
-
-    /**
-     * Obtiene el contenido renderizable de una actividad.
-     *
-     * Detecta si contiene un vídeo (YouTube/Vimeo), contenido HTML,
-     * o si debe redirigir a la URL nativa de Moodle.
-     */
-    private function get_activity_content(\cm_info $cm, \stdClass $course): array {
-        global $DB;
-
-        $result = [
-            'is_video'     => false,
-            'is_page'      => false,
-            'is_other'     => false,
-            'video_url'    => '',
-            'html_content' => '',
-            'activity_url' => (new \moodle_url('/mod/' . $cm->modname . '/view.php', ['id' => $cm->id]))->out(false),
-        ];
-
-        switch ($cm->modname) {
-            case 'page':
-                $page = $DB->get_record('page', ['id' => $cm->instance]);
-                if ($page) {
-                    $content = $page->content;
-
-                    // Detectar si el contenido contiene un vídeo embebido
-                    $videourl = $this->extract_video_url($content);
-
-                    if ($videourl) {
-                        $result['is_video'] = true;
-                        $result['video_url'] = $videourl;
-                        // Si hay contenido además del vídeo, mostrarlo debajo
-                        $cleanedcontent = $this->remove_video_from_content($content);
-                        if (!empty(trim(strip_tags($cleanedcontent)))) {
-                            $result['html_content'] = format_text($cleanedcontent, FORMAT_HTML);
-                        }
-                    } else {
-                        $result['is_page'] = true;
-                        $result['html_content'] = format_text($content, FORMAT_HTML);
-                    }
-                }
-                break;
-
-            case 'url':
-                $urlrecord = $DB->get_record('url', ['id' => $cm->instance]);
-                if ($urlrecord) {
-                    $videourl = $this->extract_video_url($urlrecord->externalurl);
-                    if ($videourl) {
-                        $result['is_video'] = true;
-                        $result['video_url'] = $videourl;
-                    } else {
-                        $result['is_other'] = true;
-                    }
-                }
-                break;
-
-            case 'quiz':
-            case 'assign':
-            case 'forum':
-            case 'h5p':
-            case 'lesson':
-            case 'scorm':
-                // Para estas actividades, mostrar en iframe o redirigir
-                $result['is_other'] = true;
-                break;
-
-            case 'resource':
-                // Archivo descargable
-                $result['is_other'] = true;
-                break;
-
-            default:
-                $result['is_other'] = true;
-                break;
+            if ($i < count($all_videos) - 1) {
+                $next = $all_videos[$i + 1];
+                $result['next'] = [
+                    'url' => $baseurl . $next['id'],
+                    'name' => $next['name'],
+                ];
+            }
+            break;
         }
 
         return $result;
     }
 
     /**
-     * Extrae la URL de embed de YouTube o Vimeo desde contenido HTML o URL.
-     *
-     * Soporta:
-     * - URLs directas: https://www.youtube.com/watch?v=xxxx
-     * - URLs cortas: https://youtu.be/xxxx
-     * - Embeds: https://www.youtube.com/embed/xxxx
-     * - Iframes ya embebidos
-     * - Vimeo: https://vimeo.com/xxxx
+     * Copia sections_videos añadiendo 'is_active' y 'url' a cada actividad.
      */
-    private function extract_video_url(string $content): string {
-        // 1. Buscar iframe existente con YouTube/Vimeo
-        if (preg_match('/src=["\']([^"\']*(?:youtube|youtu\.be|vimeo)[^"\']*)["\']/', $content, $matches)) {
-            return $this->normalize_embed_url($matches[1]);
-        }
+    private function mark_active(array $sections_videos, int $cmid, int $courseid, string $slug): array
+    {
+        $baseurl = '/cursos/' . $slug . '/ver?cmid=';
+        $marked = [];
 
-        // 2. Buscar URL de YouTube en texto/href
-        if (preg_match('#(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]+)#', $content, $matches)) {
-            return 'https://www.youtube.com/embed/' . $matches[1];
-        }
-
-        // 3. YouTube corto
-        if (preg_match('#(?:https?://)?youtu\.be/([a-zA-Z0-9_-]+)#', $content, $matches)) {
-            return 'https://www.youtube.com/embed/' . $matches[1];
-        }
-
-        // 4. YouTube embed directo
-        if (preg_match('#(?:https?://)?(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]+)#', $content, $matches)) {
-            return 'https://www.youtube.com/embed/' . $matches[1];
-        }
-
-        // 5. Vimeo
-        if (preg_match('#(?:https?://)?(?:www\.)?vimeo\.com/(\d+)#', $content, $matches)) {
-            return 'https://player.vimeo.com/video/' . $matches[1];
-        }
-
-        return '';
-    }
-
-    /**
-     * Normaliza una URL de embed de vídeo.
-     */
-    private function normalize_embed_url(string $url): string {
-        // Si ya es un embed URL, devolverla limpia
-        if (strpos($url, 'youtube.com/embed/') !== false) {
-            // Extraer solo el ID y reconstruir
-            if (preg_match('#youtube\.com/embed/([a-zA-Z0-9_-]+)#', $url, $m)) {
-                return 'https://www.youtube.com/embed/' . $m[1];
-            }
-        }
-        if (strpos($url, 'player.vimeo.com/video/') !== false) {
-            if (preg_match('#player\.vimeo\.com/video/(\d+)#', $url, $m)) {
-                return 'https://player.vimeo.com/video/' . $m[1];
-            }
-        }
-        return $url;
-    }
-
-    /**
-     * Elimina el vídeo embebido del contenido HTML para mostrar el resto.
-     */
-    private function remove_video_from_content(string $content): string {
-        // Eliminar iframes
-        $content = preg_replace('/<iframe[^>]*>.*?<\/iframe>/is', '', $content);
-        // Eliminar divs de video wrapper comunes
-        $content = preg_replace('/<div[^>]*class="[^"]*video[^"]*"[^>]*>.*?<\/div>/is', '', $content);
-        // Eliminar URLs de YouTube/Vimeo sueltas
-        $content = preg_replace('#https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/|vimeo\.com/)\S+#', '', $content);
-        return trim($content);
-    }
-
-    /**
-     * Construye la sidebar con secciones, actividades y estado de completación.
-     */
-    private function build_sidebar(\course_modinfo $modinfo, \stdClass $course, int $currentcmid): array {
-        $completioninfo = new \completion_info($course);
-        $courseformat = course_get_format($course->id);
-        $sections = [];
-
-        foreach ($modinfo->get_section_info_all() as $sectionnum => $sectioninfo) {
-            if (!isset($modinfo->sections[$sectionnum])) {
-                continue;
-            }
-
-            $sectionname = $courseformat->get_section_name($sectioninfo);
-            if (empty($sectionname)) {
-                $sectionname = get_string('section') . ' ' . $sectionnum;
-            }
-
+        foreach ($sections_videos as $section) {
             $activities = [];
-            $sectioncompleted = 0;
-            $sectiontotal = 0;
-            $containscurrent = false;
+            $section_active = false;
 
-            foreach ($modinfo->sections[$sectionnum] as $cmid) {
-                $cm = $modinfo->cms[$cmid];
-
-                if ($cm->modname === 'label' || !$cm->uservisible) {
-                    continue;
+            foreach ($section['activities'] as $activity) {
+                $is_active = ((int)$activity['id'] === $cmid);
+                if ($is_active) {
+                    $section_active = true;
                 }
-
-                $sectiontotal++;
-                $iscurrent = ($cm->id == $currentcmid);
-                if ($iscurrent) {
-                    $containscurrent = true;
-                }
-
-                // Estado de completación
-                $completed = $this->is_activity_completed($completioninfo, $cm);
-                if ($completed) {
-                    $sectioncompleted++;
-                }
-
-                // Icono según tipo
-                $icon = '📄';
-                switch ($cm->modname) {
-                    case 'page':    $icon = '📝'; break;
-                    case 'url':     $icon = '🔗'; break;
-                    case 'resource': $icon = '📎'; break;
-                    case 'quiz':    $icon = '📋'; break;
-                    case 'forum':   $icon = '💬'; break;
-                    case 'assign':  $icon = '📤'; break;
-                    case 'lesson':  $icon = '📖'; break;
-                    case 'h5p':     $icon = '🎮'; break;
-                }
-
-                // Detectar si es vídeo
-                $isvideo = $this->is_video_activity($cm);
-
-                $activities[] = [
-                    'cmid'       => $cm->id,
-                    'name'       => $cm->name,
-                    'icon'       => $isvideo ? '▶' : $icon,
-                    'type'       => get_string('modulename', $cm->modname),
-                    'iscurrent'  => $iscurrent,
-                    'completed'  => $completed,
-                    'url'        => (new \moodle_url('/local/catalog/learn.php', [
-                        'id'   => $course->id,
-                        'cmid' => $cm->id,
-                    ]))->out(false),
-                ];
+                $activities[] = array_merge($activity, [
+                    'is_active' => $is_active,
+                    'playerurl' => $baseurl . $activity['id'],
+                ]);
             }
 
-            if (!empty($activities)) {
-                $sections[] = [
-                    'name'            => $sectionname,
-                    'num'             => $sectionnum,
-                    'activities'      => $activities,
-                    'activitycount'   => $sectiontotal,
-                    'completedcount'  => $sectioncompleted,
-                    'isopen'          => $containscurrent || $sectionnum <= 1,
-                    'containscurrent' => $containscurrent,
-                    'progress_text'   => $sectioncompleted . '/' . $sectiontotal,
-                ];
-            }
+            $marked[] = array_merge($section, [
+                'activities' => $activities,
+                'section_active' => $section_active,
+                // La sección activa se muestra expandida
+                'isopen' => $section_active || $section['isopen'],
+            ]);
         }
 
-        return $sections;
+        return $marked;
     }
 
     /**
-     * Verifica si una actividad tiene vídeo.
+     * Construye el array para el índice central (show_index=true).
+     * Igual que sections_videos pero con thumbnail y url de reproducción.
      */
-    private function is_video_activity(\cm_info $cm): bool {
+    private function build_index(array $sections_videos, int $courseid, string $slug): array
+    {
+        $baseurl = '/cursos/' . $slug . '/ver?cmid=';
+        $index = [];
+
+        foreach ($sections_videos as $section) {
+            $activities = [];
+            foreach ($section['activities'] as $activity) {
+                $activities[] = array_merge($activity, [
+                    'playerurl' => $baseurl . $activity['id'],
+                ]);
+            }
+
+            $index[] = array_merge($section, [
+                'activities' => $activities,
+            ]);
+        }
+
+        return $index;
+    }
+
+    /**
+     * Calcula el progreso del alumno en el curso.
+     */
+    private function get_progress(int $courseid, int $userid): array
+    {
         global $DB;
 
-        if ($cm->modname === 'page') {
-            $page = $DB->get_record('page', ['id' => $cm->instance], 'content');
-            if ($page) {
-                return !empty($this->extract_video_url($page->content));
-            }
-        } elseif ($cm->modname === 'url') {
-            $url = $DB->get_record('url', ['id' => $cm->instance], 'externalurl');
-            if ($url) {
-                return !empty($this->extract_video_url($url->externalurl));
-            }
-        }
+        $total = (int)$DB->count_records('course_modules', [
+            'course' => $courseid,
+            'completion' => 1,
+        ]);
 
-        return false;
-    }
-
-    /**
-     * Verifica si una actividad está completada por el usuario actual.
-     */
-    private function is_activity_completed(\completion_info $completioninfo, \cm_info $cm): bool {
-        if (!$completioninfo->is_enabled($cm)) {
-            return false;
-        }
-
-        $data = $completioninfo->get_data($cm);
-        return $data->completionstate == COMPLETION_COMPLETE
-            || $data->completionstate == COMPLETION_COMPLETE_PASS;
-    }
-
-    /**
-     * Obtiene el progreso general del curso.
-     */
-    private function get_course_progress(\completion_info $completioninfo, \course_modinfo $modinfo): array {
-        $total = 0;
-        $completed = 0;
-
-        foreach ($modinfo->get_cms() as $cm) {
-            if ($cm->modname === 'label' || !$cm->uservisible) {
-                continue;
-            }
-            if ($completioninfo->is_enabled($cm)) {
-                $total++;
-                if ($this->is_activity_completed($completioninfo, $cm)) {
-                    $completed++;
-                }
-            }
-        }
-
-        $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
+        $done = (int)$DB->count_records_select(
+            'course_modules_completion',
+            'userid = :uid AND completionstate IN (1,2)
+             AND coursemoduleid IN (
+                 SELECT id FROM {course_modules}
+                  WHERE course = :cid AND completion = 1
+             )',
+            ['uid' => $userid, 'cid' => $courseid]
+        );
 
         return [
-            'percentage' => $percentage,
-            'completed'  => $completed,
-            'total'      => $total,
-            'text'       => $completed . '/' . $total . ' (' . $percentage . '%)',
+            'percent' => $total > 0 ? round(($done / $total) * 100) : 0,
+            'done' => $done,
+            'total' => $total,
         ];
     }
 
-
     /**
-     * Obtiene instructores con datos detallados del perfil.
+     * Devuelve los instructores en el formato que espera el template.
      */
-    private function get_instructors_detail(int $courseid): array {
+    private function get_course_customfields(int $courseid): array
+    {
+        $result = [
+            'course_long_description' => '',
+            'course_objectives' => '',
+            'course_requirements' => '',
+        ];
 
-        global $DB, $OUTPUT , $PAGE;
-
-        $context = \context_course::instance($courseid);
-        $instructors = [];
-
-        // u.id, u.firstname, u.lastname, u.email, u.description, u.picture, u.imagealt
-        foreach ([3, 4] as $roleid) {
-            $users = get_role_users($roleid, $context, false,'');
-
-            // print_r($users);
-            // die();
-
-            foreach ($users as $user) {
-
-                // Cargar el perfil completo
-                $fulluser = $DB->get_record('user', ['id' => $user->id],
-                    'id, firstname, lastname, description, descriptionformat, picture, email, city'
-                );
-
-                // La descripción puede tener formato Moodle, procesarla así:
-                $user->description = format_text(
-                    $fulluser->description,
-                    $fulluser->descriptionformat
-                );
-
-                // Contar cursos del instructor
-                $sql = "SELECT COUNT(DISTINCT ra.contextid)
-                          FROM {role_assignments} ra
-                          JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
-                         WHERE ra.userid = :userid AND ra.roleid IN (3, 4)";
-                $coursecount = $DB->count_records_sql($sql, ['userid' => $user->id]);
-
-                // Contar estudiantes totales del instructor
-                $sql = "SELECT COUNT(DISTINCT ue.userid)
-                          FROM {user_enrolments} ue
-                          JOIN {enrol} e ON e.id = ue.enrolid
-                          JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = 50
-                          JOIN {role_assignments} ra ON ra.contextid = ctx.id AND ra.userid = :teacherid
-                         WHERE ra.roleid IN (3, 4)";
-                $studentcount = $DB->count_records_sql($sql, ['teacherid' => $user->id]);
-
-                // Avatar
-                $userpicture = new \user_picture($user);
-                $userpicture->size = 100; // tamaño en px
-                $url_imagen_avatar = $userpicture->get_url($PAGE)->out(false);
-
-                $instructors[] = [
-                    'id'           => $user->id,
-                    'fullname'     => fullname($user),
-                    'description' => strip_tags($user->description),
-                    'bio'          => format_text($user->description ?? '', FORMAT_HTML),
-                    'hasbio'       => !empty($user->description),
-                    //'avatarurl'    => $userpicture->get_url($GLOBALS['PAGE'], $GLOBALS['OUTPUT'])->out(false),
-                    'avatarurl'    => $url_imagen_avatar,
-                    'profileurl'   => (new \moodle_url('/user/profile.php', ['id' => $user->id]))->out(false),
-                    'coursecount'   => $coursecount,
-                    'studentcount'  => $studentcount,
-                    'rating'        => '4.5', // Placeholder fase 2
-                    'reviewcount'   => 0,     // Placeholder fase 2
-                ];
+        try {
+            $handler = \core_customfield\handler::get_handler('core_course', 'course');
+            foreach ($handler->get_instance_data($courseid) as $field) {
+                $shortname = $field->get_field()->get('shortname');
+                if (array_key_exists($shortname, $result)) {
+                    $value = $field->export_value();
+                    if (!empty($value)) {
+                        $result[$shortname] = $value;
+                    }
+                }
             }
+        } catch (\Exception $e) {
         }
 
-        //print_r($instructors);
-        //die();
-
-        return $instructors;
+        return $result;
     }
-
 }

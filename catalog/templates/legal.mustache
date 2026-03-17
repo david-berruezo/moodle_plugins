@@ -1,0 +1,104 @@
+{{!
+    Legal — Política de privacidad / Términos de uso
+    local/catalog/templates/legal.mustache
+    Compartido por privacy.php y terms.php
+
+    Variables:
+      page_title    string   "Política de privacidad" | "Términos de uso"
+      last_updated  string   "Enero 2026"
+      homeurl, loginurl, registerurl, termsurl, privacyurl
+      isloggedin    bool
+      sitename, currentyear
+}}
+<div class="cv-page">
+
+{{! ══════════════════════════════════════════════════════ HEADER ══ }}
+<header class="cv-header" role="banner">
+    <div class="cv-header__inner">
+        <a href="{{homeurl}}" class="cv-header__logo">
+            <div class="cv-header__logo-mark">A</div>
+            <span class="cv-header__logo-text">Campus Virtual</span>
+        </a>
+        <div style="flex:1"></div>
+        <nav class="cv-header__right">
+            {{^isloggedin}}
+            <a href="{{loginurl}}"    class="cv-header__btn cv-header__btn--outline">
+                {{#str}}login, local_catalog{{/str}}
+            </a>
+            <a href="{{registerurl}}" class="cv-header__btn cv-header__btn--primary">
+                {{#str}}register, local_catalog{{/str}}
+            </a>
+            {{/isloggedin}}
+        </nav>
+    </div>
+</header>
+
+{{! ══════════════════════════════════════════════════════════ MAIN ══ }}
+<main class="cv-legal">
+    <div class="cv-container cv-legal__inner">
+
+        <h1 class="cv-legal__title">{{page_title}}</h1>
+        <p class="cv-legal__meta">
+            Última actualización: <strong>{{last_updated}}</strong>
+        </p>
+
+        <div class="cv-legal__content">
+            <p>
+                Este documento describe cómo <strong>{{sitename}}</strong> (Campus Virtual Aubay)
+                gestiona la información de sus usuarios en el marco del Grupo Aubay.
+            </p>
+
+            <h2>1. Responsable del tratamiento</h2>
+            <p>
+                El responsable del tratamiento de datos es <strong>Aubay S.A.</strong>,
+                con domicilio social en Madrid, España.
+            </p>
+
+            <h2>2. Datos que recogemos</h2>
+            <p>
+                Al registrarte recopilamos tu nombre, apellidos y dirección de email.
+                Durante el uso de la plataforma registramos tu progreso en los cursos,
+                actividades completadas y certificados obtenidos.
+            </p>
+
+            <h2>3. Finalidad del tratamiento</h2>
+            <p>
+                Los datos se utilizan exclusivamente para gestionar tu acceso a la
+                plataforma de formación interna y hacer seguimiento de tu progreso académico.
+            </p>
+
+            <h2>4. Derechos del usuario</h2>
+            <p>
+                Puedes ejercer tus derechos de acceso, rectificación, supresión y
+                portabilidad contactando con el equipo de Recursos Humanos de tu delegación
+                de Aubay o escribiendo a <strong>campus@aubay.es</strong>.
+            </p>
+        </div>
+
+        <div class="cv-legal__back">
+            <a href="{{homeurl}}" class="cv-legal__back-link">
+                ← {{#str}}backtocatalog, local_catalog{{/str}}
+            </a>
+        </div>
+
+    </div>
+</main>
+
+{{! ══════════════════════════════════════════════════════════ FOOTER ══ }}
+<footer class="cv-footer">
+    <div class="cv-footer__bottom-bar">
+        <div class="cv-container cv-footer__bottom">
+            <span>© {{currentyear}} {{sitename}}. {{#str}}allrightsreserved, local_catalog{{/str}}</span>
+            <div class="cv-footer__bottom-links">
+                <a href="{{privacyurl}}" class="cv-footer__bottom-link">
+                    {{#str}}privacy, local_catalog{{/str}}
+                </a>
+                <a href="{{termsurl}}" class="cv-footer__bottom-link">
+                    {{#str}}terms, local_catalog{{/str}}
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>{{! /cv-page }}

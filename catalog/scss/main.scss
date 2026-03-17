@@ -16,6 +16,7 @@
 @use 'components/sections';
 
 // ── Componentes — páginas interiores ─────────────────────────────────────────
+@use 'components/auth';
 @use 'components/filters';
 @use 'components/course-detail';
 @use 'components/player';

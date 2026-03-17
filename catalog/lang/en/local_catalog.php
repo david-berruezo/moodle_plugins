@@ -172,3 +172,68 @@ $string['home_hero_sub_subtitle_two'] = 'Aprende a tu ritmo, donde quieras.';
 $string['coursesavailability'] = 'cursos disponibles';
 $string['instructorsavailability'] = 'instructores internos';
 $string['studentsavailability'] = 'estudiantes activos';
+
+// ── Página login ──────────────────────────────────────────────────────────────
+$string['login_title']               = 'Bienvenido/a de nuevo';
+$string['login_sub']                 = 'Inicia sesión para continuar tu aprendizaje';
+
+// Campos del formulario
+$string['login_username_label']      = 'Usuario o email';
+$string['login_username_placeholder']= 'tu@empresa.com';
+$string['login_password_label']      = 'Contraseña';
+$string['login_password_placeholder']= 'Tu contraseña';
+$string['login_forgot']              = '¿La olvidaste?';
+
+// Errores
+$string['login_error_empty']         = 'Por favor, introduce tu usuario y contraseña.';
+$string['login_error_invalid']       = 'Usuario o contraseña incorrectos. Inténtalo de nuevo.';
+
+// Textos secundarios
+$string['login_terms_prefix']        = 'Al continuar, aceptas los';
+$string['login_terms_and']           = 'y la';
+$string['login_no_account']          = '¿No tienes cuenta?';
+$string['register_free']             = 'Regístrate gratis';
+$string['terms']                     = 'Términos de uso';
+
+// =============================================================================
+// STRINGS REGISTRO — añadir a lang/es/local_catalog.php
+// =============================================================================
+
+// ── Registro ──────────────────────────────────────────────────────────────────
+$string['register_title']            = 'Crea tu cuenta gratis';
+$string['register_sub']              = 'Únete a los profesionales de formación del Grupo Aubay';
+$string['register_cta']              = 'Crear cuenta gratis';
+$string['register_already']          = '¿Ya tienes cuenta?';
+
+// Campos
+$string['reg_firstname']             = 'Nombre';
+$string['reg_firstname_placeholder'] = 'Tu nombre';
+$string['reg_lastname']              = 'Apellidos';
+$string['reg_lastname_placeholder']  = 'Tus apellidos';
+$string['reg_email']                 = 'Email';
+$string['reg_email_placeholder']     = 'tu@empresa.com';
+$string['reg_password']              = 'Contraseña';
+$string['reg_password_placeholder']  = 'Mínimo 8 caracteres';
+$string['reg_password_hint']         = 'Usa letras, números y símbolos para mayor seguridad';
+
+// Checkboxes
+$string['reg_accept_prefix']         = 'Acepto los';
+$string['reg_accept_and']            = 'y la';
+$string['reg_marketing']             = 'Quiero recibir novedades y recomendaciones de cursos por email';
+
+// Errores de validación
+$string['reg_error_firstname']       = 'El nombre es obligatorio.';
+$string['reg_error_lastname']        = 'Los apellidos son obligatorios.';
+$string['reg_error_email_empty']     = 'El email es obligatorio.';
+$string['reg_error_email_invalid']   = 'Introduce un email válido.';
+$string['reg_error_email_exists']    = 'Ya existe una cuenta con ese email. ¿Quieres iniciar sesión?';
+$string['reg_error_password_empty']  = 'La contraseña es obligatoria.';
+$string['reg_error_terms']           = 'Debes aceptar los términos de uso para continuar.';
+$string['reg_error_general']         = 'Ha ocurrido un error al crear la cuenta. Inténtalo de nuevo.';
+
+// Éxito
+$string['reg_success_title']         = '¡Cuenta creada!';
+$string['reg_success_sub']           = 'Te hemos enviado un email de confirmación. Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.';
+
+// Varios
+$string['toggle_password']           = 'Mostrar/ocultar contraseña';
